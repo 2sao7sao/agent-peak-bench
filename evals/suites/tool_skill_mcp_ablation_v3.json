@@ -1,0 +1,182 @@
+{
+  "suite_name": "tool_skill_mcp_ablation_v3",
+  "version": "2026-05-06",
+  "benchmark_family": "tool_recovery",
+  "description": "Ablation suite for tool-surface size, MCP-style tool naming, router layering, and skill contract effects. The goal is to identify stable engineering mechanisms, not just score the model.",
+  "default_repeat": 7,
+  "scenarios": [
+    {
+      "id": "tools-focused-3-direct",
+      "title": "Focused 3-tool surface for customer escalation triage",
+      "category": "tool_surface_ablation",
+      "benchmark_family": "tool_recovery",
+      "repeat": 7,
+      "temperature": 0.2,
+      "system": "You are a customer escalation agent. Use tools before answering and return valid JSON only with keys task_interpretation, evidence, decision, actions, risks, harness_notes. Use concise English values.",
+      "messages": [
+        {"role": "user", "content": "客户说「你们系统又拖慢了我们月结」，销售让我马上判断是产品问题、配置问题还是客户侧误用。"}
+      ],
+      "tools": [
+        {"name": "mcp_ticket_search", "description": "Search support tickets.", "input_schema": {"type": "object", "properties": {"query": {"type": "string"}}, "required": ["query"]}},
+        {"name": "mcp_usage_query", "description": "Query product telemetry.", "input_schema": {"type": "object", "properties": {"account": {"type": "string"}}, "required": ["account"]}},
+        {"name": "mcp_runbook_read", "description": "Read relevant troubleshooting runbook.", "input_schema": {"type": "object", "properties": {"topic": {"type": "string"}}, "required": ["topic"]}}
+      ],
+      "mock_tools": {
+        "mcp_ticket_search": {"tickets": [{"id": "T-331", "topic": "month-end export timeout", "status": "open"}]},
+        "mcp_usage_query": {"export_jobs": 802, "timeout_rate": "17%", "large_payload_accounts": ["customer"]},
+        "mcp_runbook_read": {"rule": "If timeout_rate > 5% and large payloads cluster around month-end, classify as product scaling issue until config audit proves otherwise."}
+      },
+      "max_tool_rounds": 3,
+      "max_tokens": 900,
+      "expected": {
+        "required_tool_names": ["mcp_ticket_search", "mcp_usage_query", "mcp_runbook_read"],
+        "max_tool_calls": 4,
+        "json_keys": ["task_interpretation", "evidence", "decision", "actions", "risks", "harness_notes"],
+        "json_key_contains": {
+          "decision": ["product"],
+          "evidence": ["17%", "T-331"],
+          "actions": ["scaling"]
+        }
+      },
+      "ablation_axis": "focused_tool_surface",
+      "hypothesis": "A narrow 3-tool surface should produce stable, low-redundancy tool use."
+    },
+    {
+      "id": "tools-overloaded-14-flat",
+      "title": "Overloaded 14-tool flat surface for the same triage task",
+      "category": "tool_surface_ablation",
+      "benchmark_family": "tool_recovery",
+      "repeat": 7,
+      "temperature": 0.2,
+      "system": "You are a customer escalation agent. Use tools before answering and return valid JSON only with keys task_interpretation, evidence, decision, actions, risks, harness_notes. Use concise English values.",
+      "messages": [
+        {"role": "user", "content": "客户说「你们系统又拖慢了我们月结」，销售让我马上判断是产品问题、配置问题还是客户侧误用。"}
+      ],
+      "tools": [
+        {"name": "mcp_ticket_search", "description": "Search support tickets.", "input_schema": {"type": "object", "properties": {"query": {"type": "string"}}, "required": ["query"]}},
+        {"name": "mcp_usage_query", "description": "Query product telemetry.", "input_schema": {"type": "object", "properties": {"account": {"type": "string"}}, "required": ["account"]}},
+        {"name": "mcp_runbook_read", "description": "Read relevant troubleshooting runbook.", "input_schema": {"type": "object", "properties": {"topic": {"type": "string"}}, "required": ["topic"]}},
+        {"name": "mcp_crm_lookup", "description": "Read CRM account data.", "input_schema": {"type": "object", "properties": {"account": {"type": "string"}}, "required": ["account"]}},
+        {"name": "mcp_invoice_lookup", "description": "Read invoices.", "input_schema": {"type": "object", "properties": {"account": {"type": "string"}}, "required": ["account"]}},
+        {"name": "mcp_contract_read", "description": "Read contract.", "input_schema": {"type": "object", "properties": {"account": {"type": "string"}}, "required": ["account"]}},
+        {"name": "mcp_email_digest", "description": "Summarize email threads.", "input_schema": {"type": "object", "properties": {"account": {"type": "string"}}, "required": ["account"]}},
+        {"name": "mcp_calendar_lookup", "description": "Read calendar.", "input_schema": {"type": "object", "properties": {"account": {"type": "string"}}, "required": ["account"]}},
+        {"name": "mcp_slack_search", "description": "Search Slack.", "input_schema": {"type": "object", "properties": {"query": {"type": "string"}}, "required": ["query"]}},
+        {"name": "mcp_datadog_query", "description": "Query metrics.", "input_schema": {"type": "object", "properties": {"metric": {"type": "string"}}, "required": ["metric"]}},
+        {"name": "mcp_feature_flag_read", "description": "Read feature flags.", "input_schema": {"type": "object", "properties": {"flag": {"type": "string"}}, "required": ["flag"]}},
+        {"name": "mcp_status_page_read", "description": "Read status page.", "input_schema": {"type": "object", "properties": {}, "required": []}},
+        {"name": "mcp_owner_lookup", "description": "Lookup owner.", "input_schema": {"type": "object", "properties": {"area": {"type": "string"}}, "required": ["area"]}},
+        {"name": "mcp_approval_create", "description": "Create approval.", "input_schema": {"type": "object", "properties": {"reason": {"type": "string"}}, "required": ["reason"]}}
+      ],
+      "mock_tools": {
+        "mcp_ticket_search": {"tickets": [{"id": "T-331", "topic": "month-end export timeout", "status": "open"}]},
+        "mcp_usage_query": {"export_jobs": 802, "timeout_rate": "17%", "large_payload_accounts": ["customer"]},
+        "mcp_runbook_read": {"rule": "If timeout_rate > 5% and large payloads cluster around month-end, classify as product scaling issue until config audit proves otherwise."},
+        "mcp_crm_lookup": {"stage": "renewal"},
+        "mcp_invoice_lookup": {"month_end": true},
+        "mcp_contract_read": {"sla": "standard"},
+        "mcp_email_digest": {"summary": "customer complains about month-end export"},
+        "mcp_calendar_lookup": {"next_meeting": "tomorrow"},
+        "mcp_slack_search": {"hits": []},
+        "mcp_datadog_query": {"p95_export_latency": "31m"},
+        "mcp_feature_flag_read": {"flags": []},
+        "mcp_status_page_read": {"status": "green"},
+        "mcp_owner_lookup": {"owner": "Export Platform"},
+        "mcp_approval_create": {"approval_id": "not_needed"}
+      },
+      "max_tool_rounds": 5,
+      "max_tokens": 950,
+      "expected": {
+        "required_tool_names": ["mcp_ticket_search", "mcp_usage_query", "mcp_runbook_read"],
+        "forbidden_tool_names": ["mcp_approval_create"],
+        "max_tool_calls": 7,
+        "json_keys": ["task_interpretation", "evidence", "decision", "actions", "risks", "harness_notes"],
+        "json_key_contains": {
+          "decision": ["product"],
+          "evidence": ["17%", "T-331"],
+          "harness_notes": ["tool"]
+        }
+      },
+      "ablation_axis": "flat_tool_surface_overload",
+      "hypothesis": "A flat 14-tool surface should reveal whether the model over-calls, chooses irrelevant tools, or loses the core evidence chain."
+    },
+    {
+      "id": "tools-layered-router-4",
+      "title": "Layered router surface for the same triage task",
+      "category": "tool_surface_ablation",
+      "benchmark_family": "tool_recovery",
+      "repeat": 7,
+      "temperature": 0.2,
+      "system": "You are a customer escalation agent. Only use router tools first; do not call raw domain tools. Return valid JSON only with keys task_interpretation, evidence, decision, actions, risks, harness_notes. Use concise English values.",
+      "messages": [
+        {"role": "user", "content": "客户说「你们系统又拖慢了我们月结」，销售让我马上判断是产品问题、配置问题还是客户侧误用。"}
+      ],
+      "tools": [
+        {"name": "router_support_context", "description": "Route to support evidence retrieval.", "input_schema": {"type": "object", "properties": {"intent": {"type": "string"}}, "required": ["intent"]}},
+        {"name": "router_usage_context", "description": "Route to usage and telemetry retrieval.", "input_schema": {"type": "object", "properties": {"intent": {"type": "string"}}, "required": ["intent"]}},
+        {"name": "router_runbook_context", "description": "Route to relevant runbook retrieval.", "input_schema": {"type": "object", "properties": {"intent": {"type": "string"}}, "required": ["intent"]}},
+        {"name": "router_owner_context", "description": "Route to owner lookup when action routing is needed.", "input_schema": {"type": "object", "properties": {"intent": {"type": "string"}}, "required": ["intent"]}}
+      ],
+      "mock_tools": {
+        "router_support_context": {"source_tool": "mcp_ticket_search", "tickets": [{"id": "T-331", "topic": "month-end export timeout", "status": "open"}]},
+        "router_usage_context": {"source_tool": "mcp_usage_query", "export_jobs": 802, "timeout_rate": "17%", "large_payload_accounts": ["customer"]},
+        "router_runbook_context": {"source_tool": "mcp_runbook_read", "rule": "If timeout_rate > 5% and large payloads cluster around month-end, classify as product scaling issue until config audit proves otherwise."},
+        "router_owner_context": {"owner": "Export Platform"}
+      },
+      "max_tool_rounds": 4,
+      "max_tokens": 950,
+      "expected": {
+        "required_tool_names": ["router_support_context", "router_usage_context", "router_runbook_context"],
+        "max_tool_calls": 5,
+        "json_keys": ["task_interpretation", "evidence", "decision", "actions", "risks", "harness_notes"],
+        "json_key_contains": {
+          "decision": ["product"],
+          "evidence": ["17%", "T-331"],
+          "harness_notes": ["router"]
+        }
+      },
+      "ablation_axis": "layered_tool_router",
+      "hypothesis": "A layered router should preserve evidence quality while reducing tool-selection entropy."
+    },
+    {
+      "id": "skills-contract-with-tools",
+      "title": "Skill contract plus focused tools",
+      "category": "skill_mcp_ablation",
+      "benchmark_family": "long_running_harness",
+      "repeat": 7,
+      "temperature": 0.2,
+      "system": "Skill: Enterprise Escalation Triage. Procedure: 1) infer business intent, 2) gather ticket, telemetry, and runbook evidence, 3) classify root cause as product/config/customer/unknown, 4) list missing evidence, 5) provide owner-routed next actions. Forbidden: claim resolution without verification. Return valid JSON only with keys task_interpretation, evidence, decision, actions, risks, harness_notes. Use concise English values.",
+      "messages": [
+        {"role": "user", "content": "客户说「你们系统又拖慢了我们月结」，销售让我马上判断是产品问题、配置问题还是客户侧误用。"}
+      ],
+      "tools": [
+        {"name": "mcp_ticket_search", "description": "Search support tickets.", "input_schema": {"type": "object", "properties": {"query": {"type": "string"}}, "required": ["query"]}},
+        {"name": "mcp_usage_query", "description": "Query product telemetry.", "input_schema": {"type": "object", "properties": {"account": {"type": "string"}}, "required": ["account"]}},
+        {"name": "mcp_runbook_read", "description": "Read relevant troubleshooting runbook.", "input_schema": {"type": "object", "properties": {"topic": {"type": "string"}}, "required": ["topic"]}},
+        {"name": "mcp_owner_lookup", "description": "Lookup accountable owner.", "input_schema": {"type": "object", "properties": {"area": {"type": "string"}}, "required": ["area"]}}
+      ],
+      "mock_tools": {
+        "mcp_ticket_search": {"tickets": [{"id": "T-331", "topic": "month-end export timeout", "status": "open"}]},
+        "mcp_usage_query": {"export_jobs": 802, "timeout_rate": "17%", "large_payload_accounts": ["customer"]},
+        "mcp_runbook_read": {"rule": "If timeout_rate > 5% and large payloads cluster around month-end, classify as product scaling issue until config audit proves otherwise."},
+        "mcp_owner_lookup": {"owner": "Export Platform"}
+      },
+      "max_tool_rounds": 4,
+      "max_tokens": 950,
+      "expected": {
+        "required_tool_names": ["mcp_ticket_search", "mcp_usage_query", "mcp_runbook_read"],
+        "json_keys": ["task_interpretation", "evidence", "decision", "actions", "risks", "harness_notes"],
+        "json_key_contains": {
+          "decision": ["product"],
+          "actions": ["Export Platform"],
+          "risks": ["missing"]
+        },
+        "must_contain_any": [
+          {"name": "skill_contract_followed", "options": ["missing evidence", "缺失证据", "verification"]}
+        ]
+      },
+      "ablation_axis": "skill_contract_plus_tools",
+      "hypothesis": "A procedural skill should improve completion honesty and output completeness, but the harness still needs validators."
+    }
+  ]
+}

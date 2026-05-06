@@ -18,6 +18,8 @@
   ·
   <a href="./docs/evaluation-samples.zh-CN.md">Evaluation samples</a>
   ·
+  <a href="./report/enterprise-agent-benchmark-methodology.zh-CN.md">Enterprise methodology</a>
+  ·
   <a href="./report/minimax-initial-live-report-2026-05-06.md">MiniMax live report</a>
   ·
   <a href="./report/minimax-agent-usage-handbook.md">Usage handbook</a>
@@ -33,7 +35,19 @@ Most model benchmarks compress performance into a single score. That is useful f
 
 > Under which engineering conditions does a model reach its peak operating state, and where does it become unreliable?
 
-The first published case is **MiniMax M2.7 High**, implemented through `MiniMax-M2.7-highspeed`.
+The first published case is **MiniMax M2.7 High**, implemented through `MiniMax-M2.7-highspeed`. The original `minimax_canary_v1` is now treated as a smoke test only; realistic landing evaluation moves to `enterprise_agent_landing_v3` and `tool_skill_mcp_ablation_v3`.
+
+## v3 Enterprise Agent Evaluation
+
+The benchmark now separates scorekeeping from deployment diagnosis:
+
+| Asset | Purpose | What it tests |
+| --- | --- | --- |
+| [`enterprise_agent_landing_v3.json`](./evals/suites/enterprise_agent_landing_v3.json) | Realistic enterprise-agent suite | Implicit intent, multi-MCP evidence gathering, governance, complex decomposition, handoff, and resume. |
+| [`tool_skill_mcp_ablation_v3.json`](./evals/suites/tool_skill_mcp_ablation_v3.json) | Engineering-mechanism ablation | Focused tools vs flat overload vs router layering vs procedural skill contracts. |
+| [`enterprise-agent-benchmark-methodology.zh-CN.md`](./report/enterprise-agent-benchmark-methodology.zh-CN.md) | Integrated methodology | Evaluation, attribution, harness design, and model usage guidance. |
+
+The intended output is not just a model score. It should produce a capability matrix, end-to-end task reliability, pass@k stability, failure taxonomy, and concrete harness recommendations.
 
 ## Result Snapshot
 
@@ -61,6 +75,9 @@ The first published case is **MiniMax M2.7 High**, implemented through `MiniMax-
 
 > [!NOTE]
 > The initial canary used `3` repeated trials per scenario, so only `pass@1` and `pass@3` are statistically valid. Reporting `pass@5` or `pass@7` from only three trials would collapse into `pass@3` and overstate the evidence. The runner now reports insufficient pass@k as `null`; use `--force-repeat 7` for a valid pass@7 sweep.
+
+> [!IMPORTANT]
+> The result snapshot above is an early smoke canary, not the primary enterprise-agent benchmark. Use `enterprise_agent_landing_v3` for landing-oriented evaluation.
 
 ## Benchmark Design
 
@@ -223,6 +240,7 @@ sequenceDiagram
 | [`docs/index.html`](./docs/index.html) | Published report page with radar chart and model conclusions. |
 | [`README.zh-CN.md`](./README.zh-CN.md) | Chinese README report page. |
 | [`docs/evaluation-samples.zh-CN.md`](./docs/evaluation-samples.zh-CN.md) | Concrete evaluation samples and scoring logic. |
+| [`report/enterprise-agent-benchmark-methodology.zh-CN.md`](./report/enterprise-agent-benchmark-methodology.zh-CN.md) | Enterprise-agent benchmark methodology. |
 | [`public/minimax-m27-high-summary.json`](./public/minimax-m27-high-summary.json) | Sanitized public summary used for release reporting. |
 | [`report/minimax-initial-live-report-2026-05-06.md`](./report/minimax-initial-live-report-2026-05-06.md) | Initial live canary report. |
 | [`report/minimax-agent-usage-handbook.md`](./report/minimax-agent-usage-handbook.md) | Practical usage guide for skills, tools, context, and complex systems. |
@@ -268,6 +286,8 @@ export MINIMAX_API_BASE="https://api.minimaxi.com/anthropic/v1/messages"
 Run representative suites:
 
 ```bash
+python3 scripts/run_minimax_evals.py --suite evals/suites/enterprise_agent_landing_v3.json --pass-k 1,3,5,7
+python3 scripts/run_minimax_evals.py --suite evals/suites/tool_skill_mcp_ablation_v3.json --pass-k 1,3,5,7
 python3 scripts/run_minimax_evals.py --suite evals/suites/repeatability_passk.json --repeat 5 --pass-k 1,3,5
 python3 scripts/run_minimax_evals.py --suite evals/suites/skill_design_ablation.json
 python3 scripts/run_minimax_evals.py --suite evals/suites/tool_count_ablation.json --include-skipped

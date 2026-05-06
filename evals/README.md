@@ -49,3 +49,30 @@
 
 4. `Deployment Canaries`
 用真实 API、真实工具、真实 traces 做小规模线上回归。
+
+## v3: 企业级 Agent 主评测
+
+当前更接近真实落地的主评测集是：
+
+- [`suites/enterprise_agent_landing_v3.json`](./suites/enterprise_agent_landing_v3.json)
+- [`suites/tool_skill_mcp_ablation_v3.json`](./suites/tool_skill_mcp_ablation_v3.json)
+
+`enterprise_agent_landing_v3` 面向端到端企业任务：安全评审、续约风险、发布 gate、权限治理、业务分析、复杂系统设计、多 Agent handoff、长任务 resume。
+
+`tool_skill_mcp_ablation_v3` 面向工程归因：比较 3 工具直连、14 工具平铺、router 分层、procedural skill + tools 的稳定性差异。
+
+推荐运行：
+
+```bash
+python3 scripts/run_minimax_evals.py \
+  --suite evals/suites/enterprise_agent_landing_v3.json \
+  --pass-k 1,3,5,7 \
+  --out results/minimax-enterprise-agent-v3.json
+
+python3 scripts/run_minimax_evals.py \
+  --suite evals/suites/tool_skill_mcp_ablation_v3.json \
+  --pass-k 1,3,5,7 \
+  --out results/minimax-tool-skill-mcp-ablation-v3.json
+```
+
+`minimax_canary_v1.json` 现在只应视为 smoke test，不应作为模型落地能力结论。

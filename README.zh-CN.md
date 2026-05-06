@@ -18,6 +18,8 @@
   ·
   <a href="./docs/evaluation-samples.zh-CN.md">评估样本示例</a>
   ·
+  <a href="./report/enterprise-agent-benchmark-methodology.zh-CN.md">企业级方法论</a>
+  ·
   <a href="./report/minimax-agent-usage-handbook.md">模型使用指南</a>
 </p>
 
@@ -27,7 +29,27 @@
 
 **Agent Peak Bench** 的目标是从系统视角评估模型：通过多轮重复、pass@k、skills/tool/context ablation、多 Agent 协作、harness 设计检查等方式，判断模型在什么条件下能够保持“尖峰时刻”，以及什么时候必须依赖外部工程约束。
 
-首个公开案例是 **MiniMax M2.7 High**，实际模型名为 `MiniMax-M2.7-highspeed`。
+首个公开案例是 **MiniMax M2.7 High**，实际模型名为 `MiniMax-M2.7-highspeed`。早期的 `minimax_canary_v1` 只保留为 smoke test；真正面向落地的主评测已经升级到 `enterprise_agent_landing_v3` 和 `tool_skill_mcp_ablation_v3`。
+
+## v3 方向：企业级 Agent 落地评测
+
+新评测不再把“记住某个字段”当作主能力，而是围绕真实企业 Agent 的端到端任务设计：
+
+| 评测集 | 目的 | 看什么 |
+| --- | --- | --- |
+| [`enterprise_agent_landing_v3.json`](./evals/suites/enterprise_agent_landing_v3.json) | 真实企业 Agent 场景 | 潜台词理解、多 MCP 工具调用、证据综合、权限治理、复杂需求拆解、长任务恢复。 |
+| [`tool_skill_mcp_ablation_v3.json`](./evals/suites/tool_skill_mcp_ablation_v3.json) | 工程机制归因 | 3 工具直连、14 工具平铺、router 分层、skill contract 对稳定性的影响。 |
+| [`enterprise-agent-benchmark-methodology.zh-CN.md`](./report/enterprise-agent-benchmark-methodology.zh-CN.md) | 一体化方法论 | 从评估到失败归因，再到 harness 设计和模型使用指南。 |
+
+v3 的结论形式不是“模型得了多少分”，而是：
+
+| 输出 | 作用 |
+| --- | --- |
+| 子能力矩阵 | 判断模型是否能推断潜台词、选工具、识别权限、引用证据。 |
+| 端到端完成率 | 判断一个真实业务流程能否被推进。 |
+| pass@k 稳定性 | 判断模型是“一次可用”还是“需要 retry/verifier 才可用”。 |
+| failure taxonomy | 失败归因到模型、工具、上下文、权限、schema 或 harness。 |
+| 工程设计建议 | 反推工具数量、MCP 分层、skills 写法、context 策略和 verifier 机制。 |
 
 ## 当前结果快照
 
@@ -41,6 +63,9 @@
 
 > [!NOTE]
 > 目前只报告 `pass@1/pass@3`，因为初始 canary 每个场景只有 3 次重复。`pass@5/pass@7` 需要每个场景至少 5/7 次 trial，否则会退化成 `pass@3`，属于伪指标。评测脚本已更新：样本不足时不再输出误导性的 pass@k，并提供 `--force-repeat 7` 用于重新测试。
+
+> [!IMPORTANT]
+> 上表是旧 canary 的初始结果，只能代表早期 smoke 质量，不代表 v3 企业级 Agent 落地能力。下一轮应以 `enterprise_agent_landing_v3` 为主评测。
 
 ## 为什么 pass@1 只有 25%，pass@3 达到 50%
 
@@ -123,7 +148,25 @@ flowchart LR
 
 ## pass@5 / pass@7 复测方式
 
-当前仓库已支持有效复测：
+当前仓库已支持有效复测。主评测建议直接运行 v3：
+
+```bash
+export MINIMAX_API_KEY="your_key"
+export MINIMAX_MODEL="MiniMax-M2.7-highspeed"
+export MINIMAX_API_BASE="https://api.minimaxi.com/anthropic/v1/messages"
+
+python3 scripts/run_minimax_evals.py \
+  --suite evals/suites/enterprise_agent_landing_v3.json \
+  --pass-k 1,3,5,7 \
+  --out results/minimax-enterprise-agent-v3.json
+
+python3 scripts/run_minimax_evals.py \
+  --suite evals/suites/tool_skill_mcp_ablation_v3.json \
+  --pass-k 1,3,5,7 \
+  --out results/minimax-tool-skill-mcp-ablation-v3.json
+```
+
+如果只是复测旧 canary：
 
 ```bash
 export MINIMAX_API_KEY="your_key"
@@ -147,6 +190,7 @@ python3 scripts/run_minimax_evals.py \
 | [`README.zh-CN.md`](./README.zh-CN.md) | 中文报告首页。 |
 | [`docs/index.html`](./docs/index.html) | GitHub Pages 在线报告。 |
 | [`docs/evaluation-samples.zh-CN.md`](./docs/evaluation-samples.zh-CN.md) | 具体评估样本和判分逻辑示例。 |
+| [`report/enterprise-agent-benchmark-methodology.zh-CN.md`](./report/enterprise-agent-benchmark-methodology.zh-CN.md) | 企业级 Agent benchmark 一体化方法论。 |
 | [`public/minimax-m27-high-summary.json`](./public/minimax-m27-high-summary.json) | 脱敏公开结果摘要。 |
 | [`evals/benchmark_manifest_v2.json`](./evals/benchmark_manifest_v2.json) | 任务族、指标、harness modes、ablation axes。 |
 | [`evals/suites/`](./evals/suites) | 评测样本 suite。 |

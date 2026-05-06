@@ -34,7 +34,7 @@ def main():
                     "id": result.get("id"),
                     "category": category,
                     "pass_rate": summary.get("pass_rate", 0.0),
-                    "pass_at_3": summary.get("pass_at_k", {}).get("3", False),
+                    "pass_at_k": summary.get("pass_at_k", {}),
                     "consistency": summary.get("exact_output_consistency", 0.0),
                     "avg_latency_ms": summary.get("avg_total_latency_ms", 0.0),
                 }

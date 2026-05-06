@@ -1,7 +1,7 @@
 {
-  "name": "agent_landing_benchmark_v2",
+  "name": "agent_landing_benchmark_v3",
   "version": "2026-05-06",
-  "purpose": "Evaluate model capability under agent-era harness conditions, including memory, tools, long-running workflows, context strategy, governance, and system readability.",
+  "purpose": "Evaluate model capability under realistic enterprise-agent harness conditions, including implicit intent, tools/MCP, skills, long-running workflows, context strategy, governance, failure attribution, and system design guidance.",
   "families": [
     {
       "id": "chat_memory",
@@ -59,6 +59,36 @@
     "latency_p95",
     "token_cost",
     "failure_taxonomy"
+  ],
+  "benchmark_tiers": [
+    {
+      "id": "L0_smoke",
+      "description": "API, schema, minimal tool-call and pass@k plumbing checks. Not suitable for landing conclusions."
+    },
+    {
+      "id": "L1_capability_probe",
+      "description": "Focused probes for memory, tool choice, schema adherence, context pressure, and completion honesty."
+    },
+    {
+      "id": "L2_enterprise_scenario",
+      "description": "Realistic business tasks with implicit intent, multi-tool evidence, policy constraints, and end-to-end outputs."
+    },
+    {
+      "id": "L3_harness_ablation",
+      "description": "Compare engineering mechanisms such as focused tools, flat overloaded tools, router layering, procedural skills, verifier loops, and context reset."
+    },
+    {
+      "id": "L4_deployment_canary",
+      "description": "Run small sanitized traces against production-like tools, permissions, latency budgets, and audit requirements."
+    }
+  ],
+  "deployment_questions": [
+    "Which enterprise scenarios can the model complete on the first attempt?",
+    "Which scenarios become reliable only with pass@k retry, verifier, or repair loops?",
+    "How many tools can be exposed directly before tool precision degrades?",
+    "Does router layering improve tool stability compared with a flat MCP surface?",
+    "Which skill format improves output completeness without hiding missing evidence?",
+    "Which failures are model limitations versus harness design failures?"
   ],
   "harness_modes": [
     "solo",

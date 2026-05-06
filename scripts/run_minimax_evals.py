@@ -96,6 +96,12 @@ def parse_json_from_text(text: str):
     return None
 
 
+def stringify_json_value(value) -> str:
+    if isinstance(value, str):
+        return value
+    return json.dumps(value, ensure_ascii=False, sort_keys=True)
+
+
 def extract_tool_uses(content_blocks) -> list:
     calls = []
     for block in content_blocks or []:
@@ -151,6 +157,12 @@ def evaluate_text(text: str, spec: dict, tool_names: list, metrics: dict) -> dic
         passed = ci_text(needle) not in lowered
         checks.append({"check": f"must_not_contain:{needle}", "passed": passed})
 
+    for index, item in enumerate(spec.get("must_contain_any", []), start=1):
+        options = item.get("options", []) if isinstance(item, dict) else item
+        label = item.get("name", str(index)) if isinstance(item, dict) else str(index)
+        passed = any(ci_text(option) in lowered for option in options)
+        checks.append({"check": f"must_contain_any:{label}", "passed": passed})
+
     if "min_chars" in spec:
         passed = len(text) >= int(spec["min_chars"])
         checks.append({"check": f"min_chars:{spec['min_chars']}", "passed": passed})
@@ -163,6 +175,22 @@ def evaluate_text(text: str, spec: dict, tool_names: list, metrics: dict) -> dic
     for tool in required_tools:
         passed = tool in tool_names
         checks.append({"check": f"required_tool:{tool}", "passed": passed})
+
+    for index, group in enumerate(spec.get("required_tool_name_groups", []), start=1):
+        passed = any(tool in tool_names for tool in group)
+        checks.append({"check": f"required_tool_group:{index}", "passed": passed})
+
+    for tool in spec.get("forbidden_tool_names", []):
+        passed = tool not in tool_names
+        checks.append({"check": f"forbidden_tool:{tool}", "passed": passed})
+
+    if "min_tool_calls" in spec:
+        passed = len(tool_names) >= int(spec["min_tool_calls"])
+        checks.append({"check": f"min_tool_calls:{spec['min_tool_calls']}", "passed": passed})
+
+    if "max_tool_calls" in spec:
+        passed = len(tool_names) <= int(spec["max_tool_calls"])
+        checks.append({"check": f"max_tool_calls:{spec['max_tool_calls']}", "passed": passed})
 
     if spec.get("required_tool_sequence"):
         required = spec["required_tool_sequence"]
@@ -180,6 +208,21 @@ def evaluate_text(text: str, spec: dict, tool_names: list, metrics: dict) -> dic
         subset = spec["json_subset"]
         passed = isinstance(parsed_json, dict) and all(parsed_json.get(key) == value for key, value in subset.items())
         checks.append({"check": f"json_subset:{','.join(subset.keys())}", "passed": passed})
+
+    for key, needles in spec.get("json_key_contains", {}).items():
+        if parsed_json is None:
+            parsed_json = parse_json_from_text(text)
+        value_text = stringify_json_value(parsed_json.get(key, "")) if isinstance(parsed_json, dict) else ""
+        value_text = ci_text(value_text)
+        passed = all(ci_text(needle) in value_text for needle in needles)
+        checks.append({"check": f"json_key_contains:{key}", "passed": passed})
+
+    for key, min_length in spec.get("json_array_min_length", {}).items():
+        if parsed_json is None:
+            parsed_json = parse_json_from_text(text)
+        value = parsed_json.get(key) if isinstance(parsed_json, dict) else None
+        passed = isinstance(value, list) and len(value) >= int(min_length)
+        checks.append({"check": f"json_array_min_length:{key}:{min_length}", "passed": passed})
 
     if spec.get("json_equals"):
         if parsed_json is None:
@@ -445,6 +488,7 @@ def main() -> int:
             "description": suite.get("description", ""),
             "results": [],
         }
+        suite_default_repeat = int(suite.get("default_repeat", args.repeat))
         for scenario in scenarios:
             if scenario.get("skip_by_default") and not args.include_skipped:
                 suite_output["results"].append(
@@ -459,7 +503,7 @@ def main() -> int:
 
             print(f"Running {scenario['id']}...", file=sys.stderr)
             total_scenarios += 1
-            repeat_count = int(args.force_repeat or scenario.get("repeat", args.repeat))
+            repeat_count = int(args.force_repeat or scenario.get("repeat", suite_default_repeat))
             trials = []
             for trial_index in range(repeat_count):
                 print(f"  trial {trial_index + 1}/{repeat_count}", file=sys.stderr)
