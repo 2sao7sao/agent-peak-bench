@@ -9,13 +9,13 @@
 这份报告不是基于旧的 `smoke/ablation suites` 直接下结论，而是在做了三件事之后形成的：
 
 1. 先审查现有框架为何不能算真实 benchmark  
-   见：[benchmark-framework-review.md](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/report/benchmark-framework-review.md)
+   见：[benchmark-framework-review.md](./benchmark-framework-review.md)
 
 2. 先盘点公开 benchmark 的方法论，再抽取更合理的设计原则  
-   见：[benchmark-landscape-analysis.md](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/report/benchmark-landscape-analysis.md)
+   见：[benchmark-landscape-analysis.md](./benchmark-landscape-analysis.md)
 
 3. 构建一套小而硬的 `canary benchmark` 做第一轮 live test  
-   见：[minimax_canary_v1.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/minimax_canary_v1.json)
+   见：[minimax_canary_v1.json](../evals/suites/minimax_canary_v1.json)
 
 ## 2. 对 benchmark 设计的先验结论
 
@@ -77,7 +77,7 @@
 
 结果文件：
 
-- [results/minimax-canary-v1-live-calibrated.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/results/minimax-canary-v1-live-calibrated.json)
+- [results/minimax-canary-v1-live-calibrated.json](../results/minimax-canary-v1-live-calibrated.json)
 
 总体指标：
 

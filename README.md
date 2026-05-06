@@ -1,122 +1,267 @@
 # Agent Peak Bench
 
-Agent Peak Bench is a harness-first benchmark kit for evaluating whether agentic models can stay in a high-performing operating state under realistic system conditions.
+<p align="center">
+  <strong>Harness-first benchmark for evaluating whether agentic models stay useful under real engineering pressure.</strong>
+</p>
 
-The first published model case is `MiniMax-M2.7-highspeed`, reported as `MiniMax M2.7 High`.
+<p align="center">
+  <a href="https://2sao7sao.github.io/agent-peak-bench/"><img alt="Live Report" src="https://img.shields.io/badge/report-live-0f766e?style=for-the-badge"></a>
+  <a href="./public/minimax-m27-high-summary.json"><img alt="Sanitized JSON" src="https://img.shields.io/badge/results-sanitized_JSON-2563eb?style=for-the-badge"></a>
+  <a href="./evals/benchmark_manifest_v2.json"><img alt="Benchmark Manifest" src="https://img.shields.io/badge/benchmark-v2.0-111827?style=for-the-badge"></a>
+  <img alt="No Secrets" src="https://img.shields.io/badge/secrets-not_published-b91c1c?style=for-the-badge">
+</p>
 
-## Public Report
+<p align="center">
+  <a href="https://2sao7sao.github.io/agent-peak-bench/">Interactive report</a>
+  ·
+  <a href="./report/minimax-initial-live-report-2026-05-06.md">MiniMax live report</a>
+  ·
+  <a href="./report/minimax-agent-usage-handbook.md">Usage handbook</a>
+  ·
+  <a href="./evals/README.md">Evaluation suites</a>
+</p>
 
-- [docs/index.html](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/docs/index.html): public report page with radar chart and dimension scores
-- [public/minimax-m27-high-summary.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/public/minimax-m27-high-summary.json): sanitized public result summary
-- [report/public-release-summary.md](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/report/public-release-summary.md): release summary
+## Abstract
 
-Current MiniMax M2.7 High live canary:
+Most model benchmarks compress performance into a single score. That is useful for ranking, but weak for deployment: agent systems fail because of context pressure, tool overloading, state drift, vague skills, weak verification, and long-running workflow collapse.
 
-- `pass@1 = 25%`
-- `pass@3 = 50%`
-- best dimension: short schema-constrained memory
-- riskiest dimensions: long noisy history, strict workflow orchestration, skill-only control
+**Agent Peak Bench** evaluates models from a system perspective. It combines repeatability tests, pass@k, skill/tool/window ablations, multi-agent handoff tasks, and harness-level checks to answer a practical question:
 
-This repository includes:
+> Under which engineering conditions does a model reach its peak operating state, and where does it become unreliable?
 
-- A Chinese `system card` style report modeled after Anthropic's long-form release notes
-- A harness-oriented practical evaluation playbook for chatbot / agent / multi-agent scenarios
-- A MiniMax agent usage handbook covering skills, tools, windows, decomposition, and unsuitable scenarios
-- A polished single-page HTML report that can be exported to PDF
-- An automated evaluation harness for smoke tests, ablations, and benchmark prototyping
+The first published case is **MiniMax M2.7 High**, implemented through `MiniMax-M2.7-highspeed`.
 
-## Files
+## Result Snapshot
 
-- [report/minimax-m27-system-card.md](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/report/minimax-m27-system-card.md)
-- [report/minimax-m27-system-card.html](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/report/minimax-m27-system-card.html)
-- [report/minimax-harness-eval-playbook.md](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/report/minimax-harness-eval-playbook.md)
-- [report/minimax-agent-usage-handbook.md](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/report/minimax-agent-usage-handbook.md)
-- [report/benchmark-framework-review.md](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/report/benchmark-framework-review.md)
-- [report/agent-era-benchmark-principles.md](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/report/agent-era-benchmark-principles.md)
-- [report/open-claude-code-system-analysis.md](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/report/open-claude-code-system-analysis.md)
-- [evals/README.md](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/README.md)
-- [evals/benchmark_manifest_v2.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/benchmark_manifest_v2.json)
-- [evals/blueprints/minimax_real_task_benchmark.md](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/blueprints/minimax_real_task_benchmark.md)
-- [scripts/run_minimax_evals.py](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/scripts/run_minimax_evals.py)
-- [scripts/check_benchmark_distribution.py](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/scripts/check_benchmark_distribution.py)
-- [evals/suites/context_windows.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/context_windows.json)
-- [evals/suites/tool_and_workflow.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/tool_and_workflow.json)
-- [evals/suites/complex_systems.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/complex_systems.json)
-- [evals/suites/behavior_and_rigor.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/behavior_and_rigor.json)
-- [evals/suites/chatbot_memory_latency.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/chatbot_memory_latency.json)
-- [evals/suites/agent_workflow_practice.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/agent_workflow_practice.json)
-- [evals/suites/multi_agent_content_harness.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/multi_agent_content_harness.json)
-- [evals/suites/repeatability_passk.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/repeatability_passk.json)
-- [evals/suites/skill_design_ablation.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/skill_design_ablation.json)
-- [evals/suites/tool_count_ablation.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/tool_count_ablation.json)
-- [evals/suites/window_and_decomposition_ablation.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/window_and_decomposition_ablation.json)
-- [evals/suites/agent_harness_design_v2.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/agent_harness_design_v2.json)
-- [evals/suites/harness_load_bearing_ablation_v2.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/harness_load_bearing_ablation_v2.json)
-- [evals/suites/agent_landing_distribution_v2.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/agent_landing_distribution_v2.json)
+| Model case | Date | Suite | Scenarios | Trials | pass@1 | pass@3 | Interpretation |
+| --- | --- | --- | ---: | ---: | ---: | ---: | --- |
+| MiniMax M2.7 High | 2026-05-06 | `minimax_canary_v1` | 8 | 24 | 25% | 50% | Strong short-context memory; unstable under noisy long history, strict workflow control, and skill-only governance. |
 
-## Run the evaluator
+<p align="center">
+  <img alt="MiniMax M2.7 High radar chart" src="./docs/assets/minimax-m27-high-radar.svg" width="720">
+</p>
 
-Set your API key and choose the model:
+| Dimension | Score | Evaluation conclusion | Deployment guidance |
+| --- | ---: | --- | --- |
+| Short schema-constrained memory | 95 | Stable across repeated trials. | Good fit for short chatbot state, preference recall, and structured memory extraction. |
+| Tool-error honesty | 50 | Can acknowledge failures, but may still overstate resolution. | Require explicit tool status fields and verifier checks before user-facing claims. |
+| Structured decomposition | 50 | Can produce strong output when the task is phased, but consistency is limited. | Use planner/generator/evaluator loops instead of one-shot long tasks. |
+| Harness fit | 42 | Needs external contracts and test harness support. | Treat the model as a capable worker inside a controlled harness, not as the whole system. |
+| Grounded workflow | 35 | Plausible reasoning does not reliably satisfy strict JSON/tool-order constraints. | Add schema validation, retries, and state-machine guards. |
+| Skill adherence | 35 | Skill-style prompts improve shape but do not guarantee complete execution. | Keep skills narrow, procedural, and testable; avoid broad persona-style skills. |
+| Context window stability | 30 | Compact context is recoverable; expanded noisy context degrades. | Prefer compaction, summaries, and retrieval over dumping full history. |
+| Long noisy history | 20 | Fails in the current canary under noisy-history pressure. | Use memory extraction and reset windows; do not rely on raw chat history alone. |
+
+> [!IMPORTANT]
+> These are initial canary results, not a production leaderboard. The value of the benchmark is the diagnostic shape: it identifies which harness design choices improve model reliability.
+
+## Benchmark Design
+
+Agent Peak Bench follows the benchmark style used by modern model reports such as [MMBench](https://arxiv.org/pdf/2307.06281): define a hierarchical ability taxonomy, balance task families, apply quality control, and report fine-grained capability slices instead of only an aggregate score.
+
+```mermaid
+flowchart LR
+  A["Agent Peak Bench"] --> B["Chatbot Reliability"]
+  A --> C["Agent Workflow"]
+  A --> D["Multi-Agent Systems"]
+  A --> E["Harness Engineering"]
+
+  B --> B1["Memory"]
+  B --> B2["History Compression"]
+  B --> B3["Latency"]
+
+  C --> C1["Planning"]
+  C --> C2["Tool Recovery"]
+  C --> C3["Exit Criteria"]
+
+  D --> D1["Role Handoff"]
+  D --> D2["Conflict Resolution"]
+  D --> D3["Integration"]
+
+  E --> E1["Context Strategy"]
+  E --> E2["Verifier Loop"]
+  E --> E3["Governance"]
+```
+
+### Task Families
+
+| Family | Weight | What it tests |
+| --- | ---: | --- |
+| `chat_memory` | 10% | Multi-turn preference retention, memory extraction, and history compression. |
+| `structured_workflow` | 15% | Evidence collection, state updates, process completion, and grounded decisions. |
+| `tool_recovery` | 15% | Tool selection, tool failure handling, retries, fallback, and hallucination resistance. |
+| `coding_cli_repo` | 15% | Repository navigation, file mutation, test execution, and executable verification. |
+| `long_running_harness` | 15% | Planner/generator/evaluator loops, sprint contracts, resume, and verifier feedback. |
+| `context_engineering` | 10% | Context maps, compaction, reset windows, and pressure under long histories. |
+| `multi_agent_coordination` | 10% | Role separation, handoff quality, conflict resolution, and integration planning. |
+| `system_governance` | 10% | Permissions, sandboxing, hooks, audit trails, observability, and policy constraints. |
+
+### Metrics
+
+| Metric | Why it matters for agent deployment |
+| --- | --- |
+| `pass@1` | Measures first-try usability. Critical for interactive products. |
+| `pass@k` | Measures recoverability and consistency under repeated attempts. |
+| `semantic_consistency` | Detects whether the model reaches the same conclusion across repeats. |
+| `exact_output_consistency` | Detects schema drift and JSON/contract instability. |
+| `tool_precision` | Measures whether the model chooses the right tool at the right time. |
+| `completion_honesty` | Penalizes false claims of completion, hidden failures, and fabricated verification. |
+| `verification_coverage` | Measures whether the answer is backed by executable checks, citations, or test evidence. |
+| `latency_p50 / latency_p95` | Captures user-facing and workflow-facing time cost. |
+| `failure_taxonomy` | Turns failures into actionable harness changes. |
+
+## Evaluation Protocol
+
+Agent Peak Bench is designed to avoid the common failure mode of benchmark theater: a score that looks objective but does not map to deployment decisions.
+
+| Stage | Control | Purpose |
+| --- | --- | --- |
+| Ability taxonomy | L1/L2/L3 task hierarchy | Prevents a single task class from dominating conclusions. |
+| Distribution check | Weighted task families | Keeps chatbot, workflow, tooling, context, and governance pressure visible. |
+| Repeated trials | `repeat` + `pass@k` | Separates lucky completions from stable behavior. |
+| Schema constraints | Exact JSON and field checks | Detects practical integration failures that semantic grading can miss. |
+| Semantic checks | Keyword, judge, and rubric checks | Reduces false negatives where exact matching is too brittle. |
+| Ablations | Skills, tools, context, planner, evaluator | Converts benchmark results into system design recommendations. |
+| Sanitized release | Public summary only | Publishes model findings without exposing raw credentials or private traces. |
+
+## MiniMax M2.7 High Practical Guide
+
+### When to Use It
+
+| Scenario | Fit | Recommended harness |
+| --- | --- | --- |
+| Short chatbot memory | High | Structured memory slots, compact history, deterministic extraction format. |
+| Content drafting with clear rubric | Medium-high | Provide outline, acceptance criteria, and a final self-check list. |
+| Simple workflow agent | Medium | Use explicit state machine, small tool surface, and retry-on-schema-failure. |
+| Multi-agent content + harness split | Medium | Separate `Content Engineer` and `Harness Engineer`; force handoff artifacts. |
+| Long noisy enterprise chat history | Low without harness | Summarize, retrieve, and reset; do not send raw full history. |
+| Tool-heavy autonomous agent | Low without routing | Use tool routers, permission gates, and verifier loops. |
+| Compliance-critical automation | Not sufficient alone | Require external policy checks, audit logs, and human approval. |
+
+### Context Window Guidance
+
+| Task level | Recommended context style | Rationale |
+| --- | --- | --- |
+| Simple Q&A / short chatbot task | Small active window with structured memory | Best observed stability. |
+| Repeated simple operations | Same prompt contract, repeated trials, pass@k tracking | Measures consistency instead of single-shot quality. |
+| Medium workflow | Compact task packet + state table + tool contract | Reduces drift and keeps the model grounded. |
+| Large repo or long document | Retrieval + map + targeted excerpts | Avoids noisy-context degradation. |
+| Complex system design | Multi-window decomposition with handoff summaries | Keeps each step locally verifiable. |
+| Long-running agent | Planner/generator/evaluator loop with checkpoints | The harness carries continuity; the model performs bounded work. |
+
+### Skill Design Guidance
+
+Effective skills for MiniMax M2.7 High should be:
+
+| Skill property | Recommendation |
+| --- | --- |
+| Scope | One operational capability per skill. Avoid mixing persona, domain theory, and execution rules. |
+| Format | Use numbered procedure, required outputs, forbidden behaviors, and stop conditions. |
+| Verification | Include a small acceptance checklist that the harness can parse. |
+| Tool contract | Name allowed tools and expected evidence fields. |
+| Context | Include only reusable operating rules, not task-specific bulk data. |
+
+Avoid skills that are broad, motivational, or purely stylistic. In the initial canary, skill-style prompting improved output shape but did not reliably guarantee all required sections.
+
+### Tooling Guidance
+
+| Tool surface | Expected behavior | Recommendation |
+| --- | --- | --- |
+| 1-3 focused tools | Usually manageable. | Good for simple workflow agents. |
+| 4-8 related tools | Requires explicit selection policy. | Add tool-choice rubric and schema validation. |
+| 9-15 mixed tools | Higher risk of hesitation, redundant calls, or wrong abstraction. | Use a router or `ToolSearch`-style discovery layer. |
+| 15+ exposed tools | Likely to reduce stability unless strongly indexed. | Do not expose all tools directly; stage by task phase. |
+
+The important variable is not only tool count. Tool similarity, naming clarity, permission mode, error messages, and observable feedback all affect reliability.
+
+### Complex-System Pattern
+
+For complex systems, use MiniMax M2.7 High as a bounded reasoning and generation component inside a stronger harness.
+
+```mermaid
+sequenceDiagram
+  participant U as User Goal
+  participant P as Planner
+  participant W as Worker Model
+  participant T as Tools
+  participant V as Verifier
+  participant M as Memory
+
+  U->>P: Convert goal into contract
+  P->>M: Load relevant state
+  P->>W: Assign bounded task packet
+  W->>T: Use only allowed tools
+  T-->>W: Return evidence or failure
+  W->>V: Submit artifact + self-check
+  V-->>P: Pass/fail + diagnostics
+  P->>M: Persist compact handoff
+  P-->>U: Report verified progress
+```
+
+## Repository Map
+
+| Path | Purpose |
+| --- | --- |
+| [`docs/index.html`](./docs/index.html) | Published report page with radar chart and model conclusions. |
+| [`public/minimax-m27-high-summary.json`](./public/minimax-m27-high-summary.json) | Sanitized public summary used for release reporting. |
+| [`report/minimax-initial-live-report-2026-05-06.md`](./report/minimax-initial-live-report-2026-05-06.md) | Initial live canary report. |
+| [`report/minimax-agent-usage-handbook.md`](./report/minimax-agent-usage-handbook.md) | Practical usage guide for skills, tools, context, and complex systems. |
+| [`report/agent-era-benchmark-principles.md`](./report/agent-era-benchmark-principles.md) | Benchmark design principles for agent-era evaluation. |
+| [`report/open-claude-code-system-analysis.md`](./report/open-claude-code-system-analysis.md) | Analysis of Claude Code-like harness design patterns. |
+| [`evals/benchmark_manifest_v2.json`](./evals/benchmark_manifest_v2.json) | Task-family weights, metrics, harness modes, and ablation axes. |
+| [`evals/suites/`](./evals/suites) | Smoke tests, ablation suites, and landing-distribution tasks. |
+| [`scripts/run_minimax_evals.py`](./scripts/run_minimax_evals.py) | MiniMax-compatible evaluator runner. |
+| [`scripts/check_benchmark_distribution.py`](./scripts/check_benchmark_distribution.py) | Distribution sanity check for task-family coverage. |
+
+<details>
+<summary><strong>Evaluation suite inventory</strong></summary>
+
+| Suite | Focus |
+| --- | --- |
+| `repeatability_passk.json` | Repeated simple-task tests for pass@k, consistency, and jitter. |
+| `skill_design_ablation.json` | Vague vs structured skill-writing styles. |
+| `tool_count_ablation.json` | Focused vs overloaded tool surfaces. |
+| `window_and_decomposition_ablation.json` | Compact vs expanded context and single-shot vs phased decomposition. |
+| `agent_harness_design_v2.json` | Maps, contracts, evaluator separation, context reset, and governance. |
+| `harness_load_bearing_ablation_v2.json` | Planner/evaluator/contracts/resume/ToolSearch ablation canaries. |
+| `agent_landing_distribution_v2.json` | Coding, workflow, tool recovery, multi-agent, and governance tasks. |
+| `chatbot_memory_latency.json` | Pure chatbot memory, history stability, and latency. |
+| `agent_workflow_practice.json` | Grounded execution and exit criteria. |
+| `multi_agent_content_harness.json` | `Content Engineer` + `Harness Engineer` role split. |
+| `context_windows.json` | Long-context retrieval and anti-drift tests. |
+| `tool_and_workflow.json` | Interleaved tool use and synthesis. |
+| `complex_systems.json` | Architecture and multi-window design. |
+| `behavior_and_rigor.json` | Anti-laziness and completion-honesty tests. |
+
+</details>
+
+## Reproduce
+
+Set your API key locally. Do not commit it.
 
 ```bash
 export MINIMAX_API_KEY="your_key"
 export MINIMAX_MODEL="MiniMax-M2.7-highspeed"
+export MINIMAX_API_BASE="https://api.minimaxi.com/anthropic/v1/messages"
+```
+
+Run representative suites:
+
+```bash
 python3 scripts/run_minimax_evals.py --suite evals/suites/repeatability_passk.json --repeat 5 --pass-k 1,3,5
 python3 scripts/run_minimax_evals.py --suite evals/suites/skill_design_ablation.json
 python3 scripts/run_minimax_evals.py --suite evals/suites/tool_count_ablation.json --include-skipped
 python3 scripts/run_minimax_evals.py --suite evals/suites/window_and_decomposition_ablation.json
 python3 scripts/run_minimax_evals.py --suite evals/suites/agent_harness_design_v2.json --repeat 3 --pass-k 1,3
-python3 scripts/run_minimax_evals.py --suite evals/suites/harness_load_bearing_ablation_v2.json --repeat 3 --pass-k 1,3
-python3 scripts/run_minimax_evals.py --suite evals/suites/agent_landing_distribution_v2.json --repeat 3 --pass-k 1,3
-python3 scripts/run_minimax_evals.py --suite evals/suites/chatbot_memory_latency.json
-python3 scripts/run_minimax_evals.py --suite evals/suites/agent_workflow_practice.json
-python3 scripts/run_minimax_evals.py --suite evals/suites/multi_agent_content_harness.json
-python3 scripts/run_minimax_evals.py --suite evals/suites/context_windows.json
-python3 scripts/run_minimax_evals.py --suite evals/suites/tool_and_workflow.json
-```
-
-Useful environment variables:
-
-```bash
-export MINIMAX_API_BASE="https://api.minimax.io/anthropic"
-export MINIMAX_MODEL="MiniMax-M2.7"
-export MINIMAX_TIMEOUT_SECONDS="300"
-```
-
-Results are written under [results](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/results).
-
-Check task-family coverage:
-
-```bash
 python3 scripts/check_benchmark_distribution.py
 ```
 
-## Harness-Oriented Coverage
+Results are written to `results/`, which is intentionally ignored by git. Publish only sanitized summaries.
 
-- `repeatability_passk.json`: repeated simple-task tests for pass@k, consistency, and jitter
-- `skill_design_ablation.json`: compare vague vs structured skill-writing styles
-- `tool_count_ablation.json`: compare focused vs overloaded tool surfaces
-- `window_and_decomposition_ablation.json`: compare compact vs expanded context and single-shot vs phased task decomposition
-- `agent_harness_design_v2.json`: system-level checks for maps, contracts, evaluator separation, context reset, and governance
-- `harness_load_bearing_ablation_v2.json`: ablation canaries for planner/evaluator/contracts/resume/ToolSearch
-- `agent_landing_distribution_v2.json`: distribution-balancing cases for coding, workflow, tool recovery, multi-agent coordination, and governance
-- `chatbot_memory_latency.json`: pure chatbot tests for memory recall, history stability, and latency
-- `agent_workflow_practice.json`: simple agent/workflow tests for grounded execution and exit criteria
-- `multi_agent_content_harness.json`: multi-agent role split tests for `Content Engineer` + `Harness Engineer`
-- `context_windows.json`: long-context retrieval and anti-drift tests
-- `tool_and_workflow.json`: interleaved tool use and synthesis tests
-- `complex_systems.json`: architecture and multi-window design tests
-- `behavior_and_rigor.json`: anti-laziness and completion-honesty tests
+## Security and Scope
 
-## Important Scope
-
-- Current `evals/suites/*.json` are `smoke + ablation` assets, not a production-grade benchmark.
-- Their purpose is to compare prompting, skills, tools, windows, and workflow designs.
-- Real benchmark work should follow the blueprint in `evals/blueprints/` and the critique in `report/benchmark-framework-review.md`.
-
-## Notes
-
-- The report assumes the user means `MiniMax-M2.7-highspeed` when saying `m2.7high`.
-- The evaluator uses the Anthropic-compatible endpoint because MiniMax officially recommends it for thinking blocks, interleaved thinking, and prompt-cache workflows.
-- The evaluator records `first_round_latency_ms`, `total_latency_ms`, per-round metrics, final token usage, repeated-trial summaries, and `pass@k`.
-- Large context tests can be expensive. The suite marks some high-token cases as `skip_by_default`.
+- No API keys, bearer tokens, or raw credentials are included in the public report.
+- Raw result files under `results/` are local-only and gitignored.
+- Current suites are `smoke + ablation` assets, not a final production-grade leaderboard.
+- The benchmark is model-agnostic and is designed to expand from MiniMax to other agentic models.
+- The main goal is not to prove that one model is globally better; it is to identify the harness conditions that make each model reliable.

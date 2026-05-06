@@ -232,9 +232,9 @@ runner、history/memory 机制、latency 和 token 指标、tool traces、结果
 
 本仓库现在已经有三组新增 suite：
 
-- [evals/suites/chatbot_memory_latency.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/chatbot_memory_latency.json)
-- [evals/suites/agent_workflow_practice.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/agent_workflow_practice.json)
-- [evals/suites/multi_agent_content_harness.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/multi_agent_content_harness.json)
+- [evals/suites/chatbot_memory_latency.json](../evals/suites/chatbot_memory_latency.json)
+- [evals/suites/agent_workflow_practice.json](../evals/suites/agent_workflow_practice.json)
+- [evals/suites/multi_agent_content_harness.json](../evals/suites/multi_agent_content_harness.json)
 
 同时 runner 现在会记录：
 
@@ -245,7 +245,7 @@ runner、history/memory 机制、latency 和 token 指标、tool traces、结果
 
 对应 runner：
 
-- [scripts/run_minimax_evals.py](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/scripts/run_minimax_evals.py)
+- [scripts/run_minimax_evals.py](../scripts/run_minimax_evals.py)
 
 ## 7. 给 MiniMax 的最佳实用指南
 

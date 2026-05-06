@@ -303,10 +303,10 @@ MiniMax 官方给出的核心信号有两个：
 
 新的 suite：
 
-- [evals/suites/repeatability_passk.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/repeatability_passk.json)
-- [evals/suites/skill_design_ablation.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/skill_design_ablation.json)
-- [evals/suites/tool_count_ablation.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/tool_count_ablation.json)
-- [evals/suites/window_and_decomposition_ablation.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/evals/suites/window_and_decomposition_ablation.json)
+- [evals/suites/repeatability_passk.json](../evals/suites/repeatability_passk.json)
+- [evals/suites/skill_design_ablation.json](../evals/suites/skill_design_ablation.json)
+- [evals/suites/tool_count_ablation.json](../evals/suites/tool_count_ablation.json)
+- [evals/suites/window_and_decomposition_ablation.json](../evals/suites/window_and_decomposition_ablation.json)
 
 runner 新能力：
 
@@ -317,7 +317,7 @@ runner 新能力：
 
 对应脚本：
 
-- [scripts/run_minimax_evals.py](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/scripts/run_minimax_evals.py)
+- [scripts/run_minimax_evals.py](../scripts/run_minimax_evals.py)
 
 ## 9. 最后的建议
 

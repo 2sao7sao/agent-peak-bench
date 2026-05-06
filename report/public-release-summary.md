@@ -10,9 +10,9 @@ This name is intentionally model-agnostic. The first published case is MiniMax M
 
 ## Published Assets
 
-- Public report page: [docs/index.html](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/docs/index.html)
-- Public sanitized summary: [public/minimax-m27-high-summary.json](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/public/minimax-m27-high-summary.json)
-- Detailed local report: [report/minimax-initial-live-report-2026-05-06.md](/Users/caogang02/Documents/Codex/2026-05-06/github-https-www-cdn-anthropic-com/report/minimax-initial-live-report-2026-05-06.md)
+- Public report page: [docs/index.html](../docs/index.html)
+- Public sanitized summary: [public/minimax-m27-high-summary.json](../public/minimax-m27-high-summary.json)
+- Detailed local report: [report/minimax-initial-live-report-2026-05-06.md](./minimax-initial-live-report-2026-05-06.md)
 
 ## MiniMax M2.7 High Initial Scores
 
