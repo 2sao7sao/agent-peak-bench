@@ -4,6 +4,23 @@
 模型案例：`MiniMax-M2.7-highspeed`，报告中简称 **MiniMax M2.7 High**  
 定位：面向 Agent 落地的综合评估、归因、工程设计与模型使用指南
 
+## 声明
+
+本轮仅把 **MiniMax M2.7 High** 作为首个 case study。Agent Peak Bench 本身是模型无关评测体系，不是面向 MiniMax 定制的 benchmark。所有主评测集、指标、failure taxonomy、工具/skills/MCP 归因方式，都应尽量保持模型无关；后续可以对其他 Anthropic-compatible API 模型或适配后的其他 provider 复用。
+
+因此，文档和 runner 统一使用通用环境变量：
+
+| 变量 | 含义 |
+| --- | --- |
+| `MODEL_API_KEY` | 当前待测模型 API key。 |
+| `MODEL_NAME` | 当前待测模型名称。 |
+| `MODEL_API_BASE` | Anthropic-compatible API base URL。 |
+| `MODEL_TIMEOUT_SECONDS` | 单次请求超时时间。 |
+
+`MINIMAX_API_KEY`、`MINIMAX_MODEL`、`MINIMAX_API_BASE`、`MINIMAX_TIMEOUT_SECONDS` 只作为历史兼容别名保留。
+
+示例配置见 [`evals/model_config.example.json`](../evals/model_config.example.json)。该文件只记录 provider 形态，不保存真实 key。
+
 ## 0. 结论先行
 
 Agent Peak Bench 不再把早期 smoke/canary 作为模型能力结论。smoke 只用于确认 API、工具调用、JSON 解析、pass@k 聚合是否工作；它不应出现在 README 的主结论中，也不应作为模型落地能力证明。
@@ -194,7 +211,7 @@ Agent Peak Bench 不再把早期 smoke/canary 作为模型能力结论。smoke �
 | Repair loop | 针对缺失字段、缺失证据、工具错误做局部修复。 |
 | Human approval | 对高风险副作用保留人工批准。 |
 
-## 6. MiniMax M2.7 High 使用指南
+## 6. 当前 case study：MiniMax M2.7 High 使用假设
 
 在没有 v3 完整实测结果前，以下是基于当前体系的使用假设，必须通过主评测集复测确认：
 
@@ -213,6 +230,10 @@ Agent Peak Bench 不再把早期 smoke/canary 作为模型能力结论。smoke �
 主评测：
 
 ```bash
+export MODEL_API_KEY="your_key"
+export MODEL_NAME="MiniMax-M2.7-highspeed"
+export MODEL_API_BASE="https://api.minimaxi.com/anthropic/v1/messages"
+
 python3 scripts/run_minimax_evals.py \
   --suite evals/suites/enterprise_agent_landing_v3.json \
   --pass-k 1,3,5,7 \
@@ -251,7 +272,7 @@ python3 scripts/run_minimax_evals.py \
 
 ## 9. 下一步
 
-1. 使用真实 `MINIMAX_API_KEY` 运行三组主评测。
+1. 使用真实 `MODEL_API_KEY` 运行三组主评测。
 2. 生成统一结果 summary，而不是多个零散报告。
 3. 按场景输出 pass@1/3/5/7、工具调用稳定性、失败归因。
-4. 更新本综合报告中的“模型使用指南”，形成 MiniMax M2.7 High 的落地说明书。
+4. 更新本综合报告中的当前模型 case study，形成 MiniMax M2.7 High 的落地说明书。

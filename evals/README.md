@@ -76,3 +76,15 @@ python3 scripts/run_minimax_evals.py \
 ```
 
 运行结果应先用 `scripts/summarize_eval_results.py` 汇总，再统一写入综合报告，不要拆成多个独立结论文档。
+
+## 模型无关配置
+
+优先使用通用环境变量：
+
+```bash
+export MODEL_API_KEY="your_key"
+export MODEL_NAME="target-model-name"
+export MODEL_API_BASE="https://provider.example.com/anthropic/v1/messages"
+```
+
+`MINIMAX_*` 变量仍可作为兼容别名，但不应作为新文档的主配置方式。

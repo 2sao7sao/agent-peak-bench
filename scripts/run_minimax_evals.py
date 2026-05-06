@@ -413,19 +413,22 @@ def summarize_trials(trials: list, pass_k_values: list) -> dict:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run MiniMax M2.7 evaluation suites.")
+    parser = argparse.ArgumentParser(description="Run Agent Peak Bench evaluation suites.")
     parser.add_argument("--suite", action="append", required=True, help="Path to a suite JSON file.")
     parser.add_argument("--include-skipped", action="store_true", help="Run scenarios marked skip_by_default.")
-    parser.add_argument("--model", default=os.environ.get("MINIMAX_MODEL", "MiniMax-M2.7-highspeed"))
+    parser.add_argument(
+        "--model",
+        default=os.environ.get("MODEL_NAME") or os.environ.get("MINIMAX_MODEL", "MiniMax-M2.7-highspeed"),
+    )
     parser.add_argument(
         "--base-url",
-        default=os.environ.get("MINIMAX_API_BASE", "https://api.minimax.io/anthropic"),
-        help="Base URL, usually https://api.minimax.io/anthropic",
+        default=os.environ.get("MODEL_API_BASE") or os.environ.get("MINIMAX_API_BASE", "https://api.minimax.io/anthropic"),
+        help="Anthropic-compatible base URL. MODEL_API_BASE is preferred; MINIMAX_API_BASE is kept as a compatibility alias.",
     )
     parser.add_argument(
         "--timeout",
         type=int,
-        default=int(os.environ.get("MINIMAX_TIMEOUT_SECONDS", "300")),
+        default=int(os.environ.get("MODEL_TIMEOUT_SECONDS") or os.environ.get("MINIMAX_TIMEOUT_SECONDS", "300")),
         help="Per-request timeout in seconds.",
     )
     parser.add_argument(
@@ -455,11 +458,17 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    api_key = os.environ.get("MINIMAX_API_KEY") or os.environ.get("ANTHROPIC_API_KEY") or os.environ.get(
-        "ANTHROPIC_AUTH_TOKEN"
+    api_key = (
+        os.environ.get("MODEL_API_KEY")
+        or os.environ.get("MINIMAX_API_KEY")
+        or os.environ.get("ANTHROPIC_API_KEY")
+        or os.environ.get("ANTHROPIC_AUTH_TOKEN")
     )
     if not api_key:
-        print("Missing MINIMAX_API_KEY (or ANTHROPIC_API_KEY / ANTHROPIC_AUTH_TOKEN).", file=sys.stderr)
+        print(
+            "Missing MODEL_API_KEY. Compatibility aliases: MINIMAX_API_KEY, ANTHROPIC_API_KEY, ANTHROPIC_AUTH_TOKEN.",
+            file=sys.stderr,
+        )
         return 2
 
     endpoint = normalize_base_url(args.base_url)
@@ -546,7 +555,7 @@ def main() -> int:
         "suites": suite_results,
     }
 
-    out_path = Path(args.out).resolve() if args.out else ROOT / "results" / f"minimax-evals-{now_slug()}.json"
+    out_path = Path(args.out).resolve() if args.out else ROOT / "results" / f"agent-peak-evals-{now_slug()}.json"
     out_path.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2))
     print(f"\nWrote results to {out_path}")

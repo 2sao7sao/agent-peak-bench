@@ -29,6 +29,9 @@ Agent Peak Bench 不做单一排行榜分数。它要回答的是：
 
 本仓库的主入口是 [Agent Peak Bench 综合报告](./report/agent-peak-bench-integrated-report.zh-CN.md)。所有评估结论、方法论、OpenClaw 复杂任务方向、工具/skills/MCP 归因、MiniMax M2.7 High 使用指南，都统一收敛到这份报告中。
 
+> [!IMPORTANT]
+> 本轮只把 MiniMax M2.7 High 作为首个 case study。Agent Peak Bench 本身是模型无关 benchmark，不是面向 MiniMax 定制的评测。后续可以用同一套 suite、同一套指标，对任何 Anthropic-compatible API 模型或适配后的模型运行。
+
 早期 smoke/canary 只用于验证评测 runner 和接口链路，不作为 README 的模型能力结论。
 
 ## 主评测集
@@ -65,10 +68,12 @@ flowchart LR
 ## 运行方式
 
 ```bash
-export MINIMAX_API_KEY="your_key"
-export MINIMAX_MODEL="MiniMax-M2.7-highspeed"
-export MINIMAX_API_BASE="https://api.minimaxi.com/anthropic/v1/messages"
+export MODEL_API_KEY="your_key"
+export MODEL_NAME="MiniMax-M2.7-highspeed"
+export MODEL_API_BASE="https://api.minimaxi.com/anthropic/v1/messages"
 ```
+
+`MINIMAX_API_KEY`、`MINIMAX_MODEL`、`MINIMAX_API_BASE` 仍作为兼容别名保留，但新文档统一使用 `MODEL_*`，避免 benchmark 绑定单一模型。
 
 运行三组主评测：
 
@@ -101,8 +106,9 @@ python3 scripts/check_benchmark_distribution.py
 | --- | --- |
 | [`report/agent-peak-bench-integrated-report.zh-CN.md`](./report/agent-peak-bench-integrated-report.zh-CN.md) | 唯一主综合报告。 |
 | [`docs/evaluation-samples.zh-CN.md`](./docs/evaluation-samples.zh-CN.md) | 真实样本与判分逻辑示例。 |
+| [`evals/model_config.example.json`](./evals/model_config.example.json) | 模型无关 provider 配置示例，不包含真实 key。 |
 | [`evals/suites/`](./evals/suites) | 评测 suite。 |
-| [`scripts/run_minimax_evals.py`](./scripts/run_minimax_evals.py) | MiniMax 评测执行器。 |
+| [`scripts/run_minimax_evals.py`](./scripts/run_minimax_evals.py) | Anthropic-compatible API 评测执行器，保留旧文件名以避免破坏历史链接。 |
 | [`scripts/summarize_eval_results.py`](./scripts/summarize_eval_results.py) | 结果摘要脚本。 |
 | [`scripts/check_benchmark_distribution.py`](./scripts/check_benchmark_distribution.py) | 任务分布检查。 |
 

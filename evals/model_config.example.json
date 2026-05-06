@@ -1,0 +1,32 @@
+{
+  "benchmark": "Agent Peak Bench",
+  "note": "This is a documentation example only. Do not store real API keys in this file.",
+  "providers": [
+    {
+      "case_id": "minimax-m27-high",
+      "model_name": "MiniMax-M2.7-highspeed",
+      "api_base": "https://api.minimaxi.com/anthropic/v1/messages",
+      "api_key_env": "MODEL_API_KEY",
+      "protocol": "anthropic-compatible"
+    },
+    {
+      "case_id": "other-anthropic-compatible-model",
+      "model_name": "provider-model-name",
+      "api_base": "https://provider.example.com/anthropic/v1/messages",
+      "api_key_env": "MODEL_API_KEY",
+      "protocol": "anthropic-compatible"
+    }
+  ],
+  "recommended_environment": {
+    "MODEL_API_KEY": "read from environment only",
+    "MODEL_NAME": "target model name",
+    "MODEL_API_BASE": "anthropic-compatible /v1/messages endpoint",
+    "MODEL_TIMEOUT_SECONDS": "300"
+  },
+  "compatibility_aliases": {
+    "MINIMAX_API_KEY": "supported for historical MiniMax runs",
+    "MINIMAX_MODEL": "supported for historical MiniMax runs",
+    "MINIMAX_API_BASE": "supported for historical MiniMax runs",
+    "MINIMAX_TIMEOUT_SECONDS": "supported for historical MiniMax runs"
+  }
+}

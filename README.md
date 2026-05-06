@@ -29,6 +29,9 @@ Agent Peak Bench is not a single-score leaderboard. It is designed to answer a d
 
 The main entry point is the [integrated report](./report/agent-peak-bench-integrated-report.zh-CN.md), which consolidates methodology, enterprise scenarios, OpenClaw-inspired complex tasks, tool/skill/MCP attribution, and MiniMax M2.7 High usage guidance.
 
+> [!IMPORTANT]
+> This round only uses MiniMax M2.7 High as the first case study. Agent Peak Bench is model-agnostic and is not a MiniMax-specific benchmark. The same suites and metrics can be reused for any Anthropic-compatible API model, or for other providers after an adapter is added.
+
 Early smoke/canary results are kept only for runner validation and are not presented as README-level model conclusions.
 
 ## Primary Suites
@@ -65,10 +68,12 @@ flowchart LR
 ## Run
 
 ```bash
-export MINIMAX_API_KEY="your_key"
-export MINIMAX_MODEL="MiniMax-M2.7-highspeed"
-export MINIMAX_API_BASE="https://api.minimaxi.com/anthropic/v1/messages"
+export MODEL_API_KEY="your_key"
+export MODEL_NAME="MiniMax-M2.7-highspeed"
+export MODEL_API_BASE="https://api.minimaxi.com/anthropic/v1/messages"
 ```
+
+`MINIMAX_API_KEY`, `MINIMAX_MODEL`, and `MINIMAX_API_BASE` are still supported as compatibility aliases, but new documentation uses `MODEL_*` to keep the benchmark model-agnostic.
 
 Run the primary suites:
 
@@ -101,8 +106,9 @@ python3 scripts/check_benchmark_distribution.py
 | --- | --- |
 | [`report/agent-peak-bench-integrated-report.zh-CN.md`](./report/agent-peak-bench-integrated-report.zh-CN.md) | Single integrated report. |
 | [`docs/evaluation-samples.zh-CN.md`](./docs/evaluation-samples.zh-CN.md) | Realistic sample design and scoring examples. |
+| [`evals/model_config.example.json`](./evals/model_config.example.json) | Model-agnostic provider configuration example with no real keys. |
 | [`evals/suites/`](./evals/suites) | Evaluation suites. |
-| [`scripts/run_minimax_evals.py`](./scripts/run_minimax_evals.py) | MiniMax-compatible evaluator runner. |
+| [`scripts/run_minimax_evals.py`](./scripts/run_minimax_evals.py) | Anthropic-compatible evaluator runner. The filename is kept for backward compatibility. |
 | [`scripts/summarize_eval_results.py`](./scripts/summarize_eval_results.py) | Result summarizer. |
 | [`scripts/check_benchmark_distribution.py`](./scripts/check_benchmark_distribution.py) | Task-family distribution checker. |
 
