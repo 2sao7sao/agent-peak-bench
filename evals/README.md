@@ -1,30 +1,28 @@
 # Evals Layering
 
-这个目录现在被明确分成两类资产：
+这个目录现在被明确分成三类资产。主评测结论统一进入 [`report/agent-peak-bench-integrated-report.zh-CN.md`](../report/agent-peak-bench-integrated-report.zh-CN.md)，不要分散写多个互相割裂的结论文件。
 
-## 1. `suites/`
+## 1. 主评测 suites
 
-这里的内容目前主要是：
+主评测集：
 
-- smoke tests
-- prompt/workflow probes
-- ablation experiments
+- [`suites/enterprise_agent_landing_v3.json`](./suites/enterprise_agent_landing_v3.json)
+- [`suites/tool_skill_mcp_ablation_v3.json`](./suites/tool_skill_mcp_ablation_v3.json)
+- [`suites/openclaw_complex_agent_tasks_v1.json`](./suites/openclaw_complex_agent_tasks_v1.json)
 
-它们的用途是：
+这些 suite 用于形成模型落地结论：端到端能力、工具稳定性、OpenClaw 风格复杂任务、失败归因和工程设计建议。
 
-- 找方向
-- 验证接口
-- 比较 prompt、skill、tool、window 配置
+## 2. 辅助 probes / ablations
 
-它们的用途不是：
+其他 suite 主要用于局部归因或机制验证，例如 prompt、skill、tool、window、context、multi-agent handoff 的局部对比。它们可以支持主报告，但不应单独作为模型能力结论。
 
-- 充当真实 benchmark 分数
-- 代表企业级任务完成能力
-- 作为模型 leaderboard
+## 3. Smoke tests
 
-## 2. `blueprints/`
+`minimax_canary_v1.json` 只应视为 smoke test，用于验证 API、基础格式、工具调用、JSON 解析和 pass@k 聚合链路。它不应作为 README 或综合报告中的模型落地能力结论。
 
-这里用于存放未来的真实 benchmark 设计蓝图。
+## 4. `blueprints/`
+
+这里用于存放 benchmark 设计蓝图。
 
 一个 blueprint 至少应定义：
 
@@ -50,13 +48,7 @@
 4. `Deployment Canaries`
 用真实 API、真实工具、真实 traces 做小规模线上回归。
 
-## v3: 企业级 Agent 主评测
-
-当前更接近真实落地的主评测集是：
-
-- [`suites/enterprise_agent_landing_v3.json`](./suites/enterprise_agent_landing_v3.json)
-- [`suites/tool_skill_mcp_ablation_v3.json`](./suites/tool_skill_mcp_ablation_v3.json)
-- [`suites/openclaw_complex_agent_tasks_v1.json`](./suites/openclaw_complex_agent_tasks_v1.json)
+## v3: 主评测说明
 
 `enterprise_agent_landing_v3` 面向端到端企业任务：安全评审、续约风险、发布 gate、权限治理、业务分析、复杂系统设计、多 Agent handoff、长任务 resume。
 
@@ -83,4 +75,4 @@ python3 scripts/run_minimax_evals.py \
   --out results/minimax-openclaw-complex-v1.json
 ```
 
-`minimax_canary_v1.json` 现在只应视为 smoke test，不应作为模型落地能力结论。
+运行结果应先用 `scripts/summarize_eval_results.py` 汇总，再统一写入综合报告，不要拆成多个独立结论文档。
