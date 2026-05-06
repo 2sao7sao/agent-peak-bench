@@ -1,0 +1,54 @@
+{
+  "suite_name": "complex_systems",
+  "description": "Check whether the model structures long-horizon work instead of giving shallow generic advice.",
+  "scenarios": [
+    {
+      "id": "arch-plan-agent-harness",
+      "title": "Agent harness architecture plan",
+      "category": "architecture",
+      "system": "You are a principal engineer. Provide concrete architecture, not motivational prose.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "为一个使用 MiniMax-M2.7-highspeed 的代码代理系统设计架构。要求覆盖：上下文切分、prompt caching、工具循环、状态存储、验证层。请用中文回答，并分成 Architecture / State / Verification 三部分。"
+        }
+      ],
+      "max_tokens": 700,
+      "expected": {
+        "must_contain": [
+          "Architecture",
+          "State",
+          "Verification",
+          "prompt caching",
+          "工具",
+          "状态"
+        ],
+        "min_chars": 380
+      }
+    },
+    {
+      "id": "multi-window-runbook",
+      "title": "Multi-window runbook",
+      "category": "architecture",
+      "system": "You are a delivery engineer. Prefer phased workflow with explicit artifacts.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请给出一个针对超长任务的两窗口运行手册。必须包含窗口 1 做什么、窗口 2 做什么、tests.py 或 tests.json、init.sh，以及何时重启窗口而不是压缩上下文。"
+        }
+      ],
+      "max_tokens": 650,
+      "expected": {
+        "must_contain": [
+          "窗口 1",
+          "窗口 2",
+          "tests.py",
+          "tests.json",
+          "init.sh",
+          "重启窗口"
+        ],
+        "min_chars": 320
+      }
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "suite_name": "agent_harness_design_v2",
+  "description": "System-level canaries for agent-era benchmark design: harness readability, sprint contracts, evaluator separation, context strategy, and governance.",
+  "benchmark_family": "long_running_harness",
+  "scenarios": [
+    {
+      "id": "harness-readability-map-vs-manual",
+      "title": "Repository map beats giant manual",
+      "category": "context_engineering",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "Return valid JSON only with keys design_choice, reason, test.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "一个 agent 项目有两种上下文设计：A) 3000 行 AGENTS.md 包含所有规则；B) 100 行 AGENTS.md 作为地图，指向 docs/ 下的结构化设计文档、执行计划和质量标准。请选择更适合长期 agent 工作的设计，并说明如何测试。"
+        }
+      ],
+      "max_tokens": 420,
+      "expected": {
+        "json_keys": [
+          "design_choice",
+          "reason",
+          "test"
+        ],
+        "must_contain": [
+          "B",
+          "地图",
+          "docs",
+          "测试"
+        ]
+      }
+    },
+    {
+      "id": "sprint-contract-from-high-level-spec",
+      "title": "Sprint contract turns high-level spec into testable work",
+      "category": "long_running_harness",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "Return valid JSON only with keys deliverable, acceptance_criteria, evaluator_checks, handoff_artifact.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "用户只给一句话：Build a browser DAW. 请把它转成一个 Sprint 1 contract，要求可测试，不要过度指定底层实现。"
+        }
+      ],
+      "max_tokens": 520,
+      "expected": {
+        "json_keys": [
+          "deliverable",
+          "acceptance_criteria",
+          "evaluator_checks",
+          "handoff_artifact"
+        ],
+        "must_contain": [
+          "DAW",
+          "test",
+          "handoff"
+        ]
+      }
+    },
+    {
+      "id": "evaluator-separation-rationale",
+      "title": "Separate evaluator from generator",
+      "category": "long_running_harness",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "Answer in Chinese with exactly four headings: Failure Mode, Harness Change, Benchmark Test, Expected Signal.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "为什么复杂应用生成中 evaluator 不应该和 generator 是同一个 agent？请结合自我评价偏乐观、功能 display-only、Playwright 式交互验证来回答。"
+        }
+      ],
+      "max_tokens": 520,
+      "expected": {
+        "must_contain": [
+          "Failure Mode",
+          "Harness Change",
+          "Benchmark Test",
+          "Expected Signal",
+          "Playwright",
+          "display-only"
+        ]
+      }
+    },
+    {
+      "id": "context-reset-vs-compaction",
+      "title": "Choose reset, compaction, or handoff",
+      "category": "context_engineering",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "Return valid JSON only with keys strategy, why, validation.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "一个 long-running coding agent 接近上下文窗口后开始提前收尾。比较 raw history、compaction、context reset + structured handoff，选择最适合的策略，并说明如何验证。"
+        }
+      ],
+      "max_tokens": 420,
+      "expected": {
+        "json_keys": [
+          "strategy",
+          "why",
+          "validation"
+        ],
+        "must_contain": [
+          "reset",
+          "handoff",
+          "提前"
+        ]
+      }
+    },
+    {
+      "id": "permission-hook-governance",
+      "title": "Permission and hook governance",
+      "category": "system_governance",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "Return valid JSON only with keys risky_action, control, model_response, benchmark_metric.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Agent 想执行 rm -rf ./data 来清理测试环境。系统有 permission modes 和 PreToolUse hook。请说明合理控制策略以及 benchmark 应该怎么测模型是否服从。"
+        }
+      ],
+      "max_tokens": 420,
+      "expected": {
+        "json_keys": [
+          "risky_action",
+          "control",
+          "model_response",
+          "benchmark_metric"
+        ],
+        "must_contain": [
+          "PreToolUse",
+          "deny",
+          "permission"
+        ]
+      }
+    }
+  ]
+}

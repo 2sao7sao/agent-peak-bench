@@ -1,0 +1,145 @@
+{
+  "suite_name": "harness_load_bearing_ablation_v2",
+  "description": "Ablation canaries that test which harness components are load-bearing for keeping the model in peak operating condition.",
+  "benchmark_family": "long_running_harness",
+  "scenarios": [
+    {
+      "id": "solo-complex-app-plan",
+      "title": "Solo agent complex app plan",
+      "category": "ablation_solo",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "Create a concise implementation plan.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Build a browser-based project management app with tasks, comments, analytics, permissions, and AI summaries. Give an implementation plan."
+        }
+      ],
+      "max_tokens": 420,
+      "expected": {
+        "must_contain": [
+          "tasks",
+          "comments",
+          "analytics"
+        ],
+        "min_chars": 180
+      }
+    },
+    {
+      "id": "planner-generator-evaluator-plan",
+      "title": "Planner/generator/evaluator harness plan",
+      "category": "ablation_structured_harness",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "Return valid JSON only with keys planner, generator, evaluator, sprint_contract, validator.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Build a browser-based project management app with tasks, comments, analytics, permissions, and AI summaries. Design a harness plan using planner, generator, evaluator, sprint contract, and validator."
+        }
+      ],
+      "max_tokens": 560,
+      "expected": {
+        "json_keys": [
+          "planner",
+          "generator",
+          "evaluator",
+          "sprint_contract",
+          "validator"
+        ],
+        "must_contain": [
+          "tasks",
+          "permissions",
+          "validator",
+          "sprint"
+        ]
+      }
+    },
+    {
+      "id": "evaluator-weak-vs-skeptical",
+      "title": "Skeptical evaluator behavior",
+      "category": "evaluator_quality",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "You are a skeptical QA evaluator. Return valid JSON only with keys pass, critical_findings, missing_tests, next_feedback.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Evaluate this sprint result: The app shows an analytics dashboard with charts, but the charts use hardcoded sample data. The permissions page exists, but changing roles does not affect access checks. The AI summary button returns placeholder text. Should this pass QA?"
+        }
+      ],
+      "max_tokens": 420,
+      "expected": {
+        "json_keys": [
+          "pass",
+          "critical_findings",
+          "missing_tests",
+          "next_feedback"
+        ],
+        "must_contain": [
+          "false",
+          "hardcoded",
+          "permissions",
+          "placeholder"
+        ]
+      }
+    },
+    {
+      "id": "resume-after-sandbox-loss",
+      "title": "Resume after sandbox loss",
+      "category": "system_governance",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "Return valid JSON only with keys checkpoint, recovered_state, next_action, verification.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "一个 agent 在 sandbox 容器失效前完成了：读取 spec、创建 schema、写了一半 tests。外部状态文件记录 current_step=write_tests, completed=[read_spec, create_schema]。请说明 rehydration 后如何继续。"
+        }
+      ],
+      "max_tokens": 420,
+      "expected": {
+        "json_keys": [
+          "checkpoint",
+          "recovered_state",
+          "next_action",
+          "verification"
+        ],
+        "must_contain": [
+          "write_tests",
+          "read_spec",
+          "create_schema"
+        ]
+      }
+    },
+    {
+      "id": "toolsearch-vs-all-tools",
+      "title": "ToolSearch versus all-tools exposure",
+      "category": "tool_recovery",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "Return valid JSON only with keys preferred_design, reason, failure_mode, benchmark.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "一个 CLI 有 25 个内置工具和多个 MCP 工具。比较一次性暴露所有工具 vs 只暴露 ToolSearch 延迟加载工具 schema，说明哪个更适合稳定 agent 行为，并设计 benchmark。"
+        }
+      ],
+      "max_tokens": 420,
+      "expected": {
+        "json_keys": [
+          "preferred_design",
+          "reason",
+          "failure_mode",
+          "benchmark"
+        ],
+        "must_contain": [
+          "ToolSearch",
+          "schema",
+          "稳定"
+        ]
+      }
+    }
+  ]
+}

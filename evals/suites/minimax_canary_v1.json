@@ -1,0 +1,348 @@
+{
+  "suite_name": "minimax_canary_v1",
+  "description": "A small but stricter canary benchmark for MiniMax landing ability: memory, grounded workflow decisions, tool-error honesty, context robustness, and structured decomposition.",
+  "scenarios": [
+    {
+      "id": "canary-chat-memory",
+      "title": "Chat memory exact recall",
+      "category": "chat_memory",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "Return valid JSON only with keys project, owner, model, memory_file, metrics.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "项目叫 Atlas，负责人是 Nina，默认模型 MiniMax-M2.7-highspeed。请记住。"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "已记住。"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "补充：记忆文件是 session-memory.json，最重要的两个指标是 first_round_latency_ms 和 total_latency_ms。"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "已补充。"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "现在输出完整信息。"
+        }
+      ],
+      "max_tokens": 320,
+      "expected": {
+        "json_subset": {
+          "project": "Atlas",
+          "owner": "Nina",
+          "model": "MiniMax-M2.7-highspeed",
+          "memory_file": "session-memory.json"
+        },
+        "must_contain": [
+          "first_round_latency_ms",
+          "total_latency_ms"
+        ]
+      }
+    },
+    {
+      "id": "canary-history-noise",
+      "title": "Long history with noise",
+      "category": "chat_memory",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "Return valid JSON only with keys priority_1, priority_2, priority_3.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "从下面长历史中提炼当前用户最关心的三件事。\\n\\n{{GENERATED_CONTEXT}}"
+        }
+      ],
+      "generated_context": {
+        "title": "Long customer thread",
+        "sections": 72,
+        "filler": "Most paragraphs contain stale notes, repeated planning text, unrelated backlog items, and low-value discussion that should not appear in the final result.",
+        "facts": [
+          {
+            "section": 17,
+            "text": "Current priority one is memory recall across long sessions."
+          },
+          {
+            "section": 48,
+            "text": "Current priority two is latency visibility at the API layer."
+          },
+          {
+            "section": 69,
+            "text": "Current priority three is persona stability after long history."
+          }
+        ]
+      },
+      "max_tokens": 360,
+      "expected": {
+        "must_contain": [
+          "memory recall",
+          "latency visibility",
+          "persona stability"
+        ],
+        "json_keys": [
+          "priority_1",
+          "priority_2",
+          "priority_3"
+        ]
+      }
+    },
+    {
+      "id": "canary-grounded-workflow",
+      "title": "Grounded workflow decision",
+      "category": "workflow",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "You are a release workflow agent. Use tools before concluding. Return valid JSON only with keys root_cause, decision, action, verification.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "判断支付回调故障是否可以直接恢复上线，并说明原因。"
+        }
+      ],
+      "tools": [
+        {
+          "name": "read_error_log",
+          "description": "Read the latest production log.",
+          "input_schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+          }
+        },
+        {
+          "name": "read_config",
+          "description": "Read current service config.",
+          "input_schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+          }
+        },
+        {
+          "name": "read_test_status",
+          "description": "Read current test status.",
+          "input_schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+          }
+        }
+      ],
+      "mock_tools": {
+        "read_error_log": {
+          "error": "SignatureValidationError: timestamp skew exceeded 300s after gateway clock drift"
+        },
+        "read_config": {
+          "ntp_sync": "disabled"
+        },
+        "read_test_status": {
+          "webhook_replay_test": "not_run"
+        }
+      },
+      "max_tool_rounds": 3,
+      "max_tokens": 520,
+      "expected": {
+        "required_tool_sequence": [
+          "read_error_log",
+          "read_config",
+          "read_test_status"
+        ],
+        "json_keys": [
+          "root_cause",
+          "decision",
+          "action",
+          "verification"
+        ],
+        "must_contain": [
+          "clock drift",
+          "not_run"
+        ]
+      }
+    },
+    {
+      "id": "canary-tool-error-honesty",
+      "title": "Tool error honesty",
+      "category": "workflow",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "You are a rigorous debugging agent. Use tools and do not hallucinate missing evidence. Return valid JSON only with keys status, confirmed_evidence, missing_evidence, next_step.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "定位订单重试故障，并给出最终状态。"
+        }
+      ],
+      "tools": [
+        {
+          "name": "read_retry_log",
+          "description": "Read retry worker log.",
+          "input_schema": {"type": "object", "properties": {}, "required": []}
+        },
+        {
+          "name": "read_runbook",
+          "description": "Read incident runbook.",
+          "input_schema": {"type": "object", "properties": {}, "required": []}
+        }
+      ],
+      "mock_tools": {
+        "read_retry_log": {
+          "error": "queue backlog exceeded threshold after Redis reconnect"
+        },
+        "read_runbook": {
+          "__tool_error__": "504 Gateway Timeout"
+        }
+      },
+      "max_tool_rounds": 3,
+      "max_tokens": 420,
+      "expected": {
+        "required_tool_names": [
+          "read_retry_log",
+          "read_runbook"
+        ],
+        "json_keys": [
+          "status",
+          "confirmed_evidence",
+          "missing_evidence",
+          "next_step"
+        ],
+        "must_contain": [
+          "504",
+          "missing"
+        ]
+      }
+    },
+    {
+      "id": "canary-window-compact",
+      "title": "Compact context retrieval",
+      "category": "context",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "Return valid JSON only with keys milestone, rollback_owner, verification_target.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "阅读资料并输出结果。\\n\\n{{GENERATED_CONTEXT}}"
+        }
+      ],
+      "generated_context": {
+        "title": "Compact incident pack",
+        "sections": 20,
+        "filler": "Routine notes and irrelevant comments.",
+        "facts": [
+          {"section": 4, "text": "Milestone is blue-canary-ready."},
+          {"section": 12, "text": "Rollback owner is Priya Nair."},
+          {"section": 19, "text": "Verification target is callback success rate above 99.5%."}
+        ]
+      },
+      "max_tokens": 280,
+      "expected": {
+        "json_subset": {
+          "milestone": "blue-canary-ready",
+          "rollback_owner": "Priya Nair",
+          "verification_target": "callback success rate above 99.5%"
+        }
+      }
+    },
+    {
+      "id": "canary-window-expanded",
+      "title": "Expanded context retrieval",
+      "category": "context",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "Return valid JSON only with keys milestone, rollback_owner, verification_target.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "阅读资料并输出结果。\\n\\n{{GENERATED_CONTEXT}}"
+        }
+      ],
+      "generated_context": {
+        "title": "Expanded incident pack",
+        "sections": 120,
+        "filler": "Large amounts of duplicated chatter, stale plans, and irrelevant notes that should be ignored.",
+        "facts": [
+          {"section": 26, "text": "Milestone is blue-canary-ready."},
+          {"section": 72, "text": "Rollback owner is Priya Nair."},
+          {"section": 118, "text": "Verification target is callback success rate above 99.5%."}
+        ]
+      },
+      "max_tokens": 280,
+      "expected": {
+        "json_subset": {
+          "milestone": "blue-canary-ready",
+          "rollback_owner": "Priya Nair",
+          "verification_target": "callback success rate above 99.5%"
+        }
+      }
+    },
+    {
+      "id": "canary-structured-decomposition",
+      "title": "Structured decomposition for complex task",
+      "category": "decomposition",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "Return valid JSON only with keys scope, metrics, workflow, risks. Each value should be a short string.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "为一个 MiniMax agent 落地评估项目设计初步方案。要求覆盖记忆、latency、tool use、回归测试和企业上线风险。"
+        }
+      ],
+      "max_tokens": 420,
+      "expected": {
+        "json_keys": [
+          "scope",
+          "metrics",
+          "workflow",
+          "risks"
+        ],
+        "must_contain": [
+          "记忆",
+          "latency",
+          "tool",
+          "回归",
+          "风险"
+        ]
+      }
+    },
+    {
+      "id": "canary-structured-skill",
+      "title": "Structured skill style",
+      "category": "skills",
+      "repeat": 3,
+      "temperature": 0.2,
+      "system": "You have access to a skill called Incident Triage.\nGoal: diagnose the incident.\nInputs: user summary, logs, config, tests.\nRequired Output: Root Cause, Evidence, Action, Verification.\nStop Condition: do not claim completion without verification. Return plain text.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请处理这个 incident：支付回调超时，用户投诉增多。"
+        }
+      ],
+      "max_tokens": 420,
+      "expected": {
+        "must_contain": [
+          "Root Cause",
+          "Evidence",
+          "Action",
+          "Verification"
+        ],
+        "min_chars": 100
+      }
+    }
+  ]
+}

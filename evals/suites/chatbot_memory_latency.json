@@ -1,0 +1,97 @@
+{
+  "suite_name": "chatbot_memory_latency",
+  "description": "Pure chatbot harness tests for memory, history stability, response discipline, and latency.",
+  "scenarios": [
+    {
+      "id": "chatbot-memory-thread",
+      "title": "Multi-turn memory recall from prior history",
+      "category": "chatbot",
+      "system": "You are a concise support chatbot. Answer in Chinese and only use facts from the conversation.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "我们在做一个 AI harness 项目，我先告诉你基础设定：项目代号是 Cedar，主要负责人是 Mavis，默认模型是 MiniMax-M2.7-highspeed。请确认你记住了。"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "已记住：项目代号 Cedar，负责人 Mavis，默认模型 MiniMax-M2.7-highspeed。"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "补充两点：记忆模块落在 session-memory.json，性能指标里我们最看重首 token 延迟和总响应耗时。"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "已补充：记忆模块文件是 session-memory.json，重点性能指标是首 token 延迟和总响应耗时。"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "现在请你总结：这个项目代号、负责人、默认模型、记忆模块文件、最重要的两个性能指标分别是什么？"
+        }
+      ],
+      "max_tokens": 280,
+      "expected": {
+        "must_contain": [
+          "Cedar",
+          "Mavis",
+          "MiniMax-M2.7-highspeed",
+          "session-memory.json",
+          "首 token 延迟",
+          "总响应耗时"
+        ],
+        "max_total_latency_ms": 20000
+      }
+    },
+    {
+      "id": "chatbot-long-history-compression",
+      "title": "Long history instruction stability",
+      "category": "chatbot",
+      "system": "You are a product chatbot. The final answer must be exactly three bullets in Chinese.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "下面是项目长历史，请最后只提炼当前用户真正关心的三件事。\\n\\n{{GENERATED_CONTEXT}}"
+        }
+      ],
+      "generated_context": {
+        "title": "Customer success notes",
+        "sections": 56,
+        "filler": "Most notes describe repetitive meeting chatter, planning drift, old assumptions, and unrelated requests that should be ignored in the final answer.",
+        "facts": [
+          {
+            "section": 8,
+            "text": "The user currently cares about memory retention across 20+ turns."
+          },
+          {
+            "section": 31,
+            "text": "The user currently cares about latency reporting at the API layer."
+          },
+          {
+            "section": 52,
+            "text": "The user currently cares about whether persona remains stable after long history."
+          }
+        ]
+      },
+      "max_tokens": 220,
+      "expected": {
+        "must_contain": [
+          "memory retention",
+          "latency",
+          "persona"
+        ],
+        "max_chars": 280,
+        "max_total_latency_ms": 20000
+      }
+    }
+  ]
+}

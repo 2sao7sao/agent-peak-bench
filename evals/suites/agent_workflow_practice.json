@@ -1,0 +1,93 @@
+{
+  "suite_name": "agent_workflow_practice",
+  "description": "Simple agent and workflow scenarios focused on grounded execution and minimal tool loops.",
+  "scenarios": [
+    {
+      "id": "workflow-rag-triage",
+      "title": "Simple workflow with retrieval then decision",
+      "category": "agent_workflow",
+      "system": "You are a workflow agent. First inspect evidence, then recommend an action. Final answer must include Evidence, Decision, Verification.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "判断这个 harness 配置是否可以直接上线。"
+        }
+      ],
+      "tools": [
+        {
+          "name": "read_harness_config",
+          "description": "Read the current harness configuration summary.",
+          "input_schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+          }
+        },
+        {
+          "name": "read_smoke_test",
+          "description": "Read the latest smoke test report.",
+          "input_schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+          }
+        }
+      ],
+      "mock_tools": {
+        "read_harness_config": {
+          "memory_store": "session-memory.json",
+          "history_strategy": "append_full_assistant_response",
+          "fallback": "none"
+        },
+        "read_smoke_test": {
+          "passed": false,
+          "failures": [
+            "latency exporter missing",
+            "tool loop exceeded max rounds"
+          ]
+        }
+      },
+      "max_tool_rounds": 3,
+      "max_tokens": 480,
+      "expected": {
+        "required_tool_names": [
+          "read_harness_config",
+          "read_smoke_test"
+        ],
+        "must_contain": [
+          "Evidence",
+          "Decision",
+          "Verification",
+          "latency exporter",
+          "should not"
+        ],
+        "max_round_count": 3
+      }
+    },
+    {
+      "id": "workflow-memory-update-plan",
+      "title": "Simple agent planning state update",
+      "category": "agent_workflow",
+      "system": "You are an implementation agent. Produce a compact plan with Step, State Update, and Exit Criteria.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请为一个简单 harness workflow 设计执行步骤：先读取历史，再提炼长期记忆，再生成响应，最后记录延迟指标。"
+        }
+      ],
+      "max_tokens": 500,
+      "expected": {
+        "must_contain": [
+          "Step",
+          "State Update",
+          "Exit Criteria",
+          "历史",
+          "长期记忆",
+          "延迟"
+        ],
+        "min_chars": 240,
+        "max_total_latency_ms": 20000
+      }
+    }
+  ]
+}

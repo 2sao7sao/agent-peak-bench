@@ -1,0 +1,204 @@
+{
+  "suite_name": "tool_count_ablation",
+  "description": "Measure whether performance changes because of tool count, tool distractors, or both.",
+  "scenarios": [
+    {
+      "id": "tool-count-3",
+      "title": "Focused tool surface",
+      "category": "tool_ablation",
+      "repeat": 3,
+      "system": "You are a debugging agent. Use tools before concluding. Final answer must include Cause and Fix.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "定位为什么 webhook 任务失败。"
+        }
+      ],
+      "tools": [
+        {
+          "name": "read_log",
+          "description": "Read the service log.",
+          "input_schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+          }
+        },
+        {
+          "name": "read_config",
+          "description": "Read the service config.",
+          "input_schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+          }
+        },
+        {
+          "name": "read_runbook",
+          "description": "Read the recovery runbook.",
+          "input_schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+          }
+        }
+      ],
+      "mock_tools": {
+        "read_log": {
+          "error": "certificate expired on webhook gateway"
+        },
+        "read_config": {
+          "tls_rotation": "disabled"
+        },
+        "read_runbook": {
+          "action": "rotate certificate and re-enable tls rotation"
+        }
+      },
+      "max_tool_rounds": 3,
+      "max_tokens": 320,
+      "expected": {
+        "must_contain": [
+          "Cause",
+          "Fix",
+          "certificate expired",
+          "tls rotation"
+        ],
+        "required_tool_names": [
+          "read_log",
+          "read_runbook"
+        ]
+      }
+    },
+    {
+      "id": "tool-count-8",
+      "title": "Moderate tool surface with distractors",
+      "category": "tool_ablation",
+      "repeat": 3,
+      "system": "You are a debugging agent. Use only relevant tools. Final answer must include Cause and Fix.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "定位为什么 webhook 任务失败。"
+        }
+      ],
+      "tools": [
+        {
+          "name": "read_log",
+          "description": "Read the service log.",
+          "input_schema": {"type": "object", "properties": {}, "required": []}
+        },
+        {
+          "name": "read_config",
+          "description": "Read the service config.",
+          "input_schema": {"type": "object", "properties": {}, "required": []}
+        },
+        {
+          "name": "read_runbook",
+          "description": "Read the recovery runbook.",
+          "input_schema": {"type": "object", "properties": {}, "required": []}
+        },
+        {
+          "name": "read_marketing_copy",
+          "description": "Read the marketing homepage copy.",
+          "input_schema": {"type": "object", "properties": {}, "required": []}
+        },
+        {
+          "name": "list_sales_regions",
+          "description": "List sales regions.",
+          "input_schema": {"type": "object", "properties": {}, "required": []}
+        },
+        {
+          "name": "read_hr_policy",
+          "description": "Read HR policy.",
+          "input_schema": {"type": "object", "properties": {}, "required": []}
+        },
+        {
+          "name": "check_brand_palette",
+          "description": "Check brand palette.",
+          "input_schema": {"type": "object", "properties": {}, "required": []}
+        },
+        {
+          "name": "read_okr_notes",
+          "description": "Read OKR notes.",
+          "input_schema": {"type": "object", "properties": {}, "required": []}
+        }
+      ],
+      "mock_tools": {
+        "read_log": {
+          "error": "certificate expired on webhook gateway"
+        },
+        "read_config": {
+          "tls_rotation": "disabled"
+        },
+        "read_runbook": {
+          "action": "rotate certificate and re-enable tls rotation"
+        }
+      },
+      "max_tool_rounds": 4,
+      "max_tokens": 360,
+      "expected": {
+        "must_contain": [
+          "Cause",
+          "Fix",
+          "certificate expired"
+        ],
+        "required_tool_names": [
+          "read_log"
+        ]
+      }
+    },
+    {
+      "id": "tool-count-14",
+      "title": "Large tool surface",
+      "category": "tool_ablation",
+      "repeat": 3,
+      "skip_by_default": true,
+      "system": "You are a debugging agent. Use only relevant tools. Final answer must include Cause and Fix.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "定位为什么 webhook 任务失败。"
+        }
+      ],
+      "tools": [
+        {"name": "read_log", "description": "Read the service log.", "input_schema": {"type": "object", "properties": {}, "required": []}},
+        {"name": "read_config", "description": "Read the service config.", "input_schema": {"type": "object", "properties": {}, "required": []}},
+        {"name": "read_runbook", "description": "Read the recovery runbook.", "input_schema": {"type": "object", "properties": {}, "required": []}},
+        {"name": "read_marketing_copy", "description": "Read the marketing homepage copy.", "input_schema": {"type": "object", "properties": {}, "required": []}},
+        {"name": "list_sales_regions", "description": "List sales regions.", "input_schema": {"type": "object", "properties": {}, "required": []}},
+        {"name": "read_hr_policy", "description": "Read HR policy.", "input_schema": {"type": "object", "properties": {}, "required": []}},
+        {"name": "check_brand_palette", "description": "Check brand palette.", "input_schema": {"type": "object", "properties": {}, "required": []}},
+        {"name": "read_okr_notes", "description": "Read OKR notes.", "input_schema": {"type": "object", "properties": {}, "required": []}},
+        {"name": "list_vendor_contacts", "description": "List vendor contacts.", "input_schema": {"type": "object", "properties": {}, "required": []}},
+        {"name": "read_legal_notice", "description": "Read legal notice.", "input_schema": {"type": "object", "properties": {}, "required": []}},
+        {"name": "read_support_macro", "description": "Read support macro text.", "input_schema": {"type": "object", "properties": {}, "required": []}},
+        {"name": "inspect_theme_tokens", "description": "Inspect design theme tokens.", "input_schema": {"type": "object", "properties": {}, "required": []}},
+        {"name": "read_archived_meeting", "description": "Read archived meeting notes.", "input_schema": {"type": "object", "properties": {}, "required": []}},
+        {"name": "list_training_materials", "description": "List training materials.", "input_schema": {"type": "object", "properties": {}, "required": []}}
+      ],
+      "mock_tools": {
+        "read_log": {
+          "error": "certificate expired on webhook gateway"
+        },
+        "read_config": {
+          "tls_rotation": "disabled"
+        },
+        "read_runbook": {
+          "action": "rotate certificate and re-enable tls rotation"
+        }
+      },
+      "max_tool_rounds": 4,
+      "max_tokens": 360,
+      "expected": {
+        "must_contain": [
+          "Cause",
+          "Fix",
+          "certificate expired"
+        ],
+        "required_tool_names": [
+          "read_log"
+        ]
+      }
+    }
+  ]
+}

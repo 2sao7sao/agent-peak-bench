@@ -1,0 +1,138 @@
+{
+  "suite_name": "tool_and_workflow",
+  "description": "Exercise interleaved tool use, state carry-over, and final synthesis.",
+  "scenarios": [
+    {
+      "id": "tool-loop-bugtriage",
+      "title": "Bug triage with mock tools",
+      "category": "tool_use",
+      "system": "You are a debugging agent. Use tools before concluding. Final answer must include root cause, fix, and verification.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "定位支付回调失败的根因，并给出修复方案。"
+        }
+      ],
+      "tools": [
+        {
+          "name": "read_error_log",
+          "description": "Read the latest production error log.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "service": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "service"
+            ]
+          }
+        },
+        {
+          "name": "lookup_runbook",
+          "description": "Find the matching internal runbook.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "topic": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "topic"
+            ]
+          }
+        }
+      ],
+      "mock_tools": {
+        "read_error_log": {
+          "service": "payments-webhook",
+          "snippet": "SignatureValidationError: timestamp skew exceeded 300s after gateway clock drift."
+        },
+        "lookup_runbook": {
+          "title": "Webhook clock skew recovery",
+          "steps": [
+            "Resync gateway NTP",
+            "Increase alerting on drift",
+            "Replay dead-letter queue after clock fix"
+          ]
+        }
+      },
+      "max_tool_rounds": 3,
+      "max_tokens": 500,
+      "expected": {
+        "required_tool_names": [
+          "read_error_log",
+          "lookup_runbook"
+        ],
+        "must_contain": [
+          "clock drift",
+          "NTP",
+          "Replay"
+        ]
+      }
+    },
+    {
+      "id": "tool-loop-stateful-summary",
+      "title": "Stateful synthesis after tool results",
+      "category": "tool_use",
+      "system": "You are an engineering program manager. You must use tools, then output a three-part summary: Decision, Risk, Next Step.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "判断这次发布是否应该继续，并说明原因。"
+        }
+      ],
+      "tools": [
+        {
+          "name": "read_test_status",
+          "description": "Return the latest CI test status.",
+          "input_schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+          }
+        },
+        {
+          "name": "read_release_blockers",
+          "description": "Return unresolved blocker tickets.",
+          "input_schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+          }
+        }
+      ],
+      "mock_tools": {
+        "read_test_status": {
+          "passed": 182,
+          "failed": 3,
+          "critical_failed": [
+            "checkout-e2e",
+            "refund-retry"
+          ]
+        },
+        "read_release_blockers": {
+          "blockers": [
+            "B-17 payment callback duplicate charge risk"
+          ]
+        }
+      },
+      "max_tool_rounds": 3,
+      "max_tokens": 450,
+      "expected": {
+        "required_tool_names": [
+          "read_test_status",
+          "read_release_blockers"
+        ],
+        "must_contain": [
+          "Decision",
+          "Risk",
+          "Next Step",
+          "should not proceed"
+        ]
+      }
+    }
+  ]
+}

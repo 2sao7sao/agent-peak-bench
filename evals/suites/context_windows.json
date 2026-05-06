@@ -1,0 +1,124 @@
+{
+  "suite_name": "context_windows",
+  "description": "Measure long-context retrieval stability and constraint adherence.",
+  "scenarios": [
+    {
+      "id": "ctx-small-retrieval",
+      "title": "Small window retrieval",
+      "category": "context",
+      "system": "You are a precise retrieval assistant. Answer only with the requested facts in Chinese.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "阅读以下资料并回答：项目负责人是谁，关键故障码是什么？\\n\\n{{GENERATED_CONTEXT}}"
+        }
+      ],
+      "generated_context": {
+        "title": "Synthetic repo audit notes",
+        "sections": 18,
+        "filler": "Most entries describe routine maintenance, stale notes, and irrelevant observations from past iterations.",
+        "facts": [
+          {
+            "section": 4,
+            "text": "Project owner is Lina Zhou."
+          },
+          {
+            "section": 16,
+            "text": "Critical failure code is RQ-441."
+          }
+        ]
+      },
+      "max_tokens": 300,
+      "expected": {
+        "must_contain": [
+          "Lina Zhou",
+          "RQ-441"
+        ],
+        "must_not_contain": [
+          "I think",
+          "maybe"
+        ]
+      }
+    },
+    {
+      "id": "ctx-medium-constraint",
+      "title": "Medium window retrieval plus format constraint",
+      "category": "context",
+      "system": "Return valid JSON only with keys owner, root_cause, action.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "从下面资料中抽取项目 owner、根因、下一步动作。禁止补充资料中没有的事实。\\n\\n{{GENERATED_CONTEXT}}"
+        }
+      ],
+      "generated_context": {
+        "title": "Migration incident timeline",
+        "sections": 72,
+        "filler": "Timeline entries mention deploy windows, commentary, and repetitive low-value chatter from observers.",
+        "facts": [
+          {
+            "section": 11,
+            "text": "Owner is Chen Wei."
+          },
+          {
+            "section": 39,
+            "text": "Root cause: stale schema cache in the API gateway."
+          },
+          {
+            "section": 67,
+            "text": "Next action: invalidate gateway cache before rerunning migration."
+          }
+        ]
+      },
+      "max_tokens": 320,
+      "expected": {
+        "json_keys": [
+          "owner",
+          "root_cause",
+          "action"
+        ],
+        "must_contain": [
+          "Chen Wei",
+          "stale schema cache",
+          "invalidate gateway cache"
+        ]
+      }
+    },
+    {
+      "id": "ctx-large-retrieval",
+      "title": "Large window retrieval edge test",
+      "category": "context",
+      "skip_by_default": true,
+      "system": "You are a careful long-context auditor. Keep the answer concise.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "只回答两个字段：milestone 和 rollback_owner。\\n\\n{{GENERATED_CONTEXT}}"
+        }
+      ],
+      "generated_context": {
+        "title": "Very large synthetic operating log",
+        "sections": 260,
+        "filler": "These lines simulate long context with repetitive and mostly irrelevant status prose, comments, placeholders, and legacy references.",
+        "facts": [
+          {
+            "section": 103,
+            "text": "Milestone is blue-canary-ready."
+          },
+          {
+            "section": 241,
+            "text": "Rollback owner is Priya Nair."
+          }
+        ]
+      },
+      "max_tokens": 220,
+      "expected": {
+        "must_contain": [
+          "blue-canary-ready",
+          "Priya Nair"
+        ],
+        "max_chars": 220
+      }
+    }
+  ]
+}

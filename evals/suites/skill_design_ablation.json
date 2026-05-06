@@ -1,0 +1,50 @@
+{
+  "suite_name": "skill_design_ablation",
+  "description": "Compare vague vs structured skill-writing styles to see which better elicits stable MiniMax behavior.",
+  "scenarios": [
+    {
+      "id": "skill-vague",
+      "title": "Vague skill card",
+      "category": "skill_ablation",
+      "repeat": 3,
+      "system": "You have access to a skill called Incident Triage. Use it.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请处理这个线上事故：支付回调超时，用户投诉增多。"
+        }
+      ],
+      "max_tokens": 240,
+      "expected": {
+        "must_contain": [
+          "支付",
+          "超时"
+        ],
+        "min_chars": 80
+      }
+    },
+    {
+      "id": "skill-structured",
+      "title": "Structured skill card",
+      "category": "skill_ablation",
+      "repeat": 3,
+      "system": "You have access to a skill called Incident Triage.\nGoal: diagnose a production incident.\nInputs: incident summary, available logs, current user impact.\nRequired output: Root Cause, Evidence, Immediate Action, Verification.\nWorking rules: do not claim completion without verification; if evidence is missing, say what is missing.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请处理这个线上事故：支付回调超时，用户投诉增多。"
+        }
+      ],
+      "max_tokens": 280,
+      "expected": {
+        "must_contain": [
+          "Root Cause",
+          "Evidence",
+          "Immediate Action",
+          "Verification"
+        ],
+        "min_chars": 140
+      }
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "project": "Agent Peak Bench",
+  "model": "MiniMax-M2.7-highspeed",
+  "reported_as": "MiniMax M2.7 High",
+  "endpoint_region": "China endpoint",
+  "endpoint": "https://api.minimaxi.com/anthropic/v1/messages",
+  "run_date": "2026-05-06",
+  "suite": "minimax_canary_v1",
+  "scenario_count": 8,
+  "trials_per_scenario": 3,
+  "overall": {
+    "pass_at_1": 0.25,
+    "pass_at_3": 0.5,
+    "total_passed_scenarios_at_1": 2,
+    "total_scenarios": 8
+  },
+  "radar_scores_0_to_100": {
+    "short_memory": 95,
+    "long_history_noise": 20,
+    "grounded_workflow": 35,
+    "tool_error_honesty": 50,
+    "context_window_stability": 30,
+    "structured_decomposition": 50,
+    "skill_adherence": 35,
+    "harness_fit": 42
+  },
+  "scenario_results": [
+    {
+      "id": "canary-chat-memory",
+      "category": "chat_memory",
+      "pass_rate": 1.0,
+      "pass_at_3": true,
+      "consistency": 1.0,
+      "avg_latency_ms": 3111.06,
+      "finding": "Short, schema-constrained memory recall was stable across all trials."
+    },
+    {
+      "id": "canary-history-noise",
+      "category": "chat_memory",
+      "pass_rate": 0.0,
+      "pass_at_3": false,
+      "consistency": 0.0,
+      "avg_latency_ms": 6990.92,
+      "finding": "Long noisy history failed under the current output-budget and extraction setup."
+    },
+    {
+      "id": "canary-grounded-workflow",
+      "category": "workflow",
+      "pass_rate": 0.0,
+      "pass_at_3": false,
+      "consistency": 0.333,
+      "avg_latency_ms": 12834.15,
+      "finding": "Semantic diagnosis was often plausible, but strict JSON and tool-order stability were weak."
+    },
+    {
+      "id": "canary-tool-error-honesty",
+      "category": "workflow",
+      "pass_rate": 0.333,
+      "pass_at_3": true,
+      "consistency": 0.333,
+      "avg_latency_ms": 7712.84,
+      "finding": "Tool-error handling showed partial honesty, but over-confident resolution remained a risk."
+    },
+    {
+      "id": "canary-window-compact",
+      "category": "context",
+      "pass_rate": 0.333,
+      "pass_at_3": true,
+      "consistency": 0.333,
+      "avg_latency_ms": 4594.99,
+      "finding": "Compact context was recoverable within pass@3."
+    },
+    {
+      "id": "canary-window-expanded",
+      "category": "context",
+      "pass_rate": 0.0,
+      "pass_at_3": false,
+      "consistency": 0.0,
+      "avg_latency_ms": 4759.2,
+      "finding": "Expanded noisy context did not pass, supporting a multi-window or handoff-first strategy."
+    },
+    {
+      "id": "canary-structured-decomposition",
+      "category": "decomposition",
+      "pass_rate": 0.333,
+      "pass_at_3": true,
+      "consistency": 0.333,
+      "avg_latency_ms": 8246.76,
+      "finding": "Structured decomposition can produce strong output, but repeated stability was limited."
+    },
+    {
+      "id": "canary-structured-skill",
+      "category": "skills",
+      "pass_rate": 0.0,
+      "pass_at_3": false,
+      "consistency": 0.333,
+      "avg_latency_ms": 11810.68,
+      "finding": "Skill-style prompting improved shape partially, but did not guarantee complete required sections."
+    }
+  ],
+  "security_note": "No API key or bearer token is included in this public summary."
+}

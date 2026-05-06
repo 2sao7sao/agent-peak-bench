@@ -1,0 +1,97 @@
+{
+  "suite_name": "multi_agent_content_harness",
+  "description": "Role-split harness tests combining content engineer and harness engineer outputs.",
+  "scenarios": [
+    {
+      "id": "multi-agent-role-split",
+      "title": "Coordinator splits content and harness responsibilities",
+      "category": "multi_agent",
+      "system": "You are the coordinator of a two-agent team. One role is Content Engineer, one role is Harness Engineer. Final answer must include both roles plus a shared integration plan.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请为 MiniMax 能力评估项目设计一个 multi-agent 方案。Content Engineer 负责什么，Harness Engineer 负责什么，二者如何协同？用中文回答，并分成 Content Engineer / Harness Engineer / Integration 三部分。"
+        }
+      ],
+      "max_tokens": 700,
+      "expected": {
+        "must_contain": [
+          "Content Engineer",
+          "Harness Engineer",
+          "Integration",
+          "评测样本",
+          "runner",
+          "指标"
+        ],
+        "min_chars": 380,
+        "max_total_latency_ms": 20000
+      }
+    },
+    {
+      "id": "multi-agent-grounded-handoff",
+      "title": "Grounded multi-agent handoff via tools",
+      "category": "multi_agent",
+      "system": "You are a lead agent coordinating a Content Engineer and a Harness Engineer. Use both tools before concluding. Final answer must include Role Output and Joint Recommendation.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "整合两个工程角色的产出，给出一个可执行的 MiniMax harness 评估路线。"
+        }
+      ],
+      "tools": [
+        {
+          "name": "get_content_engineer_brief",
+          "description": "Return the content engineer's proposed evaluation dimensions.",
+          "input_schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+          }
+        },
+        {
+          "name": "get_harness_engineer_brief",
+          "description": "Return the harness engineer's proposed runtime and observability design.",
+          "input_schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+          }
+        }
+      ],
+      "mock_tools": {
+        "get_content_engineer_brief": {
+          "focus": [
+            "persona stability",
+            "instruction adherence",
+            "depth vs laziness",
+            "use-case quality"
+          ]
+        },
+        "get_harness_engineer_brief": {
+          "focus": [
+            "history persistence",
+            "latency per round",
+            "token usage",
+            "tool loop traces"
+          ]
+        }
+      },
+      "max_tool_rounds": 3,
+      "max_tokens": 580,
+      "expected": {
+        "required_tool_names": [
+          "get_content_engineer_brief",
+          "get_harness_engineer_brief"
+        ],
+        "must_contain": [
+          "Role Output",
+          "Joint Recommendation",
+          "persona stability",
+          "latency",
+          "tool loop"
+        ],
+        "max_round_count": 3
+      }
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "suite_name": "window_and_decomposition_ablation",
+  "description": "Test stability across context sizes and compare single-shot vs phased decomposition prompts.",
+  "scenarios": [
+    {
+      "id": "window-compact",
+      "title": "Compact context",
+      "category": "window_ablation",
+      "repeat": 3,
+      "system": "Answer in Chinese and list exactly three action items.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请根据资料给出三步排障方案。\\n\\n{{GENERATED_CONTEXT}}"
+        }
+      ],
+      "generated_context": {
+        "title": "Compact incident packet",
+        "sections": 18,
+        "filler": "Routine notes and irrelevant status updates.",
+        "facts": [
+          {"section": 4, "text": "Investigate queue backlog first."},
+          {"section": 9, "text": "Then restart the scheduler."},
+          {"section": 16, "text": "Finally verify dead-letter drain and callback success rate."}
+        ]
+      },
+      "max_tokens": 180,
+      "expected": {
+        "must_contain": [
+          "queue backlog",
+          "restart the scheduler",
+          "dead-letter"
+        ]
+      }
+    },
+    {
+      "id": "window-expanded",
+      "title": "Expanded context",
+      "category": "window_ablation",
+      "repeat": 3,
+      "system": "Answer in Chinese and list exactly three action items.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请根据资料给出三步排障方案。\\n\\n{{GENERATED_CONTEXT}}"
+        }
+      ],
+      "generated_context": {
+        "title": "Expanded incident packet",
+        "sections": 96,
+        "filler": "Large amounts of noisy planning notes, duplicated comments, stale assumptions, and irrelevant chatter.",
+        "facts": [
+          {"section": 21, "text": "Investigate queue backlog first."},
+          {"section": 52, "text": "Then restart the scheduler."},
+          {"section": 91, "text": "Finally verify dead-letter drain and callback success rate."}
+        ]
+      },
+      "max_tokens": 180,
+      "expected": {
+        "must_contain": [
+          "queue backlog",
+          "restart the scheduler",
+          "dead-letter"
+        ]
+      }
+    },
+    {
+      "id": "decomposition-single-shot",
+      "title": "Single-shot complex task",
+      "category": "decomposition_ablation",
+      "repeat": 3,
+      "system": "Design an evaluation plan for a MiniMax agent. Keep it concise.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请同时考虑记忆、latency、tool use、复杂任务拆解、企业落地、回归测试，并给出方案。"
+        }
+      ],
+      "max_tokens": 260,
+      "expected": {
+        "must_contain": [
+          "记忆",
+          "latency",
+          "tool"
+        ],
+        "min_chars": 100
+      }
+    },
+    {
+      "id": "decomposition-phased",
+      "title": "Phased complex task",
+      "category": "decomposition_ablation",
+      "repeat": 3,
+      "system": "Design an evaluation plan for a MiniMax agent. Use four sections: Scope, Metrics, Workflow, Risks.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "任务 1：先限定评估范围。任务 2：列出指标。任务 3：设计 workflow。任务 4：说明企业落地风险与回归测试。请按 Scope / Metrics / Workflow / Risks 四段输出。"
+        }
+      ],
+      "max_tokens": 380,
+      "expected": {
+        "must_contain": [
+          "Scope",
+          "Metrics",
+          "Workflow",
+          "Risks",
+          "回归"
+        ],
+        "min_chars": 180
+      }
+    }
+  ]
+}

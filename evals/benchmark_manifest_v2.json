@@ -1,0 +1,83 @@
+{
+  "name": "agent_landing_benchmark_v2",
+  "version": "2026-05-06",
+  "purpose": "Evaluate model capability under agent-era harness conditions, including memory, tools, long-running workflows, context strategy, governance, and system readability.",
+  "families": [
+    {
+      "id": "chat_memory",
+      "weight": 0.1,
+      "description": "Multi-turn preference retention, memory extraction, and history compression."
+    },
+    {
+      "id": "structured_workflow",
+      "weight": 0.15,
+      "description": "Evidence collection, state updates, process completion, and grounded decisions."
+    },
+    {
+      "id": "tool_recovery",
+      "weight": 0.15,
+      "description": "Tool selection, tool failure handling, retry, fallback, and hallucination resistance."
+    },
+    {
+      "id": "coding_cli_repo",
+      "weight": 0.15,
+      "description": "Repository navigation, mutation, test execution, and executable verification."
+    },
+    {
+      "id": "long_running_harness",
+      "weight": 0.15,
+      "description": "Planner/generator/evaluator loops, sprint contracts, handoffs, resume, and verifier feedback."
+    },
+    {
+      "id": "context_engineering",
+      "weight": 0.1,
+      "description": "Map-vs-manual instructions, compaction, reset, micro-compaction, and context pressure."
+    },
+    {
+      "id": "multi_agent_coordination",
+      "weight": 0.1,
+      "description": "Role separation, handoff quality, conflict resolution, and integration planning."
+    },
+    {
+      "id": "system_governance",
+      "weight": 0.1,
+      "description": "Permissions, sandboxing, hooks, audit trails, observability, and policy constraints."
+    }
+  ],
+  "metrics": [
+    "pass@1",
+    "pass@3",
+    "pass@5",
+    "semantic_consistency",
+    "exact_output_consistency",
+    "tool_precision",
+    "tool_redundancy",
+    "completion_honesty",
+    "verification_coverage",
+    "state_retention",
+    "latency_p50",
+    "latency_p95",
+    "token_cost",
+    "failure_taxonomy"
+  ],
+  "harness_modes": [
+    "solo",
+    "planner_generator",
+    "planner_generator_evaluator",
+    "multi_window_reset",
+    "compaction",
+    "sandboxed_tools",
+    "permissioned_tools"
+  ],
+  "ablation_axes": [
+    "planner_removed",
+    "evaluator_removed",
+    "sprint_contract_removed",
+    "memory_removed",
+    "hooks_removed",
+    "tool_surface_expanded",
+    "context_map_replaced_by_manual",
+    "permission_mode_relaxed",
+    "sandbox_removed"
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "suite_name": "repeatability_passk",
+  "description": "Repeated simple-task evaluation for pass@k, stability, and output consistency.",
+  "scenarios": [
+    {
+      "id": "repeat-json-extraction",
+      "title": "Repeated structured extraction",
+      "category": "repeatability",
+      "repeat": 5,
+      "temperature": 0.2,
+      "system": "Return valid JSON only with keys owner, severity, action.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "从这段 incident note 中抽取信息：Owner=Mina, Severity=high, Action=restart the scheduler after clearing the queue."
+        }
+      ],
+      "max_tokens": 140,
+      "expected": {
+        "json_keys": [
+          "owner",
+          "severity",
+          "action"
+        ],
+        "must_contain": [
+          "Mina",
+          "high",
+          "restart the scheduler"
+        ]
+      }
+    },
+    {
+      "id": "repeat-simple-classification",
+      "title": "Repeated task classification",
+      "category": "repeatability",
+      "repeat": 5,
+      "temperature": 0.2,
+      "system": "Classify the task into exactly one label: chatbot, workflow, or multi-agent. Respond with the label only.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "一个系统需要保留长对话 history、提取长期记忆、回答用户问题，但不需要调用外部工具。它属于哪一类？"
+        }
+      ],
+      "max_tokens": 30,
+      "expected": {
+        "must_contain": [
+          "chatbot"
+        ],
+        "max_chars": 24
+      }
+    },
+    {
+      "id": "repeat-short-workflow-judgment",
+      "title": "Repeated workflow judgment",
+      "category": "repeatability",
+      "repeat": 5,
+      "temperature": 0.2,
+      "system": "Answer in Chinese with exactly two lines: Verdict and Reason.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "一个 agent 在没有读取日志和测试结果的情况下，直接说“问题已经修复”。这是否可靠？"
+        }
+      ],
+      "max_tokens": 120,
+      "expected": {
+        "must_contain": [
+          "Verdict",
+          "Reason",
+          "不可靠"
+        ]
+      }
+    }
+  ]
+}
