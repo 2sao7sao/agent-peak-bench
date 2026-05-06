@@ -56,10 +56,13 @@
 
 - [`suites/enterprise_agent_landing_v3.json`](./suites/enterprise_agent_landing_v3.json)
 - [`suites/tool_skill_mcp_ablation_v3.json`](./suites/tool_skill_mcp_ablation_v3.json)
+- [`suites/openclaw_complex_agent_tasks_v1.json`](./suites/openclaw_complex_agent_tasks_v1.json)
 
 `enterprise_agent_landing_v3` 面向端到端企业任务：安全评审、续约风险、发布 gate、权限治理、业务分析、复杂系统设计、多 Agent handoff、长任务 resume。
 
 `tool_skill_mcp_ablation_v3` 面向工程归因：比较 3 工具直连、14 工具平铺、router 分层、procedural skill + tools 的稳定性差异。
+
+`openclaw_complex_agent_tasks_v1` 面向 OpenClaw 风格复杂任务：personal OS、语音触发生产修复、异步 GitHub backlog、多 Agent 电商运营、skills/插件治理、持久 workspace memory 与安全。
 
 推荐运行：
 
@@ -73,6 +76,11 @@ python3 scripts/run_minimax_evals.py \
   --suite evals/suites/tool_skill_mcp_ablation_v3.json \
   --pass-k 1,3,5,7 \
   --out results/minimax-tool-skill-mcp-ablation-v3.json
+
+python3 scripts/run_minimax_evals.py \
+  --suite evals/suites/openclaw_complex_agent_tasks_v1.json \
+  --pass-k 1,3,5,7 \
+  --out results/minimax-openclaw-complex-v1.json
 ```
 
 `minimax_canary_v1.json` 现在只应视为 smoke test，不应作为模型落地能力结论。

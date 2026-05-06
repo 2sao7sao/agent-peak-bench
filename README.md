@@ -20,6 +20,8 @@
   ·
   <a href="./report/enterprise-agent-benchmark-methodology.zh-CN.md">Enterprise methodology</a>
   ·
+  <a href="./report/openclaw-usecase-benchmark-direction.zh-CN.md">OpenClaw direction</a>
+  ·
   <a href="./report/minimax-initial-live-report-2026-05-06.md">MiniMax live report</a>
   ·
   <a href="./report/minimax-agent-usage-handbook.md">Usage handbook</a>
@@ -45,7 +47,9 @@ The benchmark now separates scorekeeping from deployment diagnosis:
 | --- | --- | --- |
 | [`enterprise_agent_landing_v3.json`](./evals/suites/enterprise_agent_landing_v3.json) | Realistic enterprise-agent suite | Implicit intent, multi-MCP evidence gathering, governance, complex decomposition, handoff, and resume. |
 | [`tool_skill_mcp_ablation_v3.json`](./evals/suites/tool_skill_mcp_ablation_v3.json) | Engineering-mechanism ablation | Focused tools vs flat overload vs router layering vs procedural skill contracts. |
+| [`openclaw_complex_agent_tasks_v1.json`](./evals/suites/openclaw_complex_agent_tasks_v1.json) | OpenClaw-style complex tasks | Personal OS, voice-driven prod fix, async GitHub, multi-agent ops, skill/plugin governance, and persistent memory security. |
 | [`enterprise-agent-benchmark-methodology.zh-CN.md`](./report/enterprise-agent-benchmark-methodology.zh-CN.md) | Integrated methodology | Evaluation, attribution, harness design, and model usage guidance. |
+| [`openclaw-usecase-benchmark-direction.zh-CN.md`](./report/openclaw-usecase-benchmark-direction.zh-CN.md) | OpenClaw use-case analysis | Converts public OpenClaw usage patterns into complex-agent evaluation directions. |
 
 The intended output is not just a model score. It should produce a capability matrix, end-to-end task reliability, pass@k stability, failure taxonomy, and concrete harness recommendations.
 
@@ -241,6 +245,7 @@ sequenceDiagram
 | [`README.zh-CN.md`](./README.zh-CN.md) | Chinese README report page. |
 | [`docs/evaluation-samples.zh-CN.md`](./docs/evaluation-samples.zh-CN.md) | Concrete evaluation samples and scoring logic. |
 | [`report/enterprise-agent-benchmark-methodology.zh-CN.md`](./report/enterprise-agent-benchmark-methodology.zh-CN.md) | Enterprise-agent benchmark methodology. |
+| [`report/openclaw-usecase-benchmark-direction.zh-CN.md`](./report/openclaw-usecase-benchmark-direction.zh-CN.md) | OpenClaw use-case analysis and complex-task benchmark direction. |
 | [`public/minimax-m27-high-summary.json`](./public/minimax-m27-high-summary.json) | Sanitized public summary used for release reporting. |
 | [`report/minimax-initial-live-report-2026-05-06.md`](./report/minimax-initial-live-report-2026-05-06.md) | Initial live canary report. |
 | [`report/minimax-agent-usage-handbook.md`](./report/minimax-agent-usage-handbook.md) | Practical usage guide for skills, tools, context, and complex systems. |
@@ -288,6 +293,7 @@ Run representative suites:
 ```bash
 python3 scripts/run_minimax_evals.py --suite evals/suites/enterprise_agent_landing_v3.json --pass-k 1,3,5,7
 python3 scripts/run_minimax_evals.py --suite evals/suites/tool_skill_mcp_ablation_v3.json --pass-k 1,3,5,7
+python3 scripts/run_minimax_evals.py --suite evals/suites/openclaw_complex_agent_tasks_v1.json --pass-k 1,3,5,7
 python3 scripts/run_minimax_evals.py --suite evals/suites/repeatability_passk.json --repeat 5 --pass-k 1,3,5
 python3 scripts/run_minimax_evals.py --suite evals/suites/skill_design_ablation.json
 python3 scripts/run_minimax_evals.py --suite evals/suites/tool_count_ablation.json --include-skipped

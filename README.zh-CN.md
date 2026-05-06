@@ -20,6 +20,8 @@
   ·
   <a href="./report/enterprise-agent-benchmark-methodology.zh-CN.md">企业级方法论</a>
   ·
+  <a href="./report/openclaw-usecase-benchmark-direction.zh-CN.md">OpenClaw 复杂任务方向</a>
+  ·
   <a href="./report/minimax-agent-usage-handbook.md">模型使用指南</a>
 </p>
 
@@ -39,7 +41,9 @@
 | --- | --- | --- |
 | [`enterprise_agent_landing_v3.json`](./evals/suites/enterprise_agent_landing_v3.json) | 真实企业 Agent 场景 | 潜台词理解、多 MCP 工具调用、证据综合、权限治理、复杂需求拆解、长任务恢复。 |
 | [`tool_skill_mcp_ablation_v3.json`](./evals/suites/tool_skill_mcp_ablation_v3.json) | 工程机制归因 | 3 工具直连、14 工具平铺、router 分层、skill contract 对稳定性的影响。 |
+| [`openclaw_complex_agent_tasks_v1.json`](./evals/suites/openclaw_complex_agent_tasks_v1.json) | OpenClaw 风格复杂任务 | personal OS、语音生产修复、异步 GitHub、multi-agent ops、skill/plugin governance、persistent memory security。 |
 | [`enterprise-agent-benchmark-methodology.zh-CN.md`](./report/enterprise-agent-benchmark-methodology.zh-CN.md) | 一体化方法论 | 从评估到失败归因，再到 harness 设计和模型使用指南。 |
+| [`openclaw-usecase-benchmark-direction.zh-CN.md`](./report/openclaw-usecase-benchmark-direction.zh-CN.md) | OpenClaw 使用场景调研 | 把公开 OpenClaw 用法转化为复杂 agent 评测方向。 |
 
 v3 的结论形式不是“模型得了多少分”，而是：
 
@@ -164,6 +168,11 @@ python3 scripts/run_minimax_evals.py \
   --suite evals/suites/tool_skill_mcp_ablation_v3.json \
   --pass-k 1,3,5,7 \
   --out results/minimax-tool-skill-mcp-ablation-v3.json
+
+python3 scripts/run_minimax_evals.py \
+  --suite evals/suites/openclaw_complex_agent_tasks_v1.json \
+  --pass-k 1,3,5,7 \
+  --out results/minimax-openclaw-complex-v1.json
 ```
 
 如果只是复测旧 canary：
@@ -191,6 +200,7 @@ python3 scripts/run_minimax_evals.py \
 | [`docs/index.html`](./docs/index.html) | GitHub Pages 在线报告。 |
 | [`docs/evaluation-samples.zh-CN.md`](./docs/evaluation-samples.zh-CN.md) | 具体评估样本和判分逻辑示例。 |
 | [`report/enterprise-agent-benchmark-methodology.zh-CN.md`](./report/enterprise-agent-benchmark-methodology.zh-CN.md) | 企业级 Agent benchmark 一体化方法论。 |
+| [`report/openclaw-usecase-benchmark-direction.zh-CN.md`](./report/openclaw-usecase-benchmark-direction.zh-CN.md) | OpenClaw 使用场景调研与复杂任务评测方向。 |
 | [`public/minimax-m27-high-summary.json`](./public/minimax-m27-high-summary.json) | 脱敏公开结果摘要。 |
 | [`evals/benchmark_manifest_v2.json`](./evals/benchmark_manifest_v2.json) | 任务族、指标、harness modes、ablation axes。 |
 | [`evals/suites/`](./evals/suites) | 评测样本 suite。 |
