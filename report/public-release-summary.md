@@ -31,6 +31,8 @@ Overall live canary:
 
 - `pass@1 = 25%`
 - `pass@3 = 50%`
+- `pass@5 = not measured` because the initial canary used only `3` trials per scenario
+- `pass@7 = not measured` because the initial canary used only `3` trials per scenario
 - `8` scenarios
 - `3` trials per scenario
 

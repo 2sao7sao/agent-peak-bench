@@ -11,6 +11,10 @@
   "overall": {
     "pass_at_1": 0.25,
     "pass_at_3": 0.5,
+    "pass_at_5": null,
+    "pass_at_7": null,
+    "pass_at_5_note": "Not measured in the initial canary because each scenario used only 3 trials.",
+    "pass_at_7_note": "Not measured in the initial canary because each scenario used only 3 trials.",
     "total_passed_scenarios_at_1": 2,
     "total_scenarios": 8
   },

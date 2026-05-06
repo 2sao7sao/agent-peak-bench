@@ -155,7 +155,8 @@
         gap: 12px;
       }
 
-      svg {
+      svg,
+      .chart-wrap img {
         max-width: 100%;
         height: auto;
       }
@@ -289,6 +290,8 @@
         <div class="metrics">
           <div class="metric"><span>pass@1</span><strong>25%</strong></div>
           <div class="metric"><span>pass@3</span><strong>50%</strong></div>
+          <div class="metric"><span>pass@5</span><strong>N/M</strong></div>
+          <div class="metric"><span>pass@7</span><strong>N/M</strong></div>
           <div class="metric"><span>Best category</span><strong>Memory</strong></div>
           <div class="metric"><span>Risk area</span><strong>Workflow</strong></div>
         </div>
@@ -297,42 +300,11 @@
       <section class="section grid two">
         <div class="panel chart-wrap">
           <h2>Radar</h2>
-          <svg viewBox="0 0 560 560" role="img" aria-label="MiniMax M2.7 High radar chart">
-            <g transform="translate(280 280)">
-              <polygon points="0,-210 148,-148 210,0 148,148 0,210 -148,148 -210,0 -148,-148" fill="none" stroke="#cfd7dc" />
-              <polygon points="0,-158 111,-111 158,0 111,111 0,158 -111,111 -158,0 -111,-111" fill="none" stroke="#dce3e7" />
-              <polygon points="0,-105 74,-74 105,0 74,74 0,105 -74,74 -105,0 -74,-74" fill="none" stroke="#dce3e7" />
-              <polygon points="0,-53 37,-37 53,0 37,37 0,53 -37,37 -53,0 -37,-37" fill="none" stroke="#dce3e7" />
-              <line x1="0" y1="0" x2="0" y2="-210" stroke="#dce3e7" />
-              <line x1="0" y1="0" x2="148" y2="-148" stroke="#dce3e7" />
-              <line x1="0" y1="0" x2="210" y2="0" stroke="#dce3e7" />
-              <line x1="0" y1="0" x2="148" y2="148" stroke="#dce3e7" />
-              <line x1="0" y1="0" x2="0" y2="210" stroke="#dce3e7" />
-              <line x1="0" y1="0" x2="-148" y2="148" stroke="#dce3e7" />
-              <line x1="0" y1="0" x2="-210" y2="0" stroke="#dce3e7" />
-              <line x1="0" y1="0" x2="-148" y2="-148" stroke="#dce3e7" />
-              <polygon points="0,-200 30,-30 74,0 74,74 0,105 -44,44 -63,0 -44,-44" fill="rgba(31,122,104,0.28)" stroke="#1f7a68" stroke-width="3" />
-              <circle cx="0" cy="-200" r="5" fill="#1f7a68" />
-              <circle cx="30" cy="-30" r="5" fill="#1f7a68" />
-              <circle cx="74" cy="0" r="5" fill="#1f7a68" />
-              <circle cx="74" cy="74" r="5" fill="#1f7a68" />
-              <circle cx="0" cy="105" r="5" fill="#1f7a68" />
-              <circle cx="-44" cy="44" r="5" fill="#1f7a68" />
-              <circle cx="-63" cy="0" r="5" fill="#1f7a68" />
-              <circle cx="-44" cy="-44" r="5" fill="#1f7a68" />
-              <text x="0" y="-232" text-anchor="middle" font-size="13">Short memory 95</text>
-              <text x="170" y="-160" text-anchor="start" font-size="13">Long history 20</text>
-              <text x="226" y="4" text-anchor="start" font-size="13">Workflow 35</text>
-              <text x="166" y="164" text-anchor="start" font-size="13">Tool honesty 50</text>
-              <text x="0" y="238" text-anchor="middle" font-size="13">Window 30</text>
-              <text x="-170" y="164" text-anchor="end" font-size="13">Decomposition 50</text>
-              <text x="-226" y="4" text-anchor="end" font-size="13">Skill 35</text>
-              <text x="-170" y="-160" text-anchor="end" font-size="13">Harness fit 42</text>
-            </g>
-          </svg>
+          <img src="./assets/minimax-m27-high-radar.svg" alt="MiniMax M2.7 High radar chart" />
           <div class="legend">
             <div><span class="dot"></span> Scores are 0-100 interpretive scores derived from live canary results.</div>
             <div><span class="dot"></span> This is an initial live canary, not a final production benchmark.</div>
+            <div><span class="dot"></span> pass@5 and pass@7 are not measured because the initial canary used only 3 trials.</div>
           </div>
         </div>
 
@@ -437,6 +409,7 @@
         <p>No API key, bearer token, or credential is included in this public report or the public summary JSON.</p>
         <div class="links">
           <a href="./minimax-m27-high-summary.json">Public summary JSON</a>
+          <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/docs/evaluation-samples.zh-CN.md">Evaluation samples</a>
           <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/report/minimax-initial-live-report-2026-05-06.md">Detailed report</a>
           <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/evals/benchmark_manifest_v2.json">Benchmark manifest</a>
         </div>

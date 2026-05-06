@@ -12,7 +12,11 @@
 </p>
 
 <p align="center">
+  <a href="./README.zh-CN.md">中文</a>
+  ·
   <a href="https://2sao7sao.github.io/agent-peak-bench/">Interactive report</a>
+  ·
+  <a href="./docs/evaluation-samples.zh-CN.md">Evaluation samples</a>
   ·
   <a href="./report/minimax-initial-live-report-2026-05-06.md">MiniMax live report</a>
   ·
@@ -54,6 +58,9 @@ The first published case is **MiniMax M2.7 High**, implemented through `MiniMax-
 
 > [!IMPORTANT]
 > These are initial canary results, not a production leaderboard. The value of the benchmark is the diagnostic shape: it identifies which harness design choices improve model reliability.
+
+> [!NOTE]
+> The initial canary used `3` repeated trials per scenario, so only `pass@1` and `pass@3` are statistically valid. Reporting `pass@5` or `pass@7` from only three trials would collapse into `pass@3` and overstate the evidence. The runner now reports insufficient pass@k as `null`; use `--force-repeat 7` for a valid pass@7 sweep.
 
 ## Benchmark Design
 
@@ -109,6 +116,17 @@ flowchart LR
 | `verification_coverage` | Measures whether the answer is backed by executable checks, citations, or test evidence. |
 | `latency_p50 / latency_p95` | Captures user-facing and workflow-facing time cost. |
 | `failure_taxonomy` | Turns failures into actionable harness changes. |
+
+### How to Read pass@k
+
+| Metric | Meaning | Minimum trials needed |
+| --- | --- | ---: |
+| `pass@1` | First attempt succeeds. | 1 |
+| `pass@3` | At least one of the first 3 trials succeeds. | 3 |
+| `pass@5` | At least one of the first 5 trials succeeds. | 5 |
+| `pass@7` | At least one of the first 7 trials succeeds. | 7 |
+
+The current `pass@1=25%` and `pass@3=50%` gap means the model has some recoverability under repeated attempts, but the first-shot reliability is low. That points to a harness pattern: use verifier/retry/repair loops for workflow tasks instead of direct autonomous execution.
 
 ## Evaluation Protocol
 
@@ -203,6 +221,8 @@ sequenceDiagram
 | Path | Purpose |
 | --- | --- |
 | [`docs/index.html`](./docs/index.html) | Published report page with radar chart and model conclusions. |
+| [`README.zh-CN.md`](./README.zh-CN.md) | Chinese README report page. |
+| [`docs/evaluation-samples.zh-CN.md`](./docs/evaluation-samples.zh-CN.md) | Concrete evaluation samples and scoring logic. |
 | [`public/minimax-m27-high-summary.json`](./public/minimax-m27-high-summary.json) | Sanitized public summary used for release reporting. |
 | [`report/minimax-initial-live-report-2026-05-06.md`](./report/minimax-initial-live-report-2026-05-06.md) | Initial live canary report. |
 | [`report/minimax-agent-usage-handbook.md`](./report/minimax-agent-usage-handbook.md) | Practical usage guide for skills, tools, context, and complex systems. |
@@ -254,6 +274,16 @@ python3 scripts/run_minimax_evals.py --suite evals/suites/tool_count_ablation.js
 python3 scripts/run_minimax_evals.py --suite evals/suites/window_and_decomposition_ablation.json
 python3 scripts/run_minimax_evals.py --suite evals/suites/agent_harness_design_v2.json --repeat 3 --pass-k 1,3
 python3 scripts/check_benchmark_distribution.py
+```
+
+Run a valid pass@7 sweep:
+
+```bash
+python3 scripts/run_minimax_evals.py \
+  --suite evals/suites/minimax_canary_v1.json \
+  --force-repeat 7 \
+  --pass-k 1,3,5,7 \
+  --out results/minimax-canary-v1-repeat7.json
 ```
 
 Results are written to `results/`, which is intentionally ignored by git. Publish only sanitized summaries.

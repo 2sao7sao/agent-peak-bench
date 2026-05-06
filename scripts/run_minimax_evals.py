@@ -353,8 +353,7 @@ def summarize_trials(trials: list, pass_k_values: list) -> dict:
     trial_count = len(trials)
     pass_at_k = {}
     for k in pass_k_values:
-        actual_k = min(k, trial_count)
-        pass_at_k[str(k)] = any(pass_bools[:actual_k])
+        pass_at_k[str(k)] = any(pass_bools[:k]) if trial_count >= k else None
 
     total_latency = [trial["metrics"]["total_latency_ms"] for trial in trials]
     first_round_latency = [trial["metrics"]["first_round_latency_ms"] for trial in trials]
@@ -396,6 +395,12 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=1,
         help="Default number of repeated trials per scenario for pass@k and consistency metrics.",
+    )
+    parser.add_argument(
+        "--force-repeat",
+        type=int,
+        default=0,
+        help="Override scenario-level repeat values. Use this for pass@k sweeps such as pass@5/pass@7.",
     )
     parser.add_argument(
         "--pass-k",
@@ -454,7 +459,7 @@ def main() -> int:
 
             print(f"Running {scenario['id']}...", file=sys.stderr)
             total_scenarios += 1
-            repeat_count = int(scenario.get("repeat", args.repeat))
+            repeat_count = int(args.force_repeat or scenario.get("repeat", args.repeat))
             trials = []
             for trial_index in range(repeat_count):
                 print(f"  trial {trial_index + 1}/{repeat_count}", file=sys.stderr)
@@ -463,7 +468,8 @@ def main() -> int:
                 trials.append(trial_result)
             summary = summarize_trials(trials, pass_k_values)
             for k, passed in summary["pass_at_k"].items():
-                aggregate_pass_at_k[k].append(1 if passed else 0)
+                if passed is not None:
+                    aggregate_pass_at_k[k].append(1 if passed else 0)
             result = {
                 "id": scenario["id"],
                 "title": scenario.get("title", scenario["id"]),
@@ -487,7 +493,7 @@ def main() -> int:
         "total_passed": total_passed,
         "pass_rate": 0 if total_scenarios == 0 else round(total_passed / total_scenarios, 3),
         "pass_at_k": {
-            key: round(sum(values) / len(values), 3) if values else 0.0 for key, values in aggregate_pass_at_k.items()
+            key: round(sum(values) / len(values), 3) if values else None for key, values in aggregate_pass_at_k.items()
         },
     }
 
