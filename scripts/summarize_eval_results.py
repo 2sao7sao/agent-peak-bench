@@ -49,6 +49,7 @@ def flatten_metadata(metadata, prefix=""):
 
 def aggregate_rows(rows):
     pass_rates = [row["pass_rate"] for row in rows]
+    eval_scores = [row["avg_evaluation_score"] for row in rows]
     consistency = [row["consistency"] for row in rows]
     latency = [row["avg_latency_ms"] for row in rows]
     p95_latency = [row["p95_latency_ms"] for row in rows if row["p95_latency_ms"]]
@@ -64,6 +65,7 @@ def aggregate_rows(rows):
     return {
         "scenario_count": len(rows),
         "avg_pass_rate": avg(pass_rates),
+        "avg_evaluation_score": avg(eval_scores),
         "avg_consistency": avg(consistency),
         "avg_latency_ms": avg(latency),
         "p95_latency_ms": percentile(p95_latency or latency, 0.95),
@@ -104,6 +106,7 @@ def main():
                     "pass_rate": summary.get("pass_rate", 0.0),
                     "pass_rate_ci95": summary.get("pass_rate_ci95", [0.0, 0.0]),
                     "pass_at_k": summary.get("pass_at_k", {}),
+                    "avg_evaluation_score": summary.get("avg_evaluation_score", 0.0),
                     "consistency": summary.get("exact_output_consistency", 0.0),
                     "avg_latency_ms": summary.get("avg_total_latency_ms", 0.0),
                     "p95_latency_ms": summary.get("p95_total_latency_ms", 0.0),
