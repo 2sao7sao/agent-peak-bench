@@ -2,11 +2,20 @@
   "suite_name": "harness_load_bearing_ablation_v2",
   "description": "Ablation canaries that test which harness components are load-bearing for keeping the model in peak operating condition.",
   "benchmark_family": "long_running_harness",
+  "default_repeat": 7,
   "scenarios": [
     {
       "id": "solo-complex-app-plan",
       "title": "Solo agent complex app plan",
       "category": "ablation_solo",
+      "ablation_axis": "agent_topology",
+      "plan_mode": "implicit_plan",
+      "agent_topology": "single_agent",
+      "harness_mode": "solo",
+      "ambiguity_profile": {
+        "level": "medium",
+        "source": "broad_product_scope"
+      },
       "repeat": 3,
       "temperature": 0.2,
       "system": "Create a concise implementation plan.",
@@ -30,6 +39,14 @@
       "id": "planner-generator-evaluator-plan",
       "title": "Planner/generator/evaluator harness plan",
       "category": "ablation_structured_harness",
+      "ablation_axis": "agent_topology",
+      "plan_mode": "explicit_planner_generator_evaluator",
+      "agent_topology": "planner_generator_evaluator",
+      "harness_mode": "structured_harness",
+      "ambiguity_profile": {
+        "level": "medium",
+        "source": "broad_product_scope"
+      },
       "repeat": 3,
       "temperature": 0.2,
       "system": "Return valid JSON only with keys planner, generator, evaluator, sprint_contract, validator.",
@@ -60,6 +77,14 @@
       "id": "evaluator-weak-vs-skeptical",
       "title": "Skeptical evaluator behavior",
       "category": "evaluator_quality",
+      "ablation_axis": "verifier_strength",
+      "plan_mode": "evaluation_only",
+      "agent_topology": "evaluator",
+      "harness_mode": "skeptical_verifier",
+      "personality_profile": {
+        "trait": "premature_closure_resistance",
+        "pressure": "accept_incomplete_work"
+      },
       "repeat": 3,
       "temperature": 0.2,
       "system": "You are a skeptical QA evaluator. Return valid JSON only with keys pass, critical_findings, missing_tests, next_feedback.",
@@ -89,6 +114,15 @@
       "id": "resume-after-sandbox-loss",
       "title": "Resume after sandbox loss",
       "category": "system_governance",
+      "ablation_axis": "state_rehydration",
+      "plan_mode": "resume_plan",
+      "agent_topology": "single_agent",
+      "harness_mode": "checkpoint_rehydration",
+      "context_profile": {
+        "window_bucket": "reset",
+        "payload_shape": "checkpoint_artifact",
+        "ambiguity_level": "low"
+      },
       "repeat": 3,
       "temperature": 0.2,
       "system": "Return valid JSON only with keys checkpoint, recovered_state, next_action, verification.",
@@ -117,6 +151,16 @@
       "id": "toolsearch-vs-all-tools",
       "title": "ToolSearch versus all-tools exposure",
       "category": "tool_recovery",
+      "ablation_axis": "tool_discovery_strategy",
+      "plan_mode": "design_reasoning",
+      "agent_topology": "single_agent",
+      "harness_mode": "toolsearch_design",
+      "tool_profile": {
+        "tool_count": 25,
+        "return_shape": "schema_discovery",
+        "return_length": "variable",
+        "implementation_mode": "design_probe"
+      },
       "repeat": 3,
       "temperature": 0.2,
       "system": "Return valid JSON only with keys preferred_design, reason, failure_mode, benchmark.",

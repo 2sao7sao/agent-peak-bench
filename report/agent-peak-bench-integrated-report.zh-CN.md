@@ -1,7 +1,7 @@
 # Agent Peak Bench 综合报告
 
-版本：`2026-05-06`  
-模型案例：`MiniMax-M2.7-highspeed`，报告中简称 **MiniMax M2.7 High**  
+版本：`2026-05-07`
+模型案例：`MiniMax-M2.7-highspeed`，报告中简称 **MiniMax M2.7 High**
 定位：面向 Agent 落地的综合评估、归因、工程设计与模型使用指南
 
 ## 声明
@@ -25,12 +25,13 @@
 
 Agent Peak Bench 不再把早期 smoke/canary 作为模型能力结论。smoke 只用于确认 API、工具调用、JSON 解析、pass@k 聚合是否工作；它不应出现在 README 的主结论中，也不应作为模型落地能力证明。
 
-当前主线评估应围绕三类评测集：
+当前主线评估应围绕四类评测集：
 
 | 主评测集 | 目的 | 能回答的问题 |
 | --- | --- | --- |
 | [`enterprise_agent_landing_v3.json`](../evals/suites/enterprise_agent_landing_v3.json) | 企业级 Agent 端到端任务 | 模型能否在真实业务压力下理解潜台词、查资料、调工具、处理权限、产出可执行决策。 |
 | [`tool_skill_mcp_ablation_v3.json`](../evals/suites/tool_skill_mcp_ablation_v3.json) | 工具/skills/MCP 工程机制归因 | 到底是工具数量、工具相似度、命名、router 分层还是 skill contract 影响稳定性。 |
+| [`tool_return_profiles_v1.json`](../evals/suites/tool_return_profiles_v1.json) | 工具返回 profile 归因 | 不同工具类型、返回长度、噪声、冲突证据、权限错误和大型 artifact 如何影响模型表现。 |
 | [`openclaw_complex_agent_tasks_v1.json`](../evals/suites/openclaw_complex_agent_tasks_v1.json) | OpenClaw 风格复杂 agent 任务 | personal OS、语音生产修复、异步 GitHub、多 Agent 运营、插件治理、长期记忆安全。 |
 
 综合目标不是给模型一个单点分数，而是形成一套闭环：
@@ -56,9 +57,10 @@ Agent Peak Bench 不再把早期 smoke/canary 作为模型能力结论。smoke �
 | --- | --- |
 | 子能力 | 潜台词理解、工具选择、证据引用、权限识别、缺口诚实、状态恢复。 |
 | 端到端 | 一个真实业务目标是否能被推进到可交付状态。 |
-| 稳定性 | pass@1、pass@3、pass@5、pass@7 和输出一致性。 |
+| 稳定性 | pass@1、pass@3、pass@5、pass@7、pass@10、置信区间和输出一致性。 |
 | 归因 | 失败来自模型、工具面、context、schema、权限还是 harness。 |
 | 工程设计 | 需要什么 router、verifier、skills、MCP 分层、context 策略。 |
+| 自动化 | 能否用数天到数周的 campaign 累积样本，而不是靠一次演示下结论。 |
 
 ## 2. 主评测体系
 
@@ -99,7 +101,34 @@ Agent Peak Bench 不再把早期 smoke/canary 作为模型能力结论。smoke �
 | router 是否有效？ | 看 layered router 是否提升 pass@1 或降低冗余调用。 |
 | skills 是否只是 prompt 装饰？ | 看 skill contract 是否提升 missing evidence、verification、owner routing。 |
 
-### 2.3 OpenClaw 风格复杂任务
+### 2.3 工具返回 profile 评测
+
+[`tool_return_profiles_v1.json`](../evals/suites/tool_return_profiles_v1.json) 专门补足“工具到底怎么影响模型”的观测。它不只测试工具个数，也测试工具实现方式和返回长度：
+
+![工具评估矩阵](../docs/assets/tool-eval-matrix.svg)
+
+| Profile | 要测什么 | 对应工程问题 |
+| --- | --- | --- |
+| `short_structured_json` | 短 JSON 工具返回 | 聚焦工具是否能稳定形成证据链。 |
+| `long_verbose_text` | 长文本、噪声、事实埋点 | 模型是否在长返回里漏证据或被 filler 带偏。 |
+| `conflicting_structured_json` | 状态页绿色但最新指标异常 | 模型是否能优先使用最新证据，而不是相信陈旧摘要。 |
+| `router_compressed_bundle` | router 聚合多个底层 MCP | router 是否降低选择熵，同时是否丢失必要 source detail。 |
+| `permission_error` | 403 / scope denied | 模型是否诚实说明权限缺口，而不是假装完成。 |
+| `large_log_artifact` | 大型 CI/log artifact | 模型能否抽取真正 blocker，避免 warning 噪声。 |
+
+当前实现是可复现的 mock MCP，不等于真实线上工具实测：
+
+| 层 | 当前实现 | 后续 live 化方式 |
+| --- | --- | --- |
+| Tool schema | suite 中定义 Anthropic-compatible `tools`，包含 `name`、`description`、`input_schema`。 | 保持同一 schema 契约，替换为真实 MCP/HTTP/CLI adapter。 |
+| Tool call | 模型返回 `tool_use` block。 | 不变。 |
+| Tool result | runner 根据 `mock_tools[tool_name]` 返回 `tool_result`。 | adapter 调真实工具，并对 trace 做脱敏、截断和结构化。 |
+| Error | `{"__tool_error__": "403 ..."}` 模拟权限失败。 | 映射真实 4xx/5xx、timeout、policy denied。 |
+| Long return | `generated_context` / `generated_contexts` 生成不同长度和噪声分布。 | 用真实文档、日志、工单导出构造脱敏 fixture。 |
+
+因此，这组评测的定位是 controlled attribution：先在可控变量下判断模型对工具形态和返回长度的敏感性，再把稳定结论迁移到 live adapter 小流量验证。
+
+### 2.4 OpenClaw 风格复杂任务
 
 [`openclaw_complex_agent_tasks_v1.json`](../evals/suites/openclaw_complex_agent_tasks_v1.json) 来自公开 OpenClaw 使用形态的抽象。它不评测 OpenClaw 本身，而是用 OpenClaw 暴露出的真实使用方向构造复杂任务：
 
@@ -124,8 +153,9 @@ Agent Peak Bench 不再把早期 smoke/canary 作为模型能力结论。smoke �
 | `pass@3` | 三次内可恢复 | 适合 retry + verifier。 |
 | `pass@5` | 五次内可恢复 | 有能力但不稳定，需要评估成本。 |
 | `pass@7` | 七次内可恢复 | 主要看潜力，不能直接代表生产可用。 |
+| `pass@10` | 十次采样恢复概率 | 只用于边界研究和高成本确认，不应用作生产体验指标。 |
 
-如果 `pass@1` 低而 `pass@7` 高，正确结论不是“模型强”，而是“模型需要强 harness 才能发挥”。这类场景不应直接开放 autonomous execution。
+runner 使用大样本 pass@k 估计口径，并同时输出 pass rate 的 CI95。若 `pass@1` 低而 `pass@7` / `pass@10` 高，正确结论不是“模型强”，而是“模型需要 retry、verifier、repair loop 才能发挥”。这类场景不应直接开放 autonomous execution。
 
 ### 3.2 工具指标
 
@@ -137,6 +167,10 @@ Agent Peak Bench 不再把早期 smoke/canary 作为模型能力结论。smoke �
 | `min_tool_calls` / `max_tool_calls` | 防止漏调和冗余调用。 |
 | `tool_precision` | 调用的工具是否真正必要。 |
 | `tool_redundancy` | 是否因为工具面过大而乱调。 |
+| `avg_required_tool_coverage` | 必要工具覆盖率。 |
+| `avg_tool_precision_proxy` | 基于 expected tool surface 的工具精度近似值。 |
+| `avg_forbidden_tool_calls` | 危险工具误调次数。 |
+| `avg_repeated_tool_calls` | 重复调用次数。 |
 
 ### 3.3 输出与治理指标
 
@@ -148,6 +182,25 @@ Agent Peak Bench 不再把早期 smoke/canary 作为模型能力结论。smoke �
 | `completion_honesty` | 是否说明缺失证据，而不是编造完成。 |
 | `verification_coverage` | 是否提供可验证的测试、引用、owner、审批或 gate。 |
 | `failure_taxonomy` | 失败归因到模型、工具、context、schema、权限或 harness。 |
+
+### 3.4 Campaign 观测指标
+
+大规模 campaign 不能只看单一通过率。当前 runner / summarizer 已补充以下观测：
+
+![Campaign 观测矩阵](../docs/assets/campaign-observability.svg)
+
+| 指标 | 用途 |
+| --- | --- |
+| `trial_count` / `success_count` | 样本量与成功次数。 |
+| `pass_rate_ci95` | 判断结论是否有足够置信度。 |
+| `pass_at_k` | 判断 retry/verifier 是否能把潜力转成稳定性。 |
+| `p50_total_latency_ms` / `p95_total_latency_ms` | 判断 API 耗时和长工具返回成本。 |
+| `avg_generated_context_chars` | 定位上下文窗口压力和 context panic。 |
+| `json_contract_pass_rate` | 判断输出是否可被工程系统消费。 |
+| `avg_tool_call_count` | 判断是否过度调用工具。 |
+| `exact_output_consistency` | 判断重复运行的一致性和人格/格式漂移。 |
+
+汇总脚本支持多个 result 文件，并按 `plan_mode`、`agent_topology`、`context_profile`、`tool_profile`、`skill_profile`、`ambiguity_profile`、`personality_profile` 切片。这样几天到数周的分批结果可以合并观察，而不是每次只看一个孤立 JSON。
 
 ## 4. 失败归因框架
 
@@ -225,7 +278,48 @@ Agent Peak Bench 不再把早期 smoke/canary 作为模型能力结论。smoke �
 | 长期 workspace memory | 必须区分 memory、retrieved content 和 system policy。 |
 | 合规/生产/财务动作 | 必须加入 policy gate、audit log、human approval。 |
 
-## 7. 运行建议
+## 7. Long-running campaign 运行建议
+
+完整评测周期不应被理解为几个小时内跑完的 demo。合理流程是：
+
+| 阶段 | 样本量 | 目的 | 结论等级 |
+| --- | --- | --- | --- |
+| Pilot boundary scan | 每 cell 约 7 次 | 验证任务、工具、评分和明显失稳点。 | 只能给 pilot 信号。 |
+| Calibration cells | 每 cell 约 30 次 | 计算 CI95，识别上下文、plan、工具、skills、模糊度边界。 | 可给 directional / actionable 建议。 |
+| Confirmatory boundary run | 每 cell 约 100 次 | 复测关键边界，确认工程建议是否稳定。 | 才适合写入强结论。 |
+
+当前 campaign 规格见 [`evals/campaigns/harness_engineering_campaign_v1.json`](../evals/campaigns/harness_engineering_campaign_v1.json)。
+
+规划命令，不实际执行：
+
+```bash
+python3 scripts/run_eval_campaign.py \
+  evals/campaigns/harness_engineering_campaign_v1.json \
+  --batch pilot_boundary_scan
+```
+
+执行某个 batch：
+
+```bash
+export MODEL_API_KEY="your_key"
+export MODEL_NAME="MiniMax-M2.7-highspeed"
+export MODEL_API_BASE="https://api.minimaxi.com/anthropic/v1/messages"
+
+python3 scripts/run_eval_campaign.py \
+  evals/campaigns/harness_engineering_campaign_v1.json \
+  --batch pilot_boundary_scan \
+  --execute
+```
+
+合并多天或多批次结果：
+
+```bash
+python3 scripts/summarize_eval_results.py \
+  results/harness_engineering_campaign_v1/*.json \
+  --json-out results/harness_engineering_campaign_v1/summary.json
+```
+
+### 7.1 单 suite 运行
 
 主评测：
 
@@ -236,7 +330,7 @@ export MODEL_API_BASE="https://api.minimaxi.com/anthropic/v1/messages"
 
 python3 scripts/run_minimax_evals.py \
   --suite evals/suites/enterprise_agent_landing_v3.json \
-  --pass-k 1,3,5,7 \
+  --pass-k 1,3,5,7,10 \
   --out results/minimax-enterprise-agent-v3.json
 ```
 
@@ -245,8 +339,17 @@ python3 scripts/run_minimax_evals.py \
 ```bash
 python3 scripts/run_minimax_evals.py \
   --suite evals/suites/tool_skill_mcp_ablation_v3.json \
-  --pass-k 1,3,5,7 \
+  --pass-k 1,3,5,7,10 \
   --out results/minimax-tool-skill-mcp-ablation-v3.json
+```
+
+工具返回 profile：
+
+```bash
+python3 scripts/run_minimax_evals.py \
+  --suite evals/suites/tool_return_profiles_v1.json \
+  --pass-k 1,3,5,7,10 \
+  --out results/minimax-tool-return-profiles-v1.json
 ```
 
 OpenClaw 风格复杂任务：
@@ -254,7 +357,7 @@ OpenClaw 风格复杂任务：
 ```bash
 python3 scripts/run_minimax_evals.py \
   --suite evals/suites/openclaw_complex_agent_tasks_v1.json \
-  --pass-k 1,3,5,7 \
+  --pass-k 1,3,5,7,10 \
   --out results/minimax-openclaw-complex-v1.json
 ```
 
@@ -272,7 +375,7 @@ python3 scripts/run_minimax_evals.py \
 
 ## 9. 下一步
 
-1. 使用真实 `MODEL_API_KEY` 运行三组主评测。
-2. 生成统一结果 summary，而不是多个零散报告。
-3. 按场景输出 pass@1/3/5/7、工具调用稳定性、失败归因。
-4. 更新本综合报告中的当前模型 case study，形成 MiniMax M2.7 High 的落地说明书。
+1. 先跑 `pilot_boundary_scan`，确认 suite、工具返回、评分器和 API 链路稳定。
+2. 对出现分歧的 cell 跑 `calibration_cells`，至少积累 30 次样本并观察 CI95。
+3. 对最终工程边界跑 `confirmatory_boundary_run`，目标是 100 次级别样本和稳定 failure taxonomy。
+4. 把结果按 context、plan、agent topology、tool/skill、ambiguity、personality 切片，更新本综合报告中的 MiniMax M2.7 High 落地说明书。

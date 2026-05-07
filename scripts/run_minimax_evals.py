@@ -4,6 +4,7 @@ import argparse
 import copy
 import datetime as dt
 import json
+import math
 import os
 import sys
 import time
@@ -42,13 +43,54 @@ def normalize_text(value: str) -> str:
     return " ".join(value.split()).strip().casefold()
 
 
-def replace_generated_context(node, generated: str):
+def percentile(values: list, q: float) -> float:
+    if not values:
+        return 0.0
+    ordered = sorted(values)
+    if len(ordered) == 1:
+        return round(float(ordered[0]), 3)
+    position = (len(ordered) - 1) * q
+    lower = math.floor(position)
+    upper = math.ceil(position)
+    if lower == upper:
+        return round(float(ordered[int(position)]), 3)
+    lower_value = ordered[lower]
+    upper_value = ordered[upper]
+    return round(float(lower_value + (upper_value - lower_value) * (position - lower)), 3)
+
+
+def wilson_interval(successes: int, total: int, z: float = 1.96) -> list:
+    if total <= 0:
+        return [0.0, 0.0]
+    phat = successes / total
+    denominator = 1 + z * z / total
+    center = (phat + z * z / (2 * total)) / denominator
+    margin = z * math.sqrt((phat * (1 - phat) + z * z / (4 * total)) / total) / denominator
+    return [round(max(0.0, center - margin), 3), round(min(1.0, center + margin), 3)]
+
+
+def estimate_pass_at_k(total: int, successes: int, k: int):
+    if total < k:
+        return None
+    if successes <= 0:
+        return 0.0
+    if total - successes < k:
+        return 1.0
+    # Unbiased pass@k estimator used by code-generation benchmarks.
+    # It estimates whether at least one of k sampled attempts succeeds.
+    product = 1.0
+    for value in range(total - successes + 1, total + 1):
+        product *= 1.0 - k / value
+    return round(1.0 - product, 3)
+
+
+def replace_generated_context(node, generated: str, placeholder: str = "{{GENERATED_CONTEXT}}"):
     if isinstance(node, str):
-        return node.replace("{{GENERATED_CONTEXT}}", generated)
+        return node.replace(placeholder, generated)
     if isinstance(node, list):
-        return [replace_generated_context(item, generated) for item in node]
+        return [replace_generated_context(item, generated, placeholder) for item in node]
     if isinstance(node, dict):
-        return {key: replace_generated_context(value, generated) for key, value in node.items()}
+        return {key: replace_generated_context(value, generated, placeholder) for key, value in node.items()}
     return node
 
 
@@ -102,6 +144,16 @@ def stringify_json_value(value) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True)
 
 
+def ordered_unique(items: list) -> list:
+    seen = set()
+    output = []
+    for item in items:
+        if item not in seen:
+            seen.add(item)
+            output.append(item)
+    return output
+
+
 def extract_tool_uses(content_blocks) -> list:
     calls = []
     for block in content_blocks or []:
@@ -121,6 +173,71 @@ def make_tool_result(tool_use_id: str, payload, is_error: bool = False) -> dict:
         "content": content,
         "is_error": is_error,
     }
+
+
+def compute_tool_metrics(expected: dict, tool_names_seen: list) -> dict:
+    required_tools = expected.get("required_tool_names", [])
+    required_groups = expected.get("required_tool_name_groups", [])
+    forbidden_tools = expected.get("forbidden_tool_names", [])
+    unique_seen = ordered_unique(tool_names_seen)
+
+    required_hits = sum(1 for tool in required_tools if tool in tool_names_seen)
+    group_hits = sum(1 for group in required_groups if any(tool in tool_names_seen for tool in group))
+    required_total = len(required_tools) + len(required_groups)
+    required_coverage = (required_hits + group_hits) / required_total if required_total else None
+
+    expected_tool_surface = set(required_tools)
+    for group in required_groups:
+        expected_tool_surface.update(group)
+    forbidden_call_count = sum(1 for tool in tool_names_seen if tool in forbidden_tools)
+    repeated_call_count = max(0, len(tool_names_seen) - len(unique_seen))
+
+    if tool_names_seen and expected_tool_surface:
+        precision_proxy = sum(1 for tool in tool_names_seen if tool in expected_tool_surface) / len(tool_names_seen)
+    elif tool_names_seen:
+        precision_proxy = None
+    else:
+        precision_proxy = 0.0 if expected_tool_surface else None
+
+    return {
+        "tool_call_count": len(tool_names_seen),
+        "unique_tool_call_count": len(unique_seen),
+        "tools_seen": unique_seen,
+        "required_tool_coverage": round(required_coverage, 3) if required_coverage is not None else None,
+        "tool_precision_proxy": round(precision_proxy, 3) if precision_proxy is not None else None,
+        "forbidden_tool_call_count": forbidden_call_count,
+        "repeated_tool_call_count": repeated_call_count,
+    }
+
+
+def compute_output_metrics(final_text: str, evaluation: dict) -> dict:
+    json_checks = [check for check in evaluation.get("checks", []) if check.get("check", "").startswith("json_")]
+    return {
+        "output_chars": len(final_text),
+        "json_contract_passed": all(check.get("passed") for check in json_checks) if json_checks else None,
+        "json_check_count": len(json_checks),
+    }
+
+
+def scenario_metadata(scenario: dict, suite: dict) -> dict:
+    keys = [
+        "benchmark_family",
+        "category",
+        "ablation_axis",
+        "harness_mode",
+        "plan_mode",
+        "agent_topology",
+        "context_profile",
+        "tool_profile",
+        "skill_profile",
+        "ambiguity_profile",
+        "personality_profile",
+        "hypothesis",
+    ]
+    metadata = {key: scenario[key] for key in keys if key in scenario}
+    if "benchmark_family" not in metadata and suite.get("benchmark_family"):
+        metadata["benchmark_family"] = suite["benchmark_family"]
+    return metadata
 
 
 def api_call(url: str, api_key: str, payload: dict, timeout_seconds: int) -> dict:
@@ -265,13 +382,21 @@ def evaluate_text(text: str, spec: dict, tool_names: list, metrics: dict) -> dic
     }
 
 
-def run_scenario(scenario: dict, config: dict) -> dict:
+def run_scenario(scenario: dict, config: dict, suite=None) -> dict:
     scenario = copy.deepcopy(scenario)
+    suite = suite or {}
 
-    generated = ""
+    generated_context_chars = {}
     if scenario.get("generated_context"):
         generated = build_generated_context(scenario["generated_context"])
         scenario = replace_generated_context(scenario, generated)
+        generated_context_chars["GENERATED_CONTEXT"] = len(generated)
+
+    for name, spec in scenario.get("generated_contexts", {}).items():
+        generated = build_generated_context(spec)
+        placeholder = "{{" + name + "}}"
+        scenario = replace_generated_context(scenario, generated, placeholder)
+        generated_context_chars[name] = len(generated)
 
     system = scenario.get("system")
     messages = scenario["messages"]
@@ -357,14 +482,20 @@ def run_scenario(scenario: dict, config: dict) -> dict:
         "cache_read_input_tokens": usage.get("cache_read_input_tokens", 0),
     }
     evaluation = evaluate_text(final_text, scenario.get("expected", {}), tool_names_seen, aggregate_metrics)
+    tool_metrics = compute_tool_metrics(scenario.get("expected", {}), tool_names_seen)
+    output_metrics = compute_output_metrics(final_text, evaluation)
 
     return {
         "id": scenario["id"],
         "title": scenario.get("title", scenario["id"]),
         "category": scenario.get("category"),
+        "metadata": scenario_metadata(scenario, suite),
         "skip_by_default": scenario.get("skip_by_default", False),
-        "generated_context_chars": len(generated),
+        "generated_context_chars": sum(generated_context_chars.values()),
+        "generated_context_char_map": generated_context_chars,
         "tool_names_seen": tool_names_seen,
+        "tool_metrics": tool_metrics,
+        "output_metrics": output_metrics,
         "evaluation": evaluation,
         "usage": usage,
         "metrics": aggregate_metrics,
@@ -380,12 +511,15 @@ def summarize_trials(trials: list, pass_k_values: list) -> dict:
         return {
             "trial_count": 0,
             "pass_rate": 0.0,
+            "pass_rate_ci95": [0.0, 0.0],
             "pass_at_k": {},
+            "prefix_pass_at_k": {},
             "exact_output_consistency": 0.0,
             "unique_normalized_outputs": 0,
         }
 
     pass_bools = [trial["evaluation"]["passed"] for trial in trials]
+    evaluation_scores = [trial["evaluation"]["score"] for trial in trials]
     normalized_outputs = [normalize_text(trial["final_text"]) for trial in trials]
     non_empty_outputs = [item for item in normalized_outputs if item]
     counts = {}
@@ -394,21 +528,67 @@ def summarize_trials(trials: list, pass_k_values: list) -> dict:
 
     dominant = max(counts.values()) if counts else 0
     trial_count = len(trials)
+    successes = sum(pass_bools)
     pass_at_k = {}
+    prefix_pass_at_k = {}
     for k in pass_k_values:
-        pass_at_k[str(k)] = any(pass_bools[:k]) if trial_count >= k else None
+        pass_at_k[str(k)] = estimate_pass_at_k(trial_count, successes, k)
+        prefix_pass_at_k[str(k)] = any(pass_bools[:k]) if trial_count >= k else None
 
     total_latency = [trial["metrics"]["total_latency_ms"] for trial in trials]
     first_round_latency = [trial["metrics"]["first_round_latency_ms"] for trial in trials]
+    round_counts = [trial["metrics"]["round_count"] for trial in trials]
+    output_chars = [trial["output_metrics"]["output_chars"] for trial in trials]
+    context_chars = [trial.get("generated_context_chars", 0) for trial in trials]
+    tool_call_counts = [trial["tool_metrics"]["tool_call_count"] for trial in trials]
+    required_tool_coverage = [
+        trial["tool_metrics"]["required_tool_coverage"]
+        for trial in trials
+        if trial["tool_metrics"].get("required_tool_coverage") is not None
+    ]
+    tool_precision_proxy = [
+        trial["tool_metrics"]["tool_precision_proxy"]
+        for trial in trials
+        if trial["tool_metrics"].get("tool_precision_proxy") is not None
+    ]
+    forbidden_tool_calls = [trial["tool_metrics"]["forbidden_tool_call_count"] for trial in trials]
+    repeated_tool_calls = [trial["tool_metrics"]["repeated_tool_call_count"] for trial in trials]
+    json_contract_values = [
+        trial["output_metrics"]["json_contract_passed"]
+        for trial in trials
+        if trial["output_metrics"].get("json_contract_passed") is not None
+    ]
 
     return {
         "trial_count": trial_count,
-        "pass_rate": round(sum(pass_bools) / trial_count, 3),
+        "success_count": successes,
+        "pass_rate": round(successes / trial_count, 3),
+        "pass_rate_ci95": wilson_interval(successes, trial_count),
         "pass_at_k": pass_at_k,
+        "prefix_pass_at_k": prefix_pass_at_k,
+        "avg_evaluation_score": round(sum(evaluation_scores) / trial_count, 3),
         "exact_output_consistency": round(dominant / trial_count, 3) if trial_count else 0.0,
         "unique_normalized_outputs": len(counts),
         "avg_total_latency_ms": round(sum(total_latency) / trial_count, 2),
+        "p50_total_latency_ms": percentile(total_latency, 0.5),
+        "p95_total_latency_ms": percentile(total_latency, 0.95),
         "avg_first_round_latency_ms": round(sum(first_round_latency) / trial_count, 2),
+        "p95_first_round_latency_ms": percentile(first_round_latency, 0.95),
+        "avg_round_count": round(sum(round_counts) / trial_count, 3),
+        "avg_output_chars": round(sum(output_chars) / trial_count, 1),
+        "avg_generated_context_chars": round(sum(context_chars) / trial_count, 1),
+        "avg_tool_call_count": round(sum(tool_call_counts) / trial_count, 3),
+        "avg_required_tool_coverage": round(sum(required_tool_coverage) / len(required_tool_coverage), 3)
+        if required_tool_coverage
+        else None,
+        "avg_tool_precision_proxy": round(sum(tool_precision_proxy) / len(tool_precision_proxy), 3)
+        if tool_precision_proxy
+        else None,
+        "avg_forbidden_tool_calls": round(sum(forbidden_tool_calls) / trial_count, 3),
+        "avg_repeated_tool_calls": round(sum(repeated_tool_calls) / trial_count, 3),
+        "json_contract_pass_rate": round(sum(1 for item in json_contract_values if item) / len(json_contract_values), 3)
+        if json_contract_values
+        else None,
     }
 
 
@@ -450,8 +630,18 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--pass-k",
-        default="1,3,5",
+        default="1,3,5,7,10",
         help="Comma-separated k values used when summarizing repeated trials.",
+    )
+    parser.add_argument(
+        "--campaign-id",
+        default=os.environ.get("EVAL_CAMPAIGN_ID", ""),
+        help="Optional long-running campaign identifier written into result metadata.",
+    )
+    parser.add_argument(
+        "--run-notes",
+        default=os.environ.get("EVAL_RUN_NOTES", ""),
+        help="Optional notes for this batch run.",
     )
     return parser.parse_args()
 
@@ -485,8 +675,12 @@ def main() -> int:
     run_started_at = dt.datetime.now().isoformat()
     suite_results = []
     total_scenarios = 0
-    total_passed = 0
+    first_trial_passed = 0
+    scenarios_with_any_success = 0
+    total_trials = 0
+    total_successes = 0
     aggregate_pass_at_k = {str(k): [] for k in pass_k_values}
+    scenario_pass_rates = []
 
     for suite_path in suites:
         suite = load_suite(suite_path)
@@ -516,35 +710,50 @@ def main() -> int:
             trials = []
             for trial_index in range(repeat_count):
                 print(f"  trial {trial_index + 1}/{repeat_count}", file=sys.stderr)
-                trial_result = run_scenario(scenario, config)
+                trial_result = run_scenario(scenario, config, suite)
                 trial_result["trial_index"] = trial_index + 1
                 trials.append(trial_result)
             summary = summarize_trials(trials, pass_k_values)
             for k, passed in summary["pass_at_k"].items():
                 if passed is not None:
-                    aggregate_pass_at_k[k].append(1 if passed else 0)
+                    aggregate_pass_at_k[k].append(float(passed))
+            scenario_pass_rates.append(summary["pass_rate"])
+            total_trials += summary["trial_count"]
+            total_successes += summary["success_count"]
+            if summary["success_count"] > 0:
+                scenarios_with_any_success += 1
             result = {
                 "id": scenario["id"],
                 "title": scenario.get("title", scenario["id"]),
                 "category": scenario.get("category"),
+                "metadata": scenario_metadata(scenario, suite),
                 "repeat_count": repeat_count,
                 "trial_summary": summary,
                 "trials": trials,
                 "evaluation": trials[0]["evaluation"],
             }
-            if summary["pass_at_k"].get("1", False):
-                total_passed += 1
+            if summary["prefix_pass_at_k"].get("1", False):
+                first_trial_passed += 1
             suite_output["results"].append(result)
         suite_results.append(suite_output)
 
     summary = {
         "run_started_at": run_started_at,
         "run_finished_at": dt.datetime.now().isoformat(),
+        "campaign_id": args.campaign_id,
+        "run_notes": args.run_notes,
         "model": args.model,
         "endpoint": endpoint,
         "total_scenarios": total_scenarios,
-        "total_passed": total_passed,
-        "pass_rate": 0 if total_scenarios == 0 else round(total_passed / total_scenarios, 3),
+        "total_trials": total_trials,
+        "total_successes": total_successes,
+        "first_trial_passed_scenarios": first_trial_passed,
+        "scenarios_with_any_success": scenarios_with_any_success,
+        "pass_rate": 0 if total_trials == 0 else round(total_successes / total_trials, 3),
+        "pass_rate_ci95": wilson_interval(total_successes, total_trials),
+        "mean_scenario_pass_rate": round(sum(scenario_pass_rates) / len(scenario_pass_rates), 3)
+        if scenario_pass_rates
+        else 0.0,
         "pass_at_k": {
             key: round(sum(values) / len(values), 3) if values else None for key, values in aggregate_pass_at_k.items()
         },

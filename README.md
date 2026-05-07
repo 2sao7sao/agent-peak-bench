@@ -40,6 +40,7 @@ Early smoke/canary results are kept only for runner validation and are not prese
 | --- | --- | --- |
 | [`enterprise_agent_landing_v3.json`](./evals/suites/enterprise_agent_landing_v3.json) | Realistic enterprise-agent tasks | Implicit intent, enterprise knowledge retrieval, multi-MCP tool use, governance, complex decomposition, long-running resume. |
 | [`tool_skill_mcp_ablation_v3.json`](./evals/suites/tool_skill_mcp_ablation_v3.json) | Engineering attribution | Focused 3-tool surface vs flat 14-tool overload vs router layering vs procedural skill contracts. |
+| [`tool_return_profiles_v1.json`](./evals/suites/tool_return_profiles_v1.json) | Tool-return profile attribution | Short JSON, long/noisy returns, conflicting evidence, router bundles, permission errors, and large log artifacts. |
 | [`openclaw_complex_agent_tasks_v1.json`](./evals/suites/openclaw_complex_agent_tasks_v1.json) | OpenClaw-style complex tasks | Personal OS, voice-driven production fix, async GitHub, multi-agent ops, plugin governance, persistent memory security. |
 
 ## Evaluation Loop
@@ -64,33 +65,66 @@ flowchart LR
 | How should complex systems be decomposed? | Enterprise knowledge-agent architecture, multi-agent handoff, OpenClaw complex tasks. |
 | Is persistent memory safe? | OpenClaw workspace memory and prompt-injection scenarios. |
 | What if pass@1 is low but pass@7 is high? | Use retry, verifier, repair loops, and permission gates rather than direct autonomous execution. |
+| Where does the context panic window begin? | Run context window sweeps and track pass rate, generated context chars, schema pass rate, and latency. |
+| When does multi-agent beat single-agent? | Compare `agent_topology` and `harness_mode` slices across long-running campaign batches. |
+| Does ambiguous context change final decisions? | Track `ambiguity_profile` and conflicting evidence scenarios. |
 
-## Run
+## Long-Running Campaign
+
+A serious boundary claim should come from a multi-day or multi-week evaluation campaign, not a single smoke run. The campaign spec is [`evals/campaigns/harness_engineering_campaign_v1.json`](./evals/campaigns/harness_engineering_campaign_v1.json).
+
+Plan a batch without executing:
+
+```bash
+python3 scripts/run_eval_campaign.py \
+  evals/campaigns/harness_engineering_campaign_v1.json \
+  --batch pilot_boundary_scan
+```
+
+Execute a batch after configuring provider credentials:
 
 ```bash
 export MODEL_API_KEY="your_key"
 export MODEL_NAME="MiniMax-M2.7-highspeed"
 export MODEL_API_BASE="https://api.minimaxi.com/anthropic/v1/messages"
+
+python3 scripts/run_eval_campaign.py \
+  evals/campaigns/harness_engineering_campaign_v1.json \
+  --batch pilot_boundary_scan \
+  --execute
 ```
 
 `MINIMAX_API_KEY`, `MINIMAX_MODEL`, and `MINIMAX_API_BASE` are still supported as compatibility aliases, but new documentation uses `MODEL_*` to keep the benchmark model-agnostic.
 
-Run the primary suites:
+Merge multiple campaign result files:
+
+```bash
+python3 scripts/summarize_eval_results.py \
+  results/harness_engineering_campaign_v1/*.json \
+  --json-out results/harness_engineering_campaign_v1/summary.json
+```
+
+## Single-Suite Runs
 
 ```bash
 python3 scripts/run_minimax_evals.py \
   --suite evals/suites/enterprise_agent_landing_v3.json \
-  --pass-k 1,3,5,7 \
+  --pass-k 1,3,5,7,10 \
   --out results/minimax-enterprise-agent-v3.json
 
 python3 scripts/run_minimax_evals.py \
   --suite evals/suites/tool_skill_mcp_ablation_v3.json \
-  --pass-k 1,3,5,7 \
+  --pass-k 1,3,5,7,10 \
   --out results/minimax-tool-skill-mcp-ablation-v3.json
 
 python3 scripts/run_minimax_evals.py \
+  --suite evals/suites/tool_return_profiles_v1.json \
+  --pass-k 1,3,5,7,10 \
+  --out results/minimax-tool-return-profiles-v1.json
+
+python3 scripts/run_minimax_evals.py \
   --suite evals/suites/openclaw_complex_agent_tasks_v1.json \
-  --pass-k 1,3,5,7 \
+  --pass-k 1,3,5,7,10 \
   --out results/minimax-openclaw-complex-v1.json
 ```
 
@@ -106,9 +140,13 @@ python3 scripts/check_benchmark_distribution.py
 | --- | --- |
 | [`report/agent-peak-bench-integrated-report.zh-CN.md`](./report/agent-peak-bench-integrated-report.zh-CN.md) | Single integrated report. |
 | [`docs/evaluation-samples.zh-CN.md`](./docs/evaluation-samples.zh-CN.md) | Realistic sample design and scoring examples. |
+| [`docs/assets/campaign-observability.svg`](./docs/assets/campaign-observability.svg) | Campaign dimension-to-metric observability matrix. |
+| [`docs/assets/tool-eval-matrix.svg`](./docs/assets/tool-eval-matrix.svg) | Tool-return evaluation matrix. |
+| [`evals/campaigns/harness_engineering_campaign_v1.json`](./evals/campaigns/harness_engineering_campaign_v1.json) | Multi-day/multi-week harness engineering campaign spec. |
 | [`evals/model_config.example.json`](./evals/model_config.example.json) | Model-agnostic provider configuration example with no real keys. |
 | [`evals/suites/`](./evals/suites) | Evaluation suites. |
 | [`scripts/run_minimax_evals.py`](./scripts/run_minimax_evals.py) | Anthropic-compatible evaluator runner. The filename is kept for backward compatibility. |
+| [`scripts/run_eval_campaign.py`](./scripts/run_eval_campaign.py) | Plans or executes campaign batches. |
 | [`scripts/summarize_eval_results.py`](./scripts/summarize_eval_results.py) | Result summarizer. |
 | [`scripts/check_benchmark_distribution.py`](./scripts/check_benchmark_distribution.py) | Task-family distribution checker. |
 

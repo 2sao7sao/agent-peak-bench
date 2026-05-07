@@ -1,0 +1,142 @@
+{
+  "campaign_id": "harness_engineering_campaign_v1",
+  "version": "2026-05-07",
+  "case_study_model": "MiniMax M2.7 High",
+  "purpose": "Align model evaluation with harness engineering. The campaign should locate model capability boundaries and translate them into deployment guidance for context windows, plan mode, single-agent versus multi-agent topology, tool/skill load, context ambiguity, and model behavioral traits.",
+  "duration_model": {
+    "expected_cycle": "multi-day to multi-week",
+    "reason": "Boundary claims require repeated trials, factor sweeps, confidence intervals, and confirmatory reruns. A single smoke run or one afternoon of testing is only a pilot."
+  },
+  "decision_objectives": [
+    {
+      "id": "context_panic_window",
+      "question": "At which generated/retrieved context size does pass@1, tool precision, schema adherence, or latency degrade sharply?",
+      "primary_dimensions": ["context_profile.window_bucket", "context_profile.payload_shape"],
+      "decision_output": "Recommended context budget, compaction threshold, retrieval shape, and reset strategy."
+    },
+    {
+      "id": "plan_mode_effect",
+      "question": "Does explicit planning improve task completion, or does it create slower, over-confident, or tool-avoidant behavior?",
+      "primary_dimensions": ["plan_mode", "harness_mode"],
+      "decision_output": "When to use no-plan, private plan, plan+verifier, or staged sprint contracts."
+    },
+    {
+      "id": "single_vs_multi_agent_boundary",
+      "question": "When does multi-agent decomposition beat a single agent, and when does handoff overhead dominate?",
+      "primary_dimensions": ["agent_topology", "harness_mode"],
+      "decision_output": "Boundary conditions for solo agent, planner-worker, content+harness split, and multi-agent integration owner."
+    },
+    {
+      "id": "tool_skill_load_curve",
+      "question": "How many tools or skills can be exposed before selection precision, latency, or output stability degrades?",
+      "primary_dimensions": ["tool_profile.tool_count", "tool_profile.return_length", "skill_profile.skill_count", "skill_profile.skill_style"],
+      "decision_output": "Direct tool limit, router threshold, skill writing rules, and unsafe flat-surface patterns."
+    },
+    {
+      "id": "context_ambiguity_sensitivity",
+      "question": "How does implicit intent, conflicting evidence, stale context, or noisy tool output affect final decisions?",
+      "primary_dimensions": ["ambiguity_profile.level", "context_profile.ambiguity_level"],
+      "decision_output": "Prompt and harness requirements for intent extraction, evidence conflict handling, and missing-evidence honesty."
+    },
+    {
+      "id": "personality_behavior",
+      "question": "Does the model show laziness, premature closure, over-compliance, verbosity drift, or refusal/permission handling weaknesses?",
+      "primary_dimensions": ["personality_profile.trait"],
+      "decision_output": "System prompt constraints, verifier checks, repair loops, and risk-specific gating."
+    }
+  ],
+  "confidence_policy": {
+    "pilot_trials_per_cell": 7,
+    "calibration_trials_per_cell": 30,
+    "confirmatory_trials_per_cell": 100,
+    "required_pass_k": [1, 3, 5, 7, 10],
+    "minimum_reportable_sample_size": 30,
+    "preferred_reportable_sample_size": 100,
+    "ci95_max_width_for_boundary_claim": 0.15,
+    "boundary_claim_rule": "A recommendation such as 'directly expose at most 3 tools' should not be treated as stable until the relevant cells have at least 30 trials and CI95 width <= 0.15, or until the report explicitly marks the claim as pilot-only.",
+    "repeatability_rule": "If pass@7 is high but pass@1 is low, report the model as harness-dependent rather than production-ready."
+  },
+  "primary_metrics": [
+    "pass_rate",
+    "pass_rate_ci95",
+    "pass@1",
+    "pass@3",
+    "pass@5",
+    "pass@7",
+    "pass@10",
+    "exact_output_consistency",
+    "json_contract_pass_rate",
+    "avg_required_tool_coverage",
+    "avg_tool_precision_proxy",
+    "avg_tool_call_count",
+    "avg_generated_context_chars",
+    "p50_total_latency_ms",
+    "p95_total_latency_ms",
+    "avg_forbidden_tool_calls",
+    "avg_repeated_tool_calls",
+    "failure_taxonomy"
+  ],
+  "campaign_batches": [
+    {
+      "id": "pilot_boundary_scan",
+      "goal": "Cheaply validate scenario realism, API compatibility, scoring contracts, and obvious boundary signals.",
+      "force_repeat": 7,
+      "pass_k": "1,3,5,7",
+      "suites": [
+        "evals/suites/enterprise_agent_landing_v3.json",
+        "evals/suites/tool_skill_mcp_ablation_v3.json",
+        "evals/suites/tool_return_profiles_v1.json",
+        "evals/suites/window_and_decomposition_ablation.json",
+        "evals/suites/behavior_and_rigor.json"
+      ]
+    },
+    {
+      "id": "calibration_cells",
+      "goal": "Raise each promising or risky cell to a minimum reportable sample size and estimate CI95.",
+      "force_repeat": 30,
+      "pass_k": "1,3,5,7,10",
+      "suites": [
+        "evals/suites/tool_skill_mcp_ablation_v3.json",
+        "evals/suites/tool_return_profiles_v1.json",
+        "evals/suites/window_and_decomposition_ablation.json",
+        "evals/suites/harness_load_bearing_ablation_v2.json"
+      ]
+    },
+    {
+      "id": "confirmatory_boundary_run",
+      "goal": "Confirm final deployment claims for direct tool count, router threshold, context budget, plan mode, and agent topology.",
+      "force_repeat": 100,
+      "pass_k": "1,3,5,7,10",
+      "suites": [
+        "evals/suites/enterprise_agent_landing_v3.json",
+        "evals/suites/tool_skill_mcp_ablation_v3.json",
+        "evals/suites/tool_return_profiles_v1.json",
+        "evals/suites/openclaw_complex_agent_tasks_v1.json"
+      ]
+    }
+  ],
+  "stopping_conditions": [
+    "Stop expanding a cell when pass_rate CI95 width <= 0.15 and qualitative failure categories are stable across the last two batches.",
+    "Continue sampling a cell when pass@1 and pass@7 diverge materially, because the engineering conclusion depends on retry/verifier cost.",
+    "Escalate to live adapter tests when mock-MCP results are stable but the deployment decision depends on real latency, permissions, or external-system nondeterminism.",
+    "Do not publish a strong boundary claim when only pilot data exists."
+  ],
+  "reporting_contract": {
+    "must_include": [
+      "sample size per cell",
+      "CI95 for pass rate",
+      "pass@k curve",
+      "tool precision and required-tool coverage",
+      "context length and latency distribution",
+      "schema contract pass rate",
+      "failure taxonomy",
+      "engineering recommendation with confidence label"
+    ],
+    "confidence_labels": {
+      "pilot": "n < 30 or CI95 width > 0.25",
+      "directional": "n >= 30 and CI95 width <= 0.25",
+      "actionable": "n >= 30 and CI95 width <= 0.15 plus stable failure taxonomy",
+      "confirmed": "n >= 100 and replicated in confirmatory batch"
+    }
+  }
+}

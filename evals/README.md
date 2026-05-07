@@ -8,9 +8,10 @@
 
 - [`suites/enterprise_agent_landing_v3.json`](./suites/enterprise_agent_landing_v3.json)
 - [`suites/tool_skill_mcp_ablation_v3.json`](./suites/tool_skill_mcp_ablation_v3.json)
+- [`suites/tool_return_profiles_v1.json`](./suites/tool_return_profiles_v1.json)
 - [`suites/openclaw_complex_agent_tasks_v1.json`](./suites/openclaw_complex_agent_tasks_v1.json)
 
-这些 suite 用于形成模型落地结论：端到端能力、工具稳定性、OpenClaw 风格复杂任务、失败归因和工程设计建议。
+这些 suite 用于形成模型落地结论：端到端能力、工具稳定性、工具返回长度/类型敏感性、OpenClaw 风格复杂任务、失败归因和工程设计建议。
 
 ## 2. 辅助 probes / ablations
 
@@ -54,24 +55,62 @@
 
 `tool_skill_mcp_ablation_v3` 面向工程归因：比较 3 工具直连、14 工具平铺、router 分层、procedural skill + tools 的稳定性差异。
 
+`tool_return_profiles_v1` 面向工具返回 profile：短结构化 JSON、长噪声返回、冲突证据、router 压缩 bundle、权限错误、大型日志 artifact。
+
 `openclaw_complex_agent_tasks_v1` 面向 OpenClaw 风格复杂任务：personal OS、语音触发生产修复、异步 GitHub backlog、多 Agent 电商运营、skills/插件治理、持久 workspace memory 与安全。
+
+## Long-running campaign
+
+完整边界结论应来自持续数天到数周的 campaign，而不是一次单 suite run。Campaign 规格：
+
+- [`campaigns/harness_engineering_campaign_v1.json`](./campaigns/harness_engineering_campaign_v1.json)
+
+规划 batch：
+
+```bash
+python3 scripts/run_eval_campaign.py \
+  evals/campaigns/harness_engineering_campaign_v1.json \
+  --batch pilot_boundary_scan
+```
+
+执行 batch：
+
+```bash
+python3 scripts/run_eval_campaign.py \
+  evals/campaigns/harness_engineering_campaign_v1.json \
+  --batch pilot_boundary_scan \
+  --execute
+```
+
+合并多批结果：
+
+```bash
+python3 scripts/summarize_eval_results.py \
+  results/harness_engineering_campaign_v1/*.json \
+  --json-out results/harness_engineering_campaign_v1/summary.json
+```
 
 推荐运行：
 
 ```bash
 python3 scripts/run_minimax_evals.py \
   --suite evals/suites/enterprise_agent_landing_v3.json \
-  --pass-k 1,3,5,7 \
+  --pass-k 1,3,5,7,10 \
   --out results/minimax-enterprise-agent-v3.json
 
 python3 scripts/run_minimax_evals.py \
   --suite evals/suites/tool_skill_mcp_ablation_v3.json \
-  --pass-k 1,3,5,7 \
+  --pass-k 1,3,5,7,10 \
   --out results/minimax-tool-skill-mcp-ablation-v3.json
 
 python3 scripts/run_minimax_evals.py \
+  --suite evals/suites/tool_return_profiles_v1.json \
+  --pass-k 1,3,5,7,10 \
+  --out results/minimax-tool-return-profiles-v1.json
+
+python3 scripts/run_minimax_evals.py \
   --suite evals/suites/openclaw_complex_agent_tasks_v1.json \
-  --pass-k 1,3,5,7 \
+  --pass-k 1,3,5,7,10 \
   --out results/minimax-openclaw-complex-v1.json
 ```
 

@@ -1,7 +1,7 @@
 {
   "name": "agent_landing_benchmark_v3",
-  "version": "2026-05-06",
-  "purpose": "Evaluate model capability under realistic enterprise-agent harness conditions, including implicit intent, tools/MCP, skills, long-running workflows, context strategy, governance, failure attribution, and system design guidance.",
+  "version": "2026-05-07",
+  "purpose": "Evaluate model capability under realistic enterprise-agent harness conditions, including implicit intent, tools/MCP, skills, long-running workflows, context strategy, plan mode, agent topology, ambiguity, governance, failure attribution, long-running campaign statistics, and system design guidance.",
   "families": [
     {
       "id": "chat_memory",
@@ -48,6 +48,9 @@
     "pass@1",
     "pass@3",
     "pass@5",
+    "pass@7",
+    "pass@10",
+    "pass_rate_ci95",
     "semantic_consistency",
     "exact_output_consistency",
     "tool_precision",
@@ -58,6 +61,7 @@
     "latency_p50",
     "latency_p95",
     "token_cost",
+    "generated_context_chars",
     "failure_taxonomy"
   ],
   "benchmark_tiers": [
@@ -88,7 +92,12 @@
     "How many tools can be exposed directly before tool precision degrades?",
     "Does router layering improve tool stability compared with a flat MCP surface?",
     "Which skill format improves output completeness without hiding missing evidence?",
-    "Which failures are model limitations versus harness design failures?"
+    "Which failures are model limitations versus harness design failures?",
+    "At what context size does the model enter a panic/drift zone?",
+    "Which plan mode works best for each task family?",
+    "When does multi-agent decomposition beat a single-agent harness?",
+    "How do tool return length and tool implementation mode affect stability?",
+    "How much ambiguity can the model tolerate before final decisions drift?"
   ],
   "harness_modes": [
     "solo",

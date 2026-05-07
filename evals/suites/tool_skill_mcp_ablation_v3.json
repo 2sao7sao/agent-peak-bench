@@ -39,6 +39,15 @@
         }
       },
       "ablation_axis": "focused_tool_surface",
+      "harness_mode": "direct_tools",
+      "plan_mode": "tool_first_structured_answer",
+      "agent_topology": "single_agent",
+      "tool_profile": {
+        "tool_count": 3,
+        "return_shape": "short_structured_json",
+        "return_length": "short",
+        "implementation_mode": "mock_mcp"
+      },
       "hypothesis": "A narrow 3-tool surface should produce stable, low-redundancy tool use."
     },
     {
@@ -98,6 +107,15 @@
         }
       },
       "ablation_axis": "flat_tool_surface_overload",
+      "harness_mode": "flat_tools",
+      "plan_mode": "tool_first_structured_answer",
+      "agent_topology": "single_agent",
+      "tool_profile": {
+        "tool_count": 14,
+        "return_shape": "short_structured_json",
+        "return_length": "short",
+        "implementation_mode": "mock_mcp"
+      },
       "hypothesis": "A flat 14-tool surface should reveal whether the model over-calls, chooses irrelevant tools, or loses the core evidence chain."
     },
     {
@@ -136,6 +154,15 @@
         }
       },
       "ablation_axis": "layered_tool_router",
+      "harness_mode": "router_tools",
+      "plan_mode": "router_first_structured_answer",
+      "agent_topology": "single_agent_with_router",
+      "tool_profile": {
+        "tool_count": 4,
+        "return_shape": "router_compressed_bundle",
+        "return_length": "medium",
+        "implementation_mode": "mock_router_mcp"
+      },
       "hypothesis": "A layered router should preserve evidence quality while reducing tool-selection entropy."
     },
     {
@@ -176,6 +203,19 @@
         ]
       },
       "ablation_axis": "skill_contract_plus_tools",
+      "harness_mode": "skill_plus_direct_tools",
+      "plan_mode": "procedural_skill_contract",
+      "agent_topology": "single_agent",
+      "tool_profile": {
+        "tool_count": 4,
+        "return_shape": "short_structured_json",
+        "return_length": "short",
+        "implementation_mode": "mock_mcp"
+      },
+      "skill_profile": {
+        "skill_count": 1,
+        "skill_style": "procedural_contract"
+      },
       "hypothesis": "A procedural skill should improve completion honesty and output completeness, but the harness still needs validators."
     }
   ]

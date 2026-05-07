@@ -192,6 +192,14 @@
         background: var(--panel);
       }
 
+      .asset {
+        width: 100%;
+        height: auto;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: #fff;
+      }
+
       @media (max-width: 860px) {
         header,
         .grid.two,
@@ -219,9 +227,9 @@
             <dt>Main report</dt>
             <dd>Integrated Report</dd>
             <dt>Primary suites</dt>
-            <dd>Enterprise / MCP Ablation / OpenClaw</dd>
+            <dd>Enterprise / MCP Ablation / Tool Profiles / OpenClaw</dd>
             <dt>Metrics</dt>
-            <dd>pass@1/3/5/7, tool precision, failure taxonomy</dd>
+            <dd>pass@1/3/5/7/10, CI95, tool precision, latency</dd>
             <dt>Security</dt>
             <dd>Sanitized public assets only</dd>
           </dl>
@@ -231,9 +239,9 @@
       <section class="section">
         <div class="metrics">
           <div class="metric"><span>Focus</span><strong>Agent Landing</strong></div>
-          <div class="metric"><span>Primary Suites</span><strong>3</strong></div>
-          <div class="metric"><span>Total Scenarios</span><strong>87</strong></div>
-          <div class="metric"><span>Report Mode</span><strong>Integrated</strong></div>
+          <div class="metric"><span>Primary Suites</span><strong>4</strong></div>
+          <div class="metric"><span>Total Scenarios</span><strong>96</strong></div>
+          <div class="metric"><span>Run Mode</span><strong>Campaign</strong></div>
         </div>
       </section>
 
@@ -258,10 +266,23 @@
               <tr><td>1</td><td>真实任务设计</td></tr>
               <tr><td>2</td><td>子能力观测与端到端完成率</td></tr>
               <tr><td>3</td><td>pass@k 稳定性和工具调用质量</td></tr>
-              <tr><td>4</td><td>失败归因与 harness 设计</td></tr>
-              <tr><td>5</td><td>模型使用指南</td></tr>
+              <tr><td>4</td><td>CI95、latency、context chars、schema pass rate</td></tr>
+              <tr><td>5</td><td>失败归因、harness 设计与模型使用指南</td></tr>
             </tbody>
           </table>
+        </div>
+      </section>
+
+      <section class="section panel">
+        <h2>Long-running Campaign</h2>
+        <p>
+          当前目标不是一次性 smoke test，而是持续数天到数周的实验 campaign：pilot scan、calibration cells、confirmatory boundary run。每个 cell 输出样本量、CI95、pass@k、工具精度、上下文长度、延迟分布、schema 通过率和失败归因。
+        </p>
+        <img class="asset" src="./assets/campaign-observability.svg" alt="Harness engineering campaign observability matrix" />
+        <div class="links">
+          <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/evals/campaigns/harness_engineering_campaign_v1.json">Campaign spec</a>
+          <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/scripts/run_eval_campaign.py">Campaign runner</a>
+          <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/scripts/summarize_eval_results.py">Multi-result summarizer</a>
         </div>
       </section>
 
@@ -287,6 +308,11 @@
               <td>3 工具直连、14 工具平铺、router 分层、procedural skill 对稳定性的影响。</td>
             </tr>
             <tr>
+              <td><code>tool_return_profiles_v1</code></td>
+              <td>工具返回 profile 归因</td>
+              <td>短 JSON、长噪声返回、冲突证据、router bundle、权限错误、大型日志 artifact。</td>
+            </tr>
+            <tr>
               <td><code>openclaw_complex_agent_tasks_v1</code></td>
               <td>OpenClaw 风格复杂任务</td>
               <td>personal OS、语音生产修复、异步 GitHub、多 Agent 运营、插件治理、长期记忆安全。</td>
@@ -296,12 +322,18 @@
       </section>
 
       <section class="section panel">
+        <h2>工具返回 Profile 矩阵</h2>
+        <img class="asset" src="./assets/tool-eval-matrix.svg" alt="Tool return profile evaluation matrix" />
+      </section>
+
+      <section class="section panel">
         <h2>Links</h2>
         <div class="links">
           <a href="https://github.com/2sao7sao/agent-peak-bench">GitHub repo</a>
           <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/README.zh-CN.md">中文 README</a>
           <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/evals/suites/enterprise_agent_landing_v3.json">Enterprise suite</a>
           <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/evals/suites/tool_skill_mcp_ablation_v3.json">MCP ablation suite</a>
+          <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/evals/suites/tool_return_profiles_v1.json">Tool profile suite</a>
           <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/evals/suites/openclaw_complex_agent_tasks_v1.json">OpenClaw suite</a>
           <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/evals/benchmark_manifest_v2.json">Benchmark manifest</a>
         </div>
