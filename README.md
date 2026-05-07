@@ -34,6 +34,16 @@ The main entry point is the [integrated report](./report/agent-peak-bench-integr
 
 Early smoke/canary results are kept only for runner validation and are not presented as README-level model conclusions.
 
+## MiniMax Live r7 Pilot
+
+The first MiniMax M2.7 High live r7 pilot is complete: 4 suites, 19 scenarios, and 133 trials. This is a pilot, not a final high-confidence claim; an r30 calibration batch is running for stronger estimates.
+
+![tools skills](./docs/assets/minimax-r7-tool-skill-quality.svg)
+
+![tool return](./docs/assets/minimax-r7-tool-return-quality.svg)
+
+![behavior passk](./docs/assets/minimax-r7-behavior-passk.svg)
+
 ## Primary Suites
 
 | Suite | Purpose | What it evaluates |
@@ -142,6 +152,7 @@ python3 scripts/check_benchmark_distribution.py
 | [`docs/evaluation-samples.zh-CN.md`](./docs/evaluation-samples.zh-CN.md) | Realistic sample design and scoring examples. |
 | [`docs/assets/campaign-observability.svg`](./docs/assets/campaign-observability.svg) | Campaign dimension-to-metric observability matrix. |
 | [`docs/assets/tool-eval-matrix.svg`](./docs/assets/tool-eval-matrix.svg) | Tool-return evaluation matrix. |
+| [`public/minimax-m27-high-r7-aggregate-summary.json`](./public/minimax-m27-high-r7-aggregate-summary.json) | Sanitized r7 live pilot aggregate summary. |
 | [`evals/campaigns/harness_engineering_campaign_v1.json`](./evals/campaigns/harness_engineering_campaign_v1.json) | Multi-day/multi-week harness engineering campaign spec. |
 | [`evals/model_config.example.json`](./evals/model_config.example.json) | Model-agnostic provider configuration example with no real keys. |
 | [`evals/suites/`](./evals/suites) | Evaluation suites. |

@@ -278,6 +278,55 @@ runner 使用大样本 pass@k 估计口径，并同时输出 pass rate 的 CI95�
 | 长期 workspace memory | 必须区分 memory、retrieved content 和 system policy。 |
 | 合规/生产/财务动作 | 必须加入 policy gate、audit log、human approval。 |
 
+### 6.1 Live r7 pilot：初步观测
+
+本轮已使用远端 MiniMax env 中的 `MiniMax-M2.7-highspeed` 做 live r7 pilot。公开结果只包含脱敏聚合指标，不包含 API key、原始回答 trace 或私有工具输出。r7 是 pilot，不是最终强置信结论；单 cell `n=7`，CI 仍宽。r30 calibration 已作为后台批次启动，用于后续替换这些 pilot 图。
+
+| Suite | Scenarios | Trials | Strict pass rate | CI95 | 解释 |
+| --- | ---: | ---: | ---: | --- | --- |
+| `tool_skill_mcp_ablation_v3` | 4 | 28 | 0.000 | `[0.000, 0.121]` | 部署级严格验收全未通过，但工具选择、JSON 契约和证据覆盖有明显可观测差异。 |
+| `tool_return_profiles_v1` | 6 | 42 | 0.000 | `[0.000, 0.084]` | 返回形态不直接决定严格 pass；长返回没有摧毁结构化能力，但增加上下文与延迟成本。 |
+| `behavior_and_rigor` | 5 | 35 | 0.171 | `[0.081, 0.327]` | 行为类任务出现 pass@k 提升，说明有潜力但稳定性不足。 |
+| `window_and_decomposition_ablation` | 4 | 28 | 0.036 | `[0.006, 0.177]` | 当前样本下 context / decomposition 的严格 pass 很低，需要重写任务与评分细化后复测。 |
+
+#### Tools / skills 曲线
+
+![MiniMax r7 tools skills quality](../docs/assets/minimax-r7-tool-skill-quality.svg)
+
+初步结论：
+
+| 条件 | Eval score | Tool precision | Required coverage | JSON contract | P95 latency |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 3 focused tools | 0.625 | 1.000 | 0.905 | 0.857 | 23.9s |
+| 14 flat tools | 0.603 | 0.508 | 0.905 | 0.714 | 30.6s |
+| Router 4 | 0.696 | 0.857 | 1.000 | 0.714 | 26.0s |
+| Skill + 4 tools | 0.536 | 0.795 | 0.857 | 0.857 | 31.0s |
+
+在 r7 pilot 中，直接暴露 14 个工具会显著拉低工具精度，并提高延迟。router 分层没有带来严格 pass，但在 evaluation score、coverage 上优于 flat tools。单个 procedural skill 没有自动提升整体效果，说明 skill 需要配合 verifier 和更明确的 missing-evidence contract。
+
+#### Tool return profile 曲线
+
+![MiniMax r7 tool return quality](../docs/assets/minimax-r7-tool-return-quality.svg)
+
+初步结论：
+
+| 返回形态 | Eval score | Tool precision | JSON contract | 备注 |
+| --- | ---: | ---: | ---: | --- |
+| Short JSON | 0.600 | 0.857 | 0.286 | 短返回不保证结构输出稳定。 |
+| Long verbose text | 0.829 | 1.000 | 1.000 | 长返回能被抽取，但 context 成本高。 |
+| Conflicting evidence | 0.730 | 1.000 | 1.000 | 对 stale/current evidence 有一定处理能力。 |
+| Router bundle | 0.700 左右 | 0.9 左右 | 0.7-0.8 | router 降低选择熵，但必须保留 source list。 |
+| Permission error | 0.545 | 1.000 | 0.000 | 权限错误路径仍需更强 policy/verifier。 |
+| Large log artifact | 0.757 | 1.000 | 1.000 | 可抽取 blocker，但 required coverage 不稳定。 |
+
+这组结果提示：问题不是“工具返回越短越好”。更关键的是返回是否有结构、是否有 source、是否要求模型显式输出 missing evidence，以及评分器是否能区分结构通过与语义通过。
+
+#### 行为 / 性格曲线
+
+![MiniMax r7 behavior passk](../docs/assets/minimax-r7-behavior-passk.svg)
+
+行为类任务最值得关注的是 pass@k 曲线。`over_compliance_resistance` 在 r7 中 pass rate 0.571，pass@3 估计 0.971，说明模型在“不要越权发送”这类明确安全边界上可通过重试快速收敛。`laziness_resistance` 和 `verbosity_control` 明显弱，适合通过 system prompt、结构化输出预算和 verifier 抑制，而不适合直接自动执行。
+
 ## 7. Long-running campaign 运行建议
 
 完整评测周期不应被理解为几个小时内跑完的 demo。合理流程是：

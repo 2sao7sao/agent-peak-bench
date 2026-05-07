@@ -34,6 +34,16 @@ Agent Peak Bench 不做单一排行榜分数。它要回答的是：
 
 早期 smoke/canary 只用于验证评测 runner 和接口链路，不作为 README 的模型能力结论。
 
+## MiniMax Live r7 Pilot
+
+已完成 MiniMax M2.7 High live r7 pilot：4 组 suite、19 个场景、133 trials。r7 只是 pilot，不是最终强置信结论；r30 calibration 已启动，用于后续替换为更稳定的结论。
+
+![tools skills](./docs/assets/minimax-r7-tool-skill-quality.svg)
+
+![tool return](./docs/assets/minimax-r7-tool-return-quality.svg)
+
+![behavior passk](./docs/assets/minimax-r7-behavior-passk.svg)
+
 ## 主评测集
 
 | Suite | 目的 | 评估重点 |
@@ -142,6 +152,7 @@ python3 scripts/check_benchmark_distribution.py
 | [`docs/evaluation-samples.zh-CN.md`](./docs/evaluation-samples.zh-CN.md) | 真实样本与判分逻辑示例。 |
 | [`docs/assets/campaign-observability.svg`](./docs/assets/campaign-observability.svg) | Campaign 实验维度到观测指标的矩阵。 |
 | [`docs/assets/tool-eval-matrix.svg`](./docs/assets/tool-eval-matrix.svg) | 工具返回 profile 评估矩阵。 |
+| [`public/minimax-m27-high-r7-aggregate-summary.json`](./public/minimax-m27-high-r7-aggregate-summary.json) | 脱敏 r7 live pilot 聚合结果。 |
 | [`evals/campaigns/harness_engineering_campaign_v1.json`](./evals/campaigns/harness_engineering_campaign_v1.json) | 数天到数周的 harness engineering campaign 规格。 |
 | [`evals/model_config.example.json`](./evals/model_config.example.json) | 模型无关 provider 配置示例，不包含真实 key。 |
 | [`evals/suites/`](./evals/suites) | 评测 suite。 |

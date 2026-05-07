@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="620" viewBox="0 0 1120 620" role="img">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#eef8f4"/><stop offset="55%" stop-color="#ffffff"/><stop offset="100%" stop-color="#fff1e6"/>
+</linearGradient>
+<style>
+.title{font:800 32px Georgia,'Times New Roman',serif;fill:#172026}.sub{font:500 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#5f6c73}.axis{font:650 12px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#5f6c73}.tick{font:600 11px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#5f6c73}.legend{font:650 12px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#172026}.label{font:650 12px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#172026}
+</style>
+</defs>
+<rect width="1120" height="620" rx="28" fill="url(#bg)"/>
+<rect x="34" y="34" width="1052" height="552" rx="24" fill="#fff" stroke="#cfd7dc"/>
+<text x="66" y="82" class="title">Tools / Skills Quality Curves</text>
+<text x="66" y="110" class="sub">MiniMax M2.7 High, r7 pilot. Strict pass@k remains zero; submetrics expose the engineering boundary.</text>
+<line x1="96" y1="120.0" x2="1060" y2="120.0" stroke="#e5eaee"/>
+<text x="54" y="124.0" class="tick">1.0</text>
+<line x1="96" y1="196.4" x2="1060" y2="196.4" stroke="#e5eaee"/>
+<text x="54" y="200.4" class="tick">0.8</text>
+<line x1="96" y1="272.8" x2="1060" y2="272.8" stroke="#e5eaee"/>
+<text x="54" y="276.8" class="tick">0.6</text>
+<line x1="96" y1="349.2" x2="1060" y2="349.2" stroke="#e5eaee"/>
+<text x="54" y="353.2" class="tick">0.4</text>
+<line x1="96" y1="425.6" x2="1060" y2="425.6" stroke="#e5eaee"/>
+<text x="54" y="429.6" class="tick">0.2</text>
+<line x1="96" y1="502.0" x2="1060" y2="502.0" stroke="#e5eaee"/>
+<text x="54" y="506.0" class="tick">0.0</text>
+<line x1="96" y1="120" x2="96" y2="502" stroke="#94a3ad"/>
+<line x1="96" y1="502" x2="1060" y2="502" stroke="#94a3ad"/>
+<text x="96" y="104" class="axis">score</text>
+<line x1="96.0" y1="502" x2="96.0" y2="508" stroke="#94a3ad"/>
+<text x="96.0" y="530" text-anchor="middle" class="tick">3 focused</text>
+<line x1="417.3" y1="502" x2="417.3" y2="508" stroke="#94a3ad"/>
+<text x="417.3" y="530" text-anchor="middle" class="tick">14 flat</text>
+<line x1="738.7" y1="502" x2="738.7" y2="508" stroke="#94a3ad"/>
+<text x="738.7" y="530" text-anchor="middle" class="tick">router 4</text>
+<line x1="1060.0" y1="502" x2="1060.0" y2="508" stroke="#94a3ad"/>
+<text x="1060.0" y="530" text-anchor="middle" class="tick">skill+4</text>
+<polyline points="96.0,263.2 417.3,271.7 738.7,236.1 1060.0,297.2" fill="none" stroke="#0f766e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="96.0" cy="263.2" r="4.5" fill="#fff" stroke="#0f766e" stroke-width="2.5"/>
+<circle cx="417.3" cy="271.7" r="4.5" fill="#fff" stroke="#0f766e" stroke-width="2.5"/>
+<circle cx="738.7" cy="236.1" r="4.5" fill="#fff" stroke="#0f766e" stroke-width="2.5"/>
+<circle cx="1060.0" cy="297.2" r="4.5" fill="#fff" stroke="#0f766e" stroke-width="2.5"/>
+<line x1="96" y1="570" x2="120" y2="570" stroke="#0f766e" stroke-width="3.2"/>
+<text x="128" y="574" class="legend">eval score</text>
+<polyline points="96.0,120.0 417.3,307.9 738.7,174.6 1060.0,198.3" fill="none" stroke="#b7410e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="96.0" cy="120.0" r="4.5" fill="#fff" stroke="#b7410e" stroke-width="2.5"/>
+<circle cx="417.3" cy="307.9" r="4.5" fill="#fff" stroke="#b7410e" stroke-width="2.5"/>
+<circle cx="738.7" cy="174.6" r="4.5" fill="#fff" stroke="#b7410e" stroke-width="2.5"/>
+<circle cx="1060.0" cy="198.3" r="4.5" fill="#fff" stroke="#b7410e" stroke-width="2.5"/>
+<line x1="274" y1="570" x2="298" y2="570" stroke="#b7410e" stroke-width="3.2"/>
+<text x="306" y="574" class="legend">tool precision</text>
+<polyline points="96.0,156.3 417.3,156.3 738.7,120.0 1060.0,174.6" fill="none" stroke="#2563eb" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="96.0" cy="156.3" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
+<circle cx="417.3" cy="156.3" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
+<circle cx="738.7" cy="120.0" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
+<circle cx="1060.0" cy="174.6" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
+<line x1="452" y1="570" x2="476" y2="570" stroke="#2563eb" stroke-width="3.2"/>
+<text x="484" y="574" class="legend">tool coverage</text>
+<polyline points="96.0,174.6 417.3,229.3 738.7,229.3 1060.0,174.6" fill="none" stroke="#7c3aed" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="96.0" cy="174.6" r="4.5" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
+<circle cx="417.3" cy="229.3" r="4.5" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
+<circle cx="738.7" cy="229.3" r="4.5" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
+<circle cx="1060.0" cy="174.6" r="4.5" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
+<line x1="630" y1="570" x2="654" y2="570" stroke="#7c3aed" stroke-width="3.2"/>
+<text x="662" y="574" class="legend">JSON contract</text>
+</svg>
