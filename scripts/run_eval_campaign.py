@@ -21,6 +21,12 @@ def parse_args():
     return parser.parse_args()
 
 
+def shell_join(command: list) -> str:
+    if hasattr(shlex, "join"):
+        return shlex.join(command)
+    return " ".join(shlex.quote(item) for item in command)
+
+
 def build_command(runner: Path, campaign: dict, batch: dict, out_dir: Path) -> list:
     timestamp = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
     campaign_id = campaign["campaign_id"]
@@ -69,7 +75,7 @@ def main():
 
     commands = [build_command(runner, campaign, batch, out_dir) for batch in batches]
     for command in commands:
-        print(shlex.join(command))
+        print(shell_join(command))
 
     if not args.execute:
         print("\nDry run only. Add --execute to run. Provider credentials must be supplied through MODEL_* env vars.")
