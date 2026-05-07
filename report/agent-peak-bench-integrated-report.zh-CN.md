@@ -293,9 +293,18 @@ runner 使用大样本 pass@k 估计口径，并同时输出 pass rate 的 CI95�
 
 ![MiniMax r7 tools skills quality](../docs/assets/minimax-r7-tool-skill-quality.svg)
 
+图的读法：
+
+| 展示字段 | 原始字段 | 含义 |
+| --- | --- | --- |
+| `Task score` | `avg_evaluation_score` | 评估检查项的平均部分得分，不等于部署级 pass。 |
+| `Tool precision` | `avg_tool_precision_proxy` | 调用的工具里有多少属于预期工具面。 |
+| `Required-tool coverage` | `avg_required_tool_coverage` | 必要工具是否被覆盖。 |
+| `Output schema adherence` | `json_contract_pass_rate` | 输出是否满足可解析 JSON / schema 契约。 |
+
 初步结论：
 
-| 条件 | Eval score | Tool precision | Required coverage | JSON contract | P95 latency |
+| 条件 | Task score | Tool precision | Required-tool coverage | Output schema adherence | P95 latency |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | 3 focused tools | 0.625 | 1.000 | 0.905 | 0.857 | 23.9s |
 | 14 flat tools | 0.603 | 0.508 | 0.905 | 0.714 | 30.6s |
@@ -310,7 +319,7 @@ runner 使用大样本 pass@k 估计口径，并同时输出 pass rate 的 CI95�
 
 初步结论：
 
-| 返回形态 | Eval score | Tool precision | JSON contract | 备注 |
+| 返回形态 | Task score | Tool precision | Output schema adherence | 备注 |
 | --- | ---: | ---: | ---: | --- |
 | Short JSON | 0.600 | 0.857 | 0.286 | 短返回不保证结构输出稳定。 |
 | Long verbose text | 0.829 | 1.000 | 1.000 | 长返回能被抽取，但 context 成本高。 |

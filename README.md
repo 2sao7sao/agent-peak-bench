@@ -38,6 +38,8 @@ Early smoke/canary results are kept only for runner validation and are not prese
 
 The first MiniMax M2.7 High live r7 pilot is complete: 4 suites, 19 scenarios, and 133 trials. This is a pilot, not a final high-confidence claim; an r30 calibration batch is running for stronger estimates.
 
+Figure fields: `Task score` is partial-credit evaluator score, `Tool precision` is expected-tool calls divided by all tool calls, `Required-tool coverage` is required tool coverage, and `Output schema adherence` is parseable output contract success. These are diagnostic submetrics, not the final strict pass rate.
+
 ![tools skills](./docs/assets/minimax-r7-tool-skill-quality.svg)
 
 ![tool return](./docs/assets/minimax-r7-tool-return-quality.svg)

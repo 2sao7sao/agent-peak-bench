@@ -38,6 +38,8 @@ Agent Peak Bench 不做单一排行榜分数。它要回答的是：
 
 已完成 MiniMax M2.7 High live r7 pilot：4 组 suite、19 个场景、133 trials。r7 只是 pilot，不是最终强置信结论；r30 calibration 已启动，用于后续替换为更稳定的结论。
 
+图中字段统一解释：`Task score` 是评估检查项部分得分，`Tool precision` 是工具调用精度，`Required-tool coverage` 是必要工具覆盖率，`Output schema adherence` 是输出结构契约通过率。它们是定位工程边界的子指标，不等同于最终 strict pass rate。
+
 ![tools skills](./docs/assets/minimax-r7-tool-skill-quality.svg)
 
 ![tool return](./docs/assets/minimax-r7-tool-return-quality.svg)

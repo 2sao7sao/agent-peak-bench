@@ -1,77 +1,88 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="620" viewBox="0 0 1120 620" role="img">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img">
 <defs>
 <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
 <stop offset="0%" stop-color="#eef8f4"/><stop offset="55%" stop-color="#ffffff"/><stop offset="100%" stop-color="#fff1e6"/>
 </linearGradient>
 <style>
-.title{font:800 32px Georgia,'Times New Roman',serif;fill:#172026}.sub{font:500 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#5f6c73}.axis{font:650 12px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#5f6c73}.tick{font:600 11px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#5f6c73}.legend{font:650 12px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#172026}.label{font:650 12px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#172026}
+.title{font:800 30px Georgia,'Times New Roman',serif;fill:#172026}.question{font:700 15px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#172026}.note{font:500 13px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#5f6c73}.axis{font:700 12px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#5f6c73}.tick{font:650 11px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#5f6c73}.legend{font:700 12px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#172026}.gloss{font:500 11px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#5f6c73}.label{font:700 12px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#172026}
 </style>
 </defs>
-<rect width="1120" height="620" rx="28" fill="url(#bg)"/>
-<rect x="34" y="34" width="1052" height="552" rx="24" fill="#fff" stroke="#cfd7dc"/>
-<text x="66" y="82" class="title">Tool Return Profile Curves</text>
-<text x="66" y="110" class="sub">MiniMax M2.7 High, r7 pilot. Long returns can preserve structure but increase context and latency costs.</text>
-<line x1="96" y1="120.0" x2="1060" y2="120.0" stroke="#e5eaee"/>
-<text x="54" y="124.0" class="tick">1.0</text>
-<line x1="96" y1="196.4" x2="1060" y2="196.4" stroke="#e5eaee"/>
-<text x="54" y="200.4" class="tick">0.8</text>
-<line x1="96" y1="272.8" x2="1060" y2="272.8" stroke="#e5eaee"/>
-<text x="54" y="276.8" class="tick">0.6</text>
-<line x1="96" y1="349.2" x2="1060" y2="349.2" stroke="#e5eaee"/>
-<text x="54" y="353.2" class="tick">0.4</text>
-<line x1="96" y1="425.6" x2="1060" y2="425.6" stroke="#e5eaee"/>
-<text x="54" y="429.6" class="tick">0.2</text>
-<line x1="96" y1="502.0" x2="1060" y2="502.0" stroke="#e5eaee"/>
-<text x="54" y="506.0" class="tick">0.0</text>
-<line x1="96" y1="120" x2="96" y2="502" stroke="#94a3ad"/>
-<line x1="96" y1="502" x2="1060" y2="502" stroke="#94a3ad"/>
-<text x="96" y="104" class="axis">score</text>
-<line x1="96.0" y1="502" x2="96.0" y2="508" stroke="#94a3ad"/>
-<text x="96.0" y="530" text-anchor="middle" class="tick">short JSON</text>
-<line x1="288.8" y1="502" x2="288.8" y2="508" stroke="#94a3ad"/>
-<text x="288.8" y="530" text-anchor="middle" class="tick">long text</text>
-<line x1="481.6" y1="502" x2="481.6" y2="508" stroke="#94a3ad"/>
-<text x="481.6" y="530" text-anchor="middle" class="tick">conflict</text>
-<line x1="674.4" y1="502" x2="674.4" y2="508" stroke="#94a3ad"/>
-<text x="674.4" y="530" text-anchor="middle" class="tick">router</text>
-<line x1="867.2" y1="502" x2="867.2" y2="508" stroke="#94a3ad"/>
-<text x="867.2" y="530" text-anchor="middle" class="tick">403 error</text>
-<line x1="1060.0" y1="502" x2="1060.0" y2="508" stroke="#94a3ad"/>
-<text x="1060.0" y="530" text-anchor="middle" class="tick">large log</text>
-<polyline points="96.0,272.8 288.8,185.3 481.6,223.1 674.4,234.6 867.2,293.8 1060.0,212.8" fill="none" stroke="#0f766e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
-<circle cx="96.0" cy="272.8" r="4.5" fill="#fff" stroke="#0f766e" stroke-width="2.5"/>
-<circle cx="288.8" cy="185.3" r="4.5" fill="#fff" stroke="#0f766e" stroke-width="2.5"/>
-<circle cx="481.6" cy="223.1" r="4.5" fill="#fff" stroke="#0f766e" stroke-width="2.5"/>
-<circle cx="674.4" cy="234.6" r="4.5" fill="#fff" stroke="#0f766e" stroke-width="2.5"/>
-<circle cx="867.2" cy="293.8" r="4.5" fill="#fff" stroke="#0f766e" stroke-width="2.5"/>
-<circle cx="1060.0" cy="212.8" r="4.5" fill="#fff" stroke="#0f766e" stroke-width="2.5"/>
-<line x1="96" y1="570" x2="120" y2="570" stroke="#0f766e" stroke-width="3.2"/>
-<text x="128" y="574" class="legend">eval score</text>
-<polyline points="96.0,174.6 288.8,120.0 481.6,120.0 674.4,120.0 867.2,120.0 1060.0,120.0" fill="none" stroke="#b7410e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
-<circle cx="96.0" cy="174.6" r="4.5" fill="#fff" stroke="#b7410e" stroke-width="2.5"/>
-<circle cx="288.8" cy="120.0" r="4.5" fill="#fff" stroke="#b7410e" stroke-width="2.5"/>
-<circle cx="481.6" cy="120.0" r="4.5" fill="#fff" stroke="#b7410e" stroke-width="2.5"/>
-<circle cx="674.4" cy="120.0" r="4.5" fill="#fff" stroke="#b7410e" stroke-width="2.5"/>
-<circle cx="867.2" cy="120.0" r="4.5" fill="#fff" stroke="#b7410e" stroke-width="2.5"/>
-<circle cx="1060.0" cy="120.0" r="4.5" fill="#fff" stroke="#b7410e" stroke-width="2.5"/>
-<line x1="274" y1="570" x2="298" y2="570" stroke="#b7410e" stroke-width="3.2"/>
-<text x="306" y="574" class="legend">tool precision</text>
-<polyline points="96.0,174.6 288.8,120.0 481.6,120.0 674.4,138.3 867.2,247.2 1060.0,301.8" fill="none" stroke="#2563eb" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
-<circle cx="96.0" cy="174.6" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
-<circle cx="288.8" cy="120.0" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
-<circle cx="481.6" cy="120.0" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
-<circle cx="674.4" cy="138.3" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
-<circle cx="867.2" cy="247.2" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
-<circle cx="1060.0" cy="301.8" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
-<line x1="452" y1="570" x2="476" y2="570" stroke="#2563eb" stroke-width="3.2"/>
-<text x="484" y="574" class="legend">tool coverage</text>
-<polyline points="96.0,392.7 288.8,120.0 481.6,120.0 674.4,174.6 867.2,502.0 1060.0,120.0" fill="none" stroke="#7c3aed" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
-<circle cx="96.0" cy="392.7" r="4.5" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
-<circle cx="288.8" cy="120.0" r="4.5" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
-<circle cx="481.6" cy="120.0" r="4.5" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
-<circle cx="674.4" cy="174.6" r="4.5" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
-<circle cx="867.2" cy="502.0" r="4.5" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
-<circle cx="1060.0" cy="120.0" r="4.5" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
-<line x1="630" y1="570" x2="654" y2="570" stroke="#7c3aed" stroke-width="3.2"/>
-<text x="662" y="574" class="legend">JSON contract</text>
+<rect width="1280" height="760" rx="28" fill="url(#bg)"/>
+<rect x="34" y="34" width="1212" height="692" rx="24" fill="#fff" stroke="#cfd7dc"/>
+<text x="66" y="78" class="title">Figure 2. Tool-Return Profile Signals</text>
+<text x="66" y="112" class="question">Question: how does tool-result shape affect extraction, schema stability, and evidence use?</text>
+<text x="66" y="140" class="note">MiniMax M2.7 High, r7 pilot, n=7 per cell. Long/noisy returns include generated payloads with buried critical facts.</text>
+<line x1="66" y1="164" x2="1214" y2="164" stroke="#e5eaee"/>
+<line x1="118" y1="204.0" x2="1202" y2="204.0" stroke="#e5eaee"/>
+<text x="76" y="208.0" class="tick">1.0</text>
+<line x1="118" y1="278.0" x2="1202" y2="278.0" stroke="#e5eaee"/>
+<text x="76" y="282.0" class="tick">0.8</text>
+<line x1="118" y1="352.0" x2="1202" y2="352.0" stroke="#e5eaee"/>
+<text x="76" y="356.0" class="tick">0.6</text>
+<line x1="118" y1="426.0" x2="1202" y2="426.0" stroke="#e5eaee"/>
+<text x="76" y="430.0" class="tick">0.4</text>
+<line x1="118" y1="500.0" x2="1202" y2="500.0" stroke="#e5eaee"/>
+<text x="76" y="504.0" class="tick">0.2</text>
+<line x1="118" y1="574.0" x2="1202" y2="574.0" stroke="#e5eaee"/>
+<text x="76" y="578.0" class="tick">0.0</text>
+<line x1="118" y1="204" x2="118" y2="574" stroke="#94a3ad"/>
+<line x1="118" y1="574" x2="1202" y2="574" stroke="#94a3ad"/>
+<text x="118" y="186" class="axis">Normalized metric, 0-1; higher is better</text>
+<line x1="118.0" y1="574" x2="118.0" y2="580" stroke="#94a3ad"/>
+<text x="118.0" y="600" text-anchor="middle" class="tick">Short</text>
+<text x="118.0" y="614" text-anchor="middle" class="tick">JSON</text>
+<line x1="334.8" y1="574" x2="334.8" y2="580" stroke="#94a3ad"/>
+<text x="334.8" y="600" text-anchor="middle" class="tick">Long</text>
+<text x="334.8" y="614" text-anchor="middle" class="tick">verbose</text>
+<line x1="551.6" y1="574" x2="551.6" y2="580" stroke="#94a3ad"/>
+<text x="551.6" y="600" text-anchor="middle" class="tick">Conflicting</text>
+<text x="551.6" y="614" text-anchor="middle" class="tick">evidence</text>
+<line x1="768.4" y1="574" x2="768.4" y2="580" stroke="#94a3ad"/>
+<text x="768.4" y="600" text-anchor="middle" class="tick">Router</text>
+<text x="768.4" y="614" text-anchor="middle" class="tick">bundle</text>
+<line x1="985.2" y1="574" x2="985.2" y2="580" stroke="#94a3ad"/>
+<text x="985.2" y="600" text-anchor="middle" class="tick">Permission</text>
+<text x="985.2" y="614" text-anchor="middle" class="tick">403</text>
+<line x1="1202.0" y1="574" x2="1202.0" y2="580" stroke="#94a3ad"/>
+<text x="1202.0" y="600" text-anchor="middle" class="tick">Large</text>
+<text x="1202.0" y="614" text-anchor="middle" class="tick">log</text>
+<polyline points="118.0,352.0 334.8,267.3 551.6,303.9 768.4,315.0 985.2,372.4 1202.0,293.9" fill="none" stroke="#0f766e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="118.0" cy="352.0" r="4.5" fill="#fff" stroke="#0f766e" stroke-width="2.5"/>
+<circle cx="334.8" cy="267.3" r="4.5" fill="#fff" stroke="#0f766e" stroke-width="2.5"/>
+<circle cx="551.6" cy="303.9" r="4.5" fill="#fff" stroke="#0f766e" stroke-width="2.5"/>
+<circle cx="768.4" cy="315.0" r="4.5" fill="#fff" stroke="#0f766e" stroke-width="2.5"/>
+<circle cx="985.2" cy="372.4" r="4.5" fill="#fff" stroke="#0f766e" stroke-width="2.5"/>
+<circle cx="1202.0" cy="293.9" r="4.5" fill="#fff" stroke="#0f766e" stroke-width="2.5"/>
+<line x1="118" y1="652" x2="142" y2="652" stroke="#0f766e" stroke-width="3.2"/>
+<text x="150" y="656" class="legend">Task score</text>
+<polyline points="118.0,256.9 334.8,204.0 551.6,204.0 768.4,204.0 985.2,204.0 1202.0,204.0" fill="none" stroke="#b7410e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="118.0" cy="256.9" r="4.5" fill="#fff" stroke="#b7410e" stroke-width="2.5"/>
+<circle cx="334.8" cy="204.0" r="4.5" fill="#fff" stroke="#b7410e" stroke-width="2.5"/>
+<circle cx="551.6" cy="204.0" r="4.5" fill="#fff" stroke="#b7410e" stroke-width="2.5"/>
+<circle cx="768.4" cy="204.0" r="4.5" fill="#fff" stroke="#b7410e" stroke-width="2.5"/>
+<circle cx="985.2" cy="204.0" r="4.5" fill="#fff" stroke="#b7410e" stroke-width="2.5"/>
+<circle cx="1202.0" cy="204.0" r="4.5" fill="#fff" stroke="#b7410e" stroke-width="2.5"/>
+<line x1="378" y1="652" x2="402" y2="652" stroke="#b7410e" stroke-width="3.2"/>
+<text x="410" y="656" class="legend">Tool precision</text>
+<polyline points="118.0,256.9 334.8,204.0 551.6,204.0 768.4,221.8 985.2,327.2 1202.0,380.1" fill="none" stroke="#2563eb" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="118.0" cy="256.9" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
+<circle cx="334.8" cy="204.0" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
+<circle cx="551.6" cy="204.0" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
+<circle cx="768.4" cy="221.8" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
+<circle cx="985.2" cy="327.2" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
+<circle cx="1202.0" cy="380.1" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
+<line x1="638" y1="652" x2="662" y2="652" stroke="#2563eb" stroke-width="3.2"/>
+<text x="670" y="656" class="legend">Required-tool coverage</text>
+<polyline points="118.0,468.2 334.8,204.0 551.6,204.0 768.4,256.9 985.2,574.0 1202.0,204.0" fill="none" stroke="#7c3aed" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="118.0" cy="468.2" r="4.5" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
+<circle cx="334.8" cy="204.0" r="4.5" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
+<circle cx="551.6" cy="204.0" r="4.5" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
+<circle cx="768.4" cy="256.9" r="4.5" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
+<circle cx="985.2" cy="574.0" r="4.5" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
+<circle cx="1202.0" cy="204.0" r="4.5" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
+<line x1="898" y1="652" x2="922" y2="652" stroke="#7c3aed" stroke-width="3.2"/>
+<text x="930" y="656" class="legend">Output schema adherence</text>
+<rect x="118" y="684" width="1084" height="44" rx="10" fill="#f8faf9" stroke="#e5eaee"/>
+<text x="132" y="704" text-anchor="start" class="gloss">Return shape is a controlled mock-MCP variable, not a live external-system score.</text>
+<text x="132" y="720" text-anchor="start" class="gloss">Use this figure to decide when to compress, route, summarize, or require citations from tool results.</text>
 </svg>
