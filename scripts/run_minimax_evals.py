@@ -6,6 +6,7 @@ import datetime as dt
 import json
 import math
 import os
+import re
 import sys
 import time
 import urllib.error
@@ -130,6 +131,12 @@ def parse_json_from_text(text: str):
         lines = stripped.splitlines()
         if len(lines) >= 3:
             candidates.append("\n".join(lines[1:-1]).strip())
+    for match in re.finditer(r"```(?:json)?\s*(.*?)```", text, flags=re.IGNORECASE | re.DOTALL):
+        candidates.append(match.group(1).strip())
+    start = stripped.find("{")
+    end = stripped.rfind("}")
+    if start >= 0 and end > start:
+        candidates.append(stripped[start : end + 1])
     for candidate in candidates:
         try:
             return json.loads(candidate)
@@ -211,11 +218,15 @@ def compute_tool_metrics(expected: dict, tool_names_seen: list) -> dict:
 
 
 def compute_output_metrics(final_text: str, evaluation: dict) -> dict:
-    json_checks = [check for check in evaluation.get("checks", []) if check.get("check", "").startswith("json_")]
+    structural_checks = []
+    for check in evaluation.get("checks", []):
+        name = check.get("check", "")
+        if name.startswith("json_keys:") or name.startswith("json_subset:") or name in {"json_equals"}:
+            structural_checks.append(check)
     return {
         "output_chars": len(final_text),
-        "json_contract_passed": all(check.get("passed") for check in json_checks) if json_checks else None,
-        "json_check_count": len(json_checks),
+        "json_contract_passed": all(check.get("passed") for check in structural_checks) if structural_checks else None,
+        "json_check_count": len(structural_checks),
     }
 
 
