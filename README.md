@@ -26,11 +26,13 @@
 Agent Peak Bench is not another model leaderboard. It is an evaluation system
 for deciding **how a model should be deployed as an agent**.
 
-The project starts from real commercial goals such as security-review
-acceleration, renewal-risk diagnosis, refund automation, finance close,
-contract redline support, code migration, and launch-content production. It
-then decomposes each goal into capability probes, tool/MCP requirements,
-governance checks, harness topology, and model-vendor feedback.
+The project starts from a user's business requirement, not from a predefined
+AI feature list. It first asks whether AI should be used at all, then identifies
+which parts can be delegated to an agent, which capabilities must be tested,
+which risks require human control, and how model capabilities should be
+combined with engineering mechanisms such as memory, RAG, MCP/tools, skills,
+multi-agent topology, verifier loops, approval workflows, and harness design to
+make the deployment reliable.
 
 The output is not a single score. A serious run should produce four artifacts:
 
