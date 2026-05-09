@@ -2,6 +2,21 @@
   "name": "agent_landing_benchmark_v3",
   "version": "2026-05-07",
   "purpose": "Evaluate model capability under realistic enterprise-agent harness conditions, including implicit intent, tools/MCP, skills, long-running workflows, context strategy, plan mode, agent topology, ambiguity, governance, failure attribution, long-running campaign statistics, and system design guidance.",
+  "business_goal_layer": {
+    "suite": "evals/suites/business_goal_agent_synthesis_v1.json",
+    "purpose": "Map commercial objectives to capability items, benchmark plans, deployment cookbooks, and model-vendor feedback. This layer sits above capability probes and prevents benchmark conclusions from becoming disconnected from actual business deployment goals.",
+    "report_outputs": [
+      "model_overall_capability_assessment",
+      "model_target_business_performance",
+      "business_goal_agent_cookbook",
+      "model_vendor_feedback_pack"
+    ],
+    "recommended_confidence_policy": {
+      "pilot_trials_per_business_goal": 7,
+      "reportable_trials_per_business_goal": 30,
+      "confirmatory_trials_per_business_goal": 100
+    }
+  },
   "families": [
     {
       "id": "chat_memory",
@@ -97,7 +112,10 @@
     "Which plan mode works best for each task family?",
     "When does multi-agent decomposition beat a single-agent harness?",
     "How do tool return length and tool implementation mode affect stability?",
-    "How much ambiguity can the model tolerate before final decisions drift?"
+    "How much ambiguity can the model tolerate before final decisions drift?",
+    "Given a concrete commercial objective, which model capabilities must be tested before deployment?",
+    "For a target business workflow, should the agent be single-agent, multi-agent, memory-backed, RAG-backed, MCP-router based, or harness-verifier based?",
+    "Which model failures should be packaged as reproducible feedback for the model provider?"
   ],
   "harness_modes": [
     "solo",

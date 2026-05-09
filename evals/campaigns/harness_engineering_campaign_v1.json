@@ -91,6 +91,15 @@
       ]
     },
     {
+      "id": "business_goal_mapping_pilot",
+      "goal": "Validate whether the model can decompose commercial objectives into capability maps, benchmark plans, deployment cookbooks, and vendor feedback.",
+      "force_repeat": 7,
+      "pass_k": "1,3,5,7",
+      "suites": [
+        "evals/suites/business_goal_agent_synthesis_v1.json"
+      ]
+    },
+    {
       "id": "calibration_cells",
       "goal": "Raise each promising or risky cell to a minimum reportable sample size and estimate CI95.",
       "force_repeat": 30,
@@ -100,6 +109,15 @@
         "evals/suites/tool_return_profiles_v1.json",
         "evals/suites/window_and_decomposition_ablation.json",
         "evals/suites/harness_load_bearing_ablation_v2.json"
+      ]
+    },
+    {
+      "id": "business_goal_mapping_calibration",
+      "goal": "Raise business-goal cells to reportable sample size and connect model capability to commercial deployment recommendations.",
+      "force_repeat": 30,
+      "pass_k": "1,3,5,7,10",
+      "suites": [
+        "evals/suites/business_goal_agent_synthesis_v1.json"
       ]
     },
     {

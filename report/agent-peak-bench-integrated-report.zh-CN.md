@@ -1,6 +1,6 @@
 # Agent Peak Bench 综合报告
 
-版本：`2026-05-07`
+版本：`2026-05-09`
 模型案例：`MiniMax-M2.7-highspeed`，报告中简称 **MiniMax M2.7 High**
 定位：面向 Agent 落地的综合评估、归因、工程设计与模型使用指南
 
@@ -25,10 +25,11 @@
 
 Agent Peak Bench 不再把早期 smoke/canary 作为模型能力结论。smoke 只用于确认 API、工具调用、JSON 解析、pass@k 聚合是否工作；它不应出现在 README 的主结论中，也不应作为模型落地能力证明。
 
-当前主线评估应围绕四类评测集：
+当前主线评估应围绕五类评测集：
 
 | 主评测集 | 目的 | 能回答的问题 |
 | --- | --- | --- |
+| [`business_goal_agent_synthesis_v1.json`](../evals/suites/business_goal_agent_synthesis_v1.json) | 商业目标驱动评测 | 模型能否从具体商业目标反推能力项、benchmark plan、agent cookbook 和模型厂商优化反馈。 |
 | [`enterprise_agent_landing_v3.json`](../evals/suites/enterprise_agent_landing_v3.json) | 企业级 Agent 端到端任务 | 模型能否在真实业务压力下理解潜台词、查资料、调工具、处理权限、产出可执行决策。 |
 | [`tool_skill_mcp_ablation_v3.json`](../evals/suites/tool_skill_mcp_ablation_v3.json) | 工具/skills/MCP 工程机制归因 | 到底是工具数量、工具相似度、命名、router 分层还是 skill contract 影响稳定性。 |
 | [`tool_return_profiles_v1.json`](../evals/suites/tool_return_profiles_v1.json) | 工具返回 profile 归因 | 不同工具类型、返回长度、噪声、冲突证据、权限错误和大型 artifact 如何影响模型表现。 |
@@ -63,6 +64,50 @@ Agent Peak Bench 不再把早期 smoke/canary 作为模型能力结论。smoke �
 | 自动化 | 能否用数天到数周的 campaign 累积样本，而不是靠一次演示下结论。 |
 
 ## 2. 主评测体系
+
+### 2.0 商业目标驱动评测
+
+[`business_goal_agent_synthesis_v1.json`](../evals/suites/business_goal_agent_synthesis_v1.json) 是新增的业务目标层。它解决的问题不是“模型会不会做某个标准题”，而是：
+
+> 给定一个商业化目标，模型能否拆出真正需要测试的能力项，把它们映射到 benchmark，产出可落地的 agent 搭建方案，并把失败归因整理成模型厂商可优化的反馈？
+
+当前覆盖 8 个商业目标：
+
+| 场景 | 商业目标 | 评估重点 |
+| --- | --- | --- |
+| 安全评审加速 | 降低销售安全评审材料准备时间 | evidence/RAG、owner routing、MCP、verifier。 |
+| 续约风险 | 提升 churn/renewal 判断准确率 | CRM、support、usage、email 跨源冲突处理。 |
+| 退款自动化 | 降低客服处理时间且避免违规退款 | policy、approval、forbidden side-effect tools。 |
+| 财务关账异常 | 缩短收入/订单差异定位时间 | SQL、ERP、表格证据、审计要求。 |
+| 代码迁移 | 降低内部 SDK 迁移成本 | repo navigation、测试选择、single vs multi-agent。 |
+| 合同红线 | 加速合同审查但不越过法务边界 | clause extraction、policy grounding、human approval。 |
+| 发布内容 | 提升内容生产吞吐并减少虚假 claim | content engineer + harness engineer、claim grounding。 |
+| 模型厂商反馈 | 把失败结果转为可复现优化建议 | failure clustering、vendor feedback、回归 suite。 |
+
+统一输出契约：
+
+```json
+{
+  "business_goal": "...",
+  "capability_map": "...",
+  "benchmark_plan": "...",
+  "model_risk_diagnosis": "...",
+  "agent_architecture": "...",
+  "cookbook": "...",
+  "vendor_feedback": "..."
+}
+```
+
+这让最终报告可以同时包含四层结论：
+
+| 报告层 | 产物 |
+| --- | --- |
+| 模型 A 的综合能力评估 | 各 suite/family/business goal 的 pass@k、CI95、工具指标、schema 指标、失败簇。 |
+| 模型 A 的定向业务表现 | 每个商业目标的业务可用等级、风险、最小 harness 条件。 |
+| 模型 A 的最佳 agent 搭建方案 | 是否 multi-agent、是否需要 memory/RAG/MCP/skills/harness/verifier。 |
+| 给模型厂商的反馈 | 可复现失败簇、最小脱敏 trace、优化方向和回归 suite。 |
+
+方法论细节见 [`business-goal-agent-benchmark-methodology.zh-CN.md`](./business-goal-agent-benchmark-methodology.zh-CN.md)。
 
 ### 2.1 企业级 Agent 落地评测
 

@@ -50,6 +50,7 @@ Agent Peak Bench 不做单一排行榜分数。它要回答的是：
 
 | Suite | 目的 | 评估重点 |
 | --- | --- | --- |
+| [`business_goal_agent_synthesis_v1.json`](./evals/suites/business_goal_agent_synthesis_v1.json) | 商业目标驱动评测 | 从安全评审、续约风险、退款自动化、财务关账、合同红线等商业目标反推能力项、benchmark、agent cookbook 和模型厂商反馈。 |
 | [`enterprise_agent_landing_v3.json`](./evals/suites/enterprise_agent_landing_v3.json) | 企业级 Agent 端到端任务 | 潜台词理解、企业资料查询、多 MCP 工具调用、权限治理、复杂需求拆解、长任务恢复。 |
 | [`tool_skill_mcp_ablation_v3.json`](./evals/suites/tool_skill_mcp_ablation_v3.json) | 工具/skills/MCP 工程归因 | 3 工具直连、14 工具平铺、router 分层、procedural skill 对稳定性的影响。 |
 | [`tool_return_profiles_v1.json`](./evals/suites/tool_return_profiles_v1.json) | 工具返回 profile 归因 | 短 JSON、长噪声返回、冲突证据、router bundle、权限错误、大型日志 artifact。 |
@@ -93,6 +94,14 @@ python3 scripts/run_eval_campaign.py \
   --batch pilot_boundary_scan
 ```
 
+业务目标映射 batch：
+
+```bash
+python3 scripts/run_eval_campaign.py \
+  evals/campaigns/harness_engineering_campaign_v1.json \
+  --batch business_goal_mapping_pilot
+```
+
 配置 provider 后执行 batch：
 
 ```bash
@@ -119,6 +128,11 @@ python3 scripts/summarize_eval_results.py \
 ## 单 suite 运行
 
 ```bash
+python3 scripts/run_minimax_evals.py \
+  --suite evals/suites/business_goal_agent_synthesis_v1.json \
+  --pass-k 1,3,5,7,10 \
+  --out results/model-business-goal-agent-synthesis-v1.json
+
 python3 scripts/run_minimax_evals.py \
   --suite evals/suites/enterprise_agent_landing_v3.json \
   --pass-k 1,3,5,7,10 \
@@ -151,6 +165,8 @@ python3 scripts/check_benchmark_distribution.py
 | 路径 | 作用 |
 | --- | --- |
 | [`report/agent-peak-bench-integrated-report.zh-CN.md`](./report/agent-peak-bench-integrated-report.zh-CN.md) | 唯一主综合报告。 |
+| [`report/business-goal-agent-benchmark-methodology.zh-CN.md`](./report/business-goal-agent-benchmark-methodology.zh-CN.md) | 商业目标驱动 benchmark 方法论：业务目标、能力项、评测、cookbook、模型厂商反馈。 |
+| [`research/benchmark_sources/source_index.json`](./research/benchmark_sources/source_index.json) | 本轮浏览和下载的公开 benchmark 资料索引。 |
 | [`docs/evaluation-samples.zh-CN.md`](./docs/evaluation-samples.zh-CN.md) | 真实样本与判分逻辑示例。 |
 | [`docs/assets/campaign-observability.svg`](./docs/assets/campaign-observability.svg) | Campaign 实验维度到观测指标的矩阵。 |
 | [`docs/assets/tool-eval-matrix.svg`](./docs/assets/tool-eval-matrix.svg) | 工具返回 profile 评估矩阵。 |

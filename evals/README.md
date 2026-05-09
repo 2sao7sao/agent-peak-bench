@@ -6,12 +6,13 @@
 
 主评测集：
 
+- [`suites/business_goal_agent_synthesis_v1.json`](./suites/business_goal_agent_synthesis_v1.json)
 - [`suites/enterprise_agent_landing_v3.json`](./suites/enterprise_agent_landing_v3.json)
 - [`suites/tool_skill_mcp_ablation_v3.json`](./suites/tool_skill_mcp_ablation_v3.json)
 - [`suites/tool_return_profiles_v1.json`](./suites/tool_return_profiles_v1.json)
 - [`suites/openclaw_complex_agent_tasks_v1.json`](./suites/openclaw_complex_agent_tasks_v1.json)
 
-这些 suite 用于形成模型落地结论：端到端能力、工具稳定性、工具返回长度/类型敏感性、OpenClaw 风格复杂任务、失败归因和工程设计建议。
+这些 suite 用于形成模型落地结论：商业目标拆解、端到端能力、工具稳定性、工具返回长度/类型敏感性、OpenClaw 风格复杂任务、失败归因、工程设计建议和模型厂商反馈。
 
 ## 2. 辅助 probes / ablations
 
@@ -51,6 +52,8 @@
 
 ## v3: 主评测说明
 
+`business_goal_agent_synthesis_v1` 面向商业化目标：安全评审、续约风险、退款自动化、财务关账、代码迁移、合同红线、发布内容和模型厂商反馈。它要求模型从业务目标反推能力项、benchmark plan、agent architecture、cookbook 和 vendor feedback。
+
 `enterprise_agent_landing_v3` 面向端到端企业任务：安全评审、续约风险、发布 gate、权限治理、业务分析、复杂系统设计、多 Agent handoff、长任务 resume。
 
 `tool_skill_mcp_ablation_v3` 面向工程归因：比较 3 工具直连、14 工具平铺、router 分层、procedural skill + tools 的稳定性差异。
@@ -73,6 +76,14 @@ python3 scripts/run_eval_campaign.py \
   --batch pilot_boundary_scan
 ```
 
+业务目标映射 batch：
+
+```bash
+python3 scripts/run_eval_campaign.py \
+  evals/campaigns/harness_engineering_campaign_v1.json \
+  --batch business_goal_mapping_pilot
+```
+
 执行 batch：
 
 ```bash
@@ -93,6 +104,11 @@ python3 scripts/summarize_eval_results.py \
 推荐运行：
 
 ```bash
+python3 scripts/run_minimax_evals.py \
+  --suite evals/suites/business_goal_agent_synthesis_v1.json \
+  --pass-k 1,3,5,7,10 \
+  --out results/model-business-goal-agent-synthesis-v1.json
+
 python3 scripts/run_minimax_evals.py \
   --suite evals/suites/enterprise_agent_landing_v3.json \
   --pass-k 1,3,5,7,10 \

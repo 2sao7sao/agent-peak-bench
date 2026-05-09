@@ -1,0 +1,153 @@
+{
+  "version": "2026-05-09",
+  "purpose": "Trace public benchmark sources reviewed while adding the business-goal agent evaluation layer.",
+  "download_policy": "Commit lightweight public README/evaluation-guide artifacts only. Keep large PDFs, Docker images, full datasets, and restricted examples out of git.",
+  "sources": [
+    {
+      "id": "agentbench",
+      "name": "AgentBench",
+      "primary_url": "https://arxiv.org/abs/2308.03688",
+      "code_url": "https://github.com/THUDM/AgentBench",
+      "local_artifact": "raw/agentbench_readme.md",
+      "useful_patterns": [
+        "interactive environments",
+        "multi-environment coverage",
+        "agent failure taxonomy"
+      ],
+      "agent_peak_bench_usage": "Use as a reference for multi-environment coverage, but keep Agent Peak Bench focused on harness decisions and business deployment guidance."
+    },
+    {
+      "id": "webarena",
+      "name": "WebArena",
+      "primary_url": "https://arxiv.org/abs/2307.13854",
+      "code_url": "https://github.com/web-arena-x/webarena",
+      "local_artifact": "raw/webarena_readme.md",
+      "useful_patterns": [
+        "realistic self-hosted websites",
+        "functional correctness",
+        "long-horizon web navigation"
+      ],
+      "agent_peak_bench_usage": "Reuse the idea of end-state success instead of answer-only grading for enterprise web workflows."
+    },
+    {
+      "id": "swebench",
+      "name": "SWE-bench",
+      "primary_url": "https://www.swebench.com/SWE-bench/guides/datasets/",
+      "code_url": "https://github.com/SWE-bench/SWE-bench",
+      "local_artifact": "raw/swebench_readme.md",
+      "useful_patterns": [
+        "real GitHub issues",
+        "test-patch validation",
+        "dataset variants for iteration versus high-quality evaluation"
+      ],
+      "agent_peak_bench_usage": "Reuse executable verification and dataset-tier thinking for coding and harness-engineering scenarios."
+    },
+    {
+      "id": "tau_bench",
+      "name": "tau-bench",
+      "primary_url": "https://arxiv.org/abs/2406.12045",
+      "code_url": "https://github.com/sierra-research/tau-bench",
+      "local_artifact": "raw/tau_bench_readme.md",
+      "useful_patterns": [
+        "tool-agent-user interaction",
+        "domain policy compliance",
+        "database end-state grading",
+        "pass^k reliability"
+      ],
+      "agent_peak_bench_usage": "Directly informs pass@k/pass^k, policy-bound tool use, and repeatability requirements."
+    },
+    {
+      "id": "osworld",
+      "name": "OSWorld",
+      "primary_url": "https://arxiv.org/abs/2404.07972",
+      "code_url": "https://github.com/xlang-ai/OSWorld",
+      "local_artifact": "raw/osworld_readme.md",
+      "useful_patterns": [
+        "real desktop environments",
+        "execution-based OS state graders",
+        "GUI grounding failures"
+      ],
+      "agent_peak_bench_usage": "Use for computer-use and MCP-tool side-effect evaluation, especially where browser-only tasks are insufficient."
+    },
+    {
+      "id": "workarena",
+      "name": "WorkArena",
+      "primary_url": "https://arxiv.org/abs/2403.07718",
+      "code_url": "https://github.com/ServiceNow/WorkArena",
+      "local_artifact": "raw/workarena_readme.md",
+      "useful_patterns": [
+        "enterprise software tasks",
+        "knowledge-worker workflows",
+        "BrowserGym environment"
+      ],
+      "agent_peak_bench_usage": "Use as a reference for enterprise workflow realism, but extend with business-goal decomposition and harness recommendations."
+    },
+    {
+      "id": "the_agent_company",
+      "name": "TheAgentCompany",
+      "primary_url": "https://arxiv.org/abs/2412.14161",
+      "code_url": "https://github.com/TheAgentCompany/TheAgentCompany",
+      "local_artifact": "raw/the_agent_company_readme.md",
+      "useful_patterns": [
+        "simulated company",
+        "multi-application work",
+        "subcheckpoint grading",
+        "digital-worker task environment"
+      ],
+      "agent_peak_bench_usage": "Use as the strongest reference for business-like agent tasks; Agent Peak Bench adds model-specific cookbook and vendor feedback outputs."
+    },
+    {
+      "id": "terminal_bench",
+      "name": "Terminal-Bench",
+      "primary_url": "https://arxiv.org/abs/2601.11868",
+      "code_url": "https://github.com/laude-institute/terminal-bench",
+      "local_artifact": "raw/terminal_bench_readme.md",
+      "useful_patterns": [
+        "terminal sandbox",
+        "task folder contract",
+        "verification scripts",
+        "oracle solutions"
+      ],
+      "agent_peak_bench_usage": "Use verification-script thinking for CLI, DevOps, data, and repo tasks."
+    },
+    {
+      "id": "paperbench",
+      "name": "PaperBench",
+      "primary_url": "https://openai.com/index/paperbench/",
+      "code_url": "https://github.com/openai/preparedness/tree/main/project/paperbench",
+      "local_artifact": "raw/paperbench_readme.md",
+      "useful_patterns": [
+        "hierarchical rubric",
+        "long-horizon research replication",
+        "judge calibration"
+      ],
+      "agent_peak_bench_usage": "Use hierarchical rubrics for business-goal decomposition and long-horizon model capability reports."
+    },
+    {
+      "id": "browsecomp",
+      "name": "BrowseComp / simple-evals",
+      "primary_url": "https://openai.com/index/browsecomp/",
+      "code_url": "https://github.com/openai/simple-evals",
+      "local_artifact": "raw/simple_evals_readme.md",
+      "useful_patterns": [
+        "hard-to-find browsing",
+        "short-answer verification",
+        "anti-leakage policy"
+      ],
+      "agent_peak_bench_usage": "Use search perseverance and anti-leakage principles; do not publish dataset examples."
+    },
+    {
+      "id": "bfcl",
+      "name": "Berkeley Function Calling Leaderboard",
+      "primary_url": "https://gorilla.cs.berkeley.edu/leaderboard",
+      "code_url": "https://github.com/ShishirPatil/gorilla/tree/main/berkeley-function-call-leaderboard",
+      "local_artifact": "raw/bfcl_readme.md",
+      "useful_patterns": [
+        "function calling categories",
+        "multi-turn tool use",
+        "AST/API validation"
+      ],
+      "agent_peak_bench_usage": "Use as the low-level tool-call quality reference beneath business workflow tasks."
+    }
+  ]
+}

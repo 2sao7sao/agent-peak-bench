@@ -227,7 +227,7 @@
             <dt>Main report</dt>
             <dd>Integrated Report</dd>
             <dt>Primary suites</dt>
-            <dd>Enterprise / MCP Ablation / Tool Profiles / OpenClaw</dd>
+            <dd>Business Goals / Enterprise / MCP Ablation / Tool Profiles / OpenClaw</dd>
             <dt>Metrics</dt>
             <dd>pass@1/3/5/7/10, CI95, tool precision, latency</dd>
             <dt>Security</dt>
@@ -239,8 +239,8 @@
       <section class="section">
         <div class="metrics">
           <div class="metric"><span>Focus</span><strong>Agent Landing</strong></div>
-          <div class="metric"><span>Primary Suites</span><strong>4</strong></div>
-          <div class="metric"><span>Total Scenarios</span><strong>96</strong></div>
+          <div class="metric"><span>Primary Suites</span><strong>5</strong></div>
+          <div class="metric"><span>Total Scenarios</span><strong>104</strong></div>
           <div class="metric"><span>Run Mode</span><strong>Campaign</strong></div>
         </div>
       </section>
@@ -248,12 +248,13 @@
       <section class="section grid two">
         <div class="panel">
           <h2>主报告</h2>
-          <p>所有评估结论、方法论、OpenClaw 复杂任务方向、工具/skills/MCP 归因和 MiniMax M2.7 High 使用指南，都收敛到同一份综合报告。</p>
+          <p>所有评估结论、商业目标拆解、OpenClaw 复杂任务方向、工具/skills/MCP 归因和 MiniMax M2.7 High 使用指南，都收敛到同一份综合报告。</p>
           <div class="callout">
             Smoke/canary 只用于验证评测 runner，不作为 README 或 Pages 的模型能力结论。
           </div>
           <div class="links">
             <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/report/agent-peak-bench-integrated-report.zh-CN.md">Read integrated report</a>
+            <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/report/business-goal-agent-benchmark-methodology.zh-CN.md">Business goal methodology</a>
             <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/docs/evaluation-samples.zh-CN.md">Evaluation samples</a>
           </div>
         </div>
@@ -297,6 +298,11 @@
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td><code>business_goal_agent_synthesis_v1</code></td>
+              <td>商业目标驱动评测</td>
+              <td>从安全评审、续约风险、退款自动化、财务关账、合同红线等目标反推能力项、benchmark、agent cookbook 和模型厂商反馈。</td>
+            </tr>
             <tr>
               <td><code>enterprise_agent_landing_v3</code></td>
               <td>企业级 Agent 端到端任务</td>
@@ -348,6 +354,7 @@
         <div class="links">
           <a href="https://github.com/2sao7sao/agent-peak-bench">GitHub repo</a>
           <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/README.zh-CN.md">中文 README</a>
+          <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/evals/suites/business_goal_agent_synthesis_v1.json">Business goal suite</a>
           <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/evals/suites/enterprise_agent_landing_v3.json">Enterprise suite</a>
           <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/evals/suites/tool_skill_mcp_ablation_v3.json">MCP ablation suite</a>
           <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/evals/suites/tool_return_profiles_v1.json">Tool profile suite</a>

@@ -50,6 +50,7 @@ Figure fields: `Task score` is partial-credit evaluator score, `Tool precision` 
 
 | Suite | Purpose | What it evaluates |
 | --- | --- | --- |
+| [`business_goal_agent_synthesis_v1.json`](./evals/suites/business_goal_agent_synthesis_v1.json) | Business-goal-driven evaluation | Maps commercial objectives such as security review, renewal risk, refund automation, finance close, and contract review into capability probes, deployment cookbooks, and model-vendor feedback. |
 | [`enterprise_agent_landing_v3.json`](./evals/suites/enterprise_agent_landing_v3.json) | Realistic enterprise-agent tasks | Implicit intent, enterprise knowledge retrieval, multi-MCP tool use, governance, complex decomposition, long-running resume. |
 | [`tool_skill_mcp_ablation_v3.json`](./evals/suites/tool_skill_mcp_ablation_v3.json) | Engineering attribution | Focused 3-tool surface vs flat 14-tool overload vs router layering vs procedural skill contracts. |
 | [`tool_return_profiles_v1.json`](./evals/suites/tool_return_profiles_v1.json) | Tool-return profile attribution | Short JSON, long/noisy returns, conflicting evidence, router bundles, permission errors, and large log artifacts. |
@@ -93,6 +94,14 @@ python3 scripts/run_eval_campaign.py \
   --batch pilot_boundary_scan
 ```
 
+Plan the business-goal mapping batch:
+
+```bash
+python3 scripts/run_eval_campaign.py \
+  evals/campaigns/harness_engineering_campaign_v1.json \
+  --batch business_goal_mapping_pilot
+```
+
 Execute a batch after configuring provider credentials:
 
 ```bash
@@ -119,6 +128,11 @@ python3 scripts/summarize_eval_results.py \
 ## Single-Suite Runs
 
 ```bash
+python3 scripts/run_minimax_evals.py \
+  --suite evals/suites/business_goal_agent_synthesis_v1.json \
+  --pass-k 1,3,5,7,10 \
+  --out results/model-business-goal-agent-synthesis-v1.json
+
 python3 scripts/run_minimax_evals.py \
   --suite evals/suites/enterprise_agent_landing_v3.json \
   --pass-k 1,3,5,7,10 \
@@ -151,6 +165,8 @@ python3 scripts/check_benchmark_distribution.py
 | Path | Purpose |
 | --- | --- |
 | [`report/agent-peak-bench-integrated-report.zh-CN.md`](./report/agent-peak-bench-integrated-report.zh-CN.md) | Single integrated report. |
+| [`report/business-goal-agent-benchmark-methodology.zh-CN.md`](./report/business-goal-agent-benchmark-methodology.zh-CN.md) | Business-goal benchmark methodology: objectives, capabilities, evals, cookbooks, and model-vendor feedback. |
+| [`research/benchmark_sources/source_index.json`](./research/benchmark_sources/source_index.json) | Public benchmark source index reviewed and downloaded in this phase. |
 | [`docs/evaluation-samples.zh-CN.md`](./docs/evaluation-samples.zh-CN.md) | Realistic sample design and scoring examples. |
 | [`docs/assets/campaign-observability.svg`](./docs/assets/campaign-observability.svg) | Campaign dimension-to-metric observability matrix. |
 | [`docs/assets/tool-eval-matrix.svg`](./docs/assets/tool-eval-matrix.svg) | Tool-return evaluation matrix. |
