@@ -22,9 +22,7 @@ def parse_args():
 
 
 def shell_join(command: list) -> str:
-    if hasattr(shlex, "join"):
-        return shlex.join(command)
-    return " ".join(shlex.quote(item) for item in command)
+    return shlex.join(command)
 
 
 def build_command(runner: Path, campaign: dict, batch: dict, out_dir: Path) -> list:

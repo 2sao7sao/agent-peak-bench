@@ -1,44 +1,111 @@
 # Agent Peak Bench
 
 <p align="center">
-  <strong>Harness-first benchmark for agent deployment: realistic tasks, failure attribution, engineering design, and model usage guidance.</strong>
+  <strong>Business-goal-driven, harness-first evaluation for real agent deployment.</strong>
 </p>
 
 <p align="center">
   <a href="https://2sao7sao.github.io/agent-peak-bench/"><img alt="Live Report" src="https://img.shields.io/badge/report-live-0f766e?style=for-the-badge"></a>
   <a href="./report/agent-peak-bench-integrated-report.zh-CN.md"><img alt="Integrated Report" src="https://img.shields.io/badge/report-integrated-111827?style=for-the-badge"></a>
-  <a href="./evals/benchmark_manifest_v2.json"><img alt="Benchmark Manifest" src="https://img.shields.io/badge/benchmark-v3.0-2563eb?style=for-the-badge"></a>
+  <a href="./evals/benchmark_manifest_v2.json"><img alt="Benchmark Manifest" src="https://img.shields.io/badge/benchmark-v3.1-2563eb?style=for-the-badge"></a>
   <img alt="No Secrets" src="https://img.shields.io/badge/secrets-not_published-b91c1c?style=for-the-badge">
 </p>
 
 <p align="center">
   <a href="./README.zh-CN.md">中文</a>
   ·
-  <a href="./report/agent-peak-bench-integrated-report.zh-CN.md">Integrated report</a>
+  <a href="./report/business-goal-agent-benchmark-methodology.zh-CN.md">Business-goal methodology</a>
   ·
-  <a href="./docs/evaluation-samples.zh-CN.md">Evaluation samples</a>
+  <a href="./report/agent-peak-bench-integrated-report.zh-CN.md">Integrated report</a>
   ·
   <a href="https://2sao7sao.github.io/agent-peak-bench/">GitHub Pages</a>
 </p>
 
-## Purpose
+## What This Is
 
-Agent Peak Bench is not a single-score leaderboard. It is designed to answer a deployment question:
+Agent Peak Bench is not another model leaderboard. It is an evaluation system
+for deciding **how a model should be deployed as an agent**.
 
-> Under which harness, tool, MCP, skill, context, and verification conditions can a model reliably complete real agent tasks?
+The project starts from real commercial goals such as security-review
+acceleration, renewal-risk diagnosis, refund automation, finance close,
+contract redline support, code migration, and launch-content production. It
+then decomposes each goal into capability probes, tool/MCP requirements,
+governance checks, harness topology, and model-vendor feedback.
 
-The main entry point is the [integrated report](./report/agent-peak-bench-integrated-report.zh-CN.md), which consolidates methodology, enterprise scenarios, OpenClaw-inspired complex tasks, tool/skill/MCP attribution, and MiniMax M2.7 High usage guidance.
+The output is not a single score. A serious run should produce four artifacts:
+
+| Artifact | Question it answers |
+| --- | --- |
+| Model capability report | What can Model A do reliably across agent task families? |
+| Business-goal report | How does Model A perform for a concrete commercial workflow? |
+| Agent deployment cookbook | Should this use single-agent, multi-agent, memory, RAG, MCP routers, skills, verifier loops, or human approval? |
+| Vendor feedback pack | Which reproducible failure clusters should a model provider optimize? |
 
 > [!IMPORTANT]
-> This round only uses MiniMax M2.7 High as the first case study. Agent Peak Bench is model-agnostic and is not a MiniMax-specific benchmark. The same suites and metrics can be reused for any Anthropic-compatible API model, or for other providers after an adapter is added.
+> MiniMax M2.7 High is only the first case study. Agent Peak Bench is
+> model-agnostic and uses generic `MODEL_*` provider variables. Historical
+> `MINIMAX_*` aliases are retained only for compatibility.
 
-Early smoke/canary results are kept only for runner validation and are not presented as README-level model conclusions.
+## Why It Exists
 
-## MiniMax Live r7 Pilot
+Most benchmarks tell you whether a model can solve a task. Agent deployment
+needs a more operational answer:
 
-The first MiniMax M2.7 High live r7 pilot is complete: 4 suites, 19 scenarios, and 133 trials. This is a pilot, not a final high-confidence claim; an r30 calibration batch is running for stronger estimates.
+> Under which harness, tool, context, memory, skill, approval, and verifier
+> conditions can this model safely move a business process forward?
 
-Figure fields: `Task score` is partial-credit evaluator score, `Tool precision` is expected-tool calls divided by all tool calls, `Required-tool coverage` is required tool coverage, and `Output schema adherence` is parseable output contract success. These are diagnostic submetrics, not the final strict pass rate.
+That requires testing model behavior and system design together. A model that
+fails with 14 flat tools may work with a router. A model with low pass@1 but
+high pass@7 may be useful with verifier/repair loops, but unsafe for direct
+autonomy. A model that drafts good content may still need a separate harness
+engineer to verify product claims.
+
+## Evaluation Stack
+
+```mermaid
+flowchart LR
+  A["Commercial Goal"] --> B["Capability Map"]
+  B --> C["Benchmark Suite"]
+  C --> D["Repeated Trials"]
+  D --> E["Failure Attribution"]
+  E --> F["Harness Design"]
+  F --> G["Deployment Cookbook"]
+  G --> H["Vendor Feedback"]
+```
+
+## Primary Suites
+
+| Suite | Role | Evaluates |
+| --- | --- | --- |
+| [`business_goal_agent_synthesis_v1`](./evals/suites/business_goal_agent_synthesis_v1.json) | Business-goal layer | Turns commercial objectives into capability maps, benchmark plans, deployment cookbooks, and vendor feedback. |
+| [`enterprise_agent_landing_v3`](./evals/suites/enterprise_agent_landing_v3.json) | End-to-end enterprise work | Implicit intent, enterprise evidence, cross-system tool use, governance, long-running resume. |
+| [`tool_skill_mcp_ablation_v3`](./evals/suites/tool_skill_mcp_ablation_v3.json) | Engineering attribution | Focused tools vs flat overload vs router layering vs procedural skill contracts. |
+| [`tool_return_profiles_v1`](./evals/suites/tool_return_profiles_v1.json) | Tool-result sensitivity | Short JSON, long noisy returns, conflicting evidence, permission errors, and large logs. |
+| [`openclaw_complex_agent_tasks_v1`](./evals/suites/openclaw_complex_agent_tasks_v1.json) | Complex agent pressure | Personal OS, voice-triggered production fix, async GitHub, multi-agent ops, plugin governance, memory safety. |
+
+Supporting probes cover context windows, tool counts, behavior/rigor,
+repeatability, skill design, and harness load-bearing ablations.
+
+## What Gets Measured
+
+| Dimension | Metrics |
+| --- | --- |
+| Reliability | pass@1, pass@3, pass@5, pass@7, pass@10, CI95, output consistency. |
+| Tool use | required-tool coverage, tool precision, forbidden tool calls, repeated calls. |
+| Output contract | JSON/schema adherence, missing-evidence honesty, evidence placement. |
+| Harness pressure | context length, generated context chars, plan mode, topology, tool surface. |
+| Runtime | total latency, first-round latency, tool rounds, token usage. |
+| Deployment risk | unsafe action, policy miss, single-source bias, schema drift, role blur. |
+
+If pass@1 is weak but pass@k improves, the conclusion is not "the model is
+ready"; it is "the model is harness-dependent."
+
+## Current Case Study
+
+The first MiniMax M2.7 High r7 pilot covered 4 suites, 19 scenarios, and 133
+trials. It is a pilot signal, not a final boundary claim. Strong claims require
+r30 calibration and, for high-risk deployment decisions, confirmatory r100
+cells.
 
 ![tools skills](./docs/assets/minimax-r7-tool-skill-quality.svg)
 
@@ -46,55 +113,9 @@ Figure fields: `Task score` is partial-credit evaluator score, `Tool precision` 
 
 ![behavior passk](./docs/assets/minimax-r7-behavior-passk.svg)
 
-## Primary Suites
+## Run It
 
-| Suite | Purpose | What it evaluates |
-| --- | --- | --- |
-| [`business_goal_agent_synthesis_v1.json`](./evals/suites/business_goal_agent_synthesis_v1.json) | Business-goal-driven evaluation | Maps commercial objectives such as security review, renewal risk, refund automation, finance close, and contract review into capability probes, deployment cookbooks, and model-vendor feedback. |
-| [`enterprise_agent_landing_v3.json`](./evals/suites/enterprise_agent_landing_v3.json) | Realistic enterprise-agent tasks | Implicit intent, enterprise knowledge retrieval, multi-MCP tool use, governance, complex decomposition, long-running resume. |
-| [`tool_skill_mcp_ablation_v3.json`](./evals/suites/tool_skill_mcp_ablation_v3.json) | Engineering attribution | Focused 3-tool surface vs flat 14-tool overload vs router layering vs procedural skill contracts. |
-| [`tool_return_profiles_v1.json`](./evals/suites/tool_return_profiles_v1.json) | Tool-return profile attribution | Short JSON, long/noisy returns, conflicting evidence, router bundles, permission errors, and large log artifacts. |
-| [`openclaw_complex_agent_tasks_v1.json`](./evals/suites/openclaw_complex_agent_tasks_v1.json) | OpenClaw-style complex tasks | Personal OS, voice-driven production fix, async GitHub, multi-agent ops, plugin governance, persistent memory security. |
-
-## Evaluation Loop
-
-```mermaid
-flowchart LR
-  A["Realistic Task"] --> B["Capability Observation"]
-  B --> C["End-to-End Reliability"]
-  C --> D["pass@k Stability"]
-  D --> E["Failure Attribution"]
-  E --> F["Harness Design"]
-  F --> G["Model Usage Guide"]
-```
-
-## Key Questions
-
-| Question | Evaluation path |
-| --- | --- |
-| Can the model infer implicit user intent rather than only follow explicit instructions? | Security review, renewal risk, analytics, OpenClaw personal OS tasks. |
-| How many tools can be exposed before stability degrades? | 3 focused tools vs 14 flat tools vs router-layered ablation. |
-| When do MCP and skills help or hurt? | `tool_skill_mcp_ablation_v3`. |
-| How should complex systems be decomposed? | Enterprise knowledge-agent architecture, multi-agent handoff, OpenClaw complex tasks. |
-| Is persistent memory safe? | OpenClaw workspace memory and prompt-injection scenarios. |
-| What if pass@1 is low but pass@7 is high? | Use retry, verifier, repair loops, and permission gates rather than direct autonomous execution. |
-| Where does the context panic window begin? | Run context window sweeps and track pass rate, generated context chars, schema pass rate, and latency. |
-| When does multi-agent beat single-agent? | Compare `agent_topology` and `harness_mode` slices across long-running campaign batches. |
-| Does ambiguous context change final decisions? | Track `ambiguity_profile` and conflicting evidence scenarios. |
-
-## Long-Running Campaign
-
-A serious boundary claim should come from a multi-day or multi-week evaluation campaign, not a single smoke run. The campaign spec is [`evals/campaigns/harness_engineering_campaign_v1.json`](./evals/campaigns/harness_engineering_campaign_v1.json).
-
-Plan a batch without executing:
-
-```bash
-python3 scripts/run_eval_campaign.py \
-  evals/campaigns/harness_engineering_campaign_v1.json \
-  --batch pilot_boundary_scan
-```
-
-Plan the business-goal mapping batch:
+Plan a campaign batch without calling a model:
 
 ```bash
 python3 scripts/run_eval_campaign.py \
@@ -102,22 +123,20 @@ python3 scripts/run_eval_campaign.py \
   --batch business_goal_mapping_pilot
 ```
 
-Execute a batch after configuring provider credentials:
+Run one suite after setting provider credentials:
 
 ```bash
 export MODEL_API_KEY="your_key"
-export MODEL_NAME="MiniMax-M2.7-highspeed"
-export MODEL_API_BASE="https://api.minimaxi.com/anthropic/v1/messages"
+export MODEL_NAME="target-model"
+export MODEL_API_BASE="https://provider.example.com/anthropic/v1/messages"
 
-python3 scripts/run_eval_campaign.py \
-  evals/campaigns/harness_engineering_campaign_v1.json \
-  --batch pilot_boundary_scan \
-  --execute
+python3 scripts/run_minimax_evals.py \
+  --suite evals/suites/business_goal_agent_synthesis_v1.json \
+  --pass-k 1,3,5,7,10 \
+  --out results/model-business-goal-agent-synthesis-v1.json
 ```
 
-`MINIMAX_API_KEY`, `MINIMAX_MODEL`, and `MINIMAX_API_BASE` are still supported as compatibility aliases, but new documentation uses `MODEL_*` to keep the benchmark model-agnostic.
-
-Merge multiple campaign result files:
+Summarize multiple result files:
 
 ```bash
 python3 scripts/summarize_eval_results.py \
@@ -125,36 +144,7 @@ python3 scripts/summarize_eval_results.py \
   --json-out results/harness_engineering_campaign_v1/summary.json
 ```
 
-## Single-Suite Runs
-
-```bash
-python3 scripts/run_minimax_evals.py \
-  --suite evals/suites/business_goal_agent_synthesis_v1.json \
-  --pass-k 1,3,5,7,10 \
-  --out results/model-business-goal-agent-synthesis-v1.json
-
-python3 scripts/run_minimax_evals.py \
-  --suite evals/suites/enterprise_agent_landing_v3.json \
-  --pass-k 1,3,5,7,10 \
-  --out results/minimax-enterprise-agent-v3.json
-
-python3 scripts/run_minimax_evals.py \
-  --suite evals/suites/tool_skill_mcp_ablation_v3.json \
-  --pass-k 1,3,5,7,10 \
-  --out results/minimax-tool-skill-mcp-ablation-v3.json
-
-python3 scripts/run_minimax_evals.py \
-  --suite evals/suites/tool_return_profiles_v1.json \
-  --pass-k 1,3,5,7,10 \
-  --out results/minimax-tool-return-profiles-v1.json
-
-python3 scripts/run_minimax_evals.py \
-  --suite evals/suites/openclaw_complex_agent_tasks_v1.json \
-  --pass-k 1,3,5,7,10 \
-  --out results/minimax-openclaw-complex-v1.json
-```
-
-Check benchmark distribution:
+Check suite distribution:
 
 ```bash
 python3 scripts/check_benchmark_distribution.py
@@ -164,23 +154,20 @@ python3 scripts/check_benchmark_distribution.py
 
 | Path | Purpose |
 | --- | --- |
-| [`report/agent-peak-bench-integrated-report.zh-CN.md`](./report/agent-peak-bench-integrated-report.zh-CN.md) | Single integrated report. |
-| [`report/business-goal-agent-benchmark-methodology.zh-CN.md`](./report/business-goal-agent-benchmark-methodology.zh-CN.md) | Business-goal benchmark methodology: objectives, capabilities, evals, cookbooks, and model-vendor feedback. |
-| [`research/benchmark_sources/source_index.json`](./research/benchmark_sources/source_index.json) | Public benchmark source index reviewed and downloaded in this phase. |
-| [`docs/evaluation-samples.zh-CN.md`](./docs/evaluation-samples.zh-CN.md) | Realistic sample design and scoring examples. |
-| [`docs/assets/campaign-observability.svg`](./docs/assets/campaign-observability.svg) | Campaign dimension-to-metric observability matrix. |
-| [`docs/assets/tool-eval-matrix.svg`](./docs/assets/tool-eval-matrix.svg) | Tool-return evaluation matrix. |
-| [`public/minimax-m27-high-r7-aggregate-summary.json`](./public/minimax-m27-high-r7-aggregate-summary.json) | Sanitized r7 live pilot aggregate summary. |
-| [`evals/campaigns/harness_engineering_campaign_v1.json`](./evals/campaigns/harness_engineering_campaign_v1.json) | Multi-day/multi-week harness engineering campaign spec. |
-| [`evals/model_config.example.json`](./evals/model_config.example.json) | Model-agnostic provider configuration example with no real keys. |
+| [`report/agent-peak-bench-integrated-report.zh-CN.md`](./report/agent-peak-bench-integrated-report.zh-CN.md) | Main integrated report and MiniMax case-study interpretation. |
+| [`report/business-goal-agent-benchmark-methodology.zh-CN.md`](./report/business-goal-agent-benchmark-methodology.zh-CN.md) | Business-goal benchmark methodology. |
 | [`evals/suites/`](./evals/suites) | Evaluation suites. |
-| [`scripts/run_minimax_evals.py`](./scripts/run_minimax_evals.py) | Anthropic-compatible evaluator runner. The filename is kept for backward compatibility. |
-| [`scripts/run_eval_campaign.py`](./scripts/run_eval_campaign.py) | Plans or executes campaign batches. |
-| [`scripts/summarize_eval_results.py`](./scripts/summarize_eval_results.py) | Result summarizer. |
-| [`scripts/check_benchmark_distribution.py`](./scripts/check_benchmark_distribution.py) | Task-family distribution checker. |
+| [`evals/campaigns/harness_engineering_campaign_v1.json`](./evals/campaigns/harness_engineering_campaign_v1.json) | Multi-day/multi-week campaign plan. |
+| [`evals/blueprints/business_goal_benchmark_blueprint.md`](./evals/blueprints/business_goal_benchmark_blueprint.md) | Template for creating new business-goal suites. |
+| [`research/benchmark_sources/source_index.json`](./research/benchmark_sources/source_index.json) | Public benchmark sources reviewed for methodology design. |
+| [`docs/index.html`](./docs/index.html) | GitHub Pages landing report. |
+| [`scripts/run_minimax_evals.py`](./scripts/run_minimax_evals.py) | Anthropic-compatible evaluator runner. Filename kept for historical compatibility. |
+| [`scripts/run_eval_campaign.py`](./scripts/run_eval_campaign.py) | Campaign planner/executor. |
+| [`scripts/summarize_eval_results.py`](./scripts/summarize_eval_results.py) | Multi-result summarizer. |
+| [`scripts/check_benchmark_distribution.py`](./scripts/check_benchmark_distribution.py) | Suite distribution checker. |
 
 ## Security
 
 - Do not commit API keys, tokens, cookies, raw traces, or private tool outputs.
 - `results/` is local-only and gitignored.
-- Public releases should contain only sanitized summaries, aggregate metrics, failure taxonomy, and engineering guidance.
+- Public releases should contain sanitized summaries, aggregate metrics, failure taxonomy, and engineering guidance only.

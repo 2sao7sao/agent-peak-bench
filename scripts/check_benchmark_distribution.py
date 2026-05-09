@@ -25,6 +25,7 @@ CATEGORY_ALIASES = {
     "ablation_solo": "long_running_harness",
     "ablation_structured_harness": "long_running_harness",
     "evaluator_quality": "long_running_harness",
+    "business_goal_alignment": "structured_workflow",
 }
 
 
@@ -35,11 +36,24 @@ def parse_args():
     return parser.parse_args()
 
 
+def resolve_family(scenario: dict, suite_default: str | None, expected: set[str]) -> str:
+    family = scenario.get("benchmark_family")
+    category = scenario.get("category")
+    if family:
+        return family
+    if category in expected:
+        return category
+    if category in CATEGORY_ALIASES:
+        return CATEGORY_ALIASES[category]
+    return suite_default or category or "unknown"
+
+
 def main():
     args = parse_args()
     manifest = json.loads(Path(args.manifest).read_text(encoding="utf-8"))
     suite_dir = Path(args.suite_dir)
     expected = {item["id"]: item["weight"] for item in manifest["families"]}
+    expected_families = set(expected)
 
     counts = Counter()
     total = 0
@@ -49,14 +63,7 @@ def main():
         suite = json.loads(suite_path.read_text(encoding="utf-8"))
         default_family = suite.get("benchmark_family")
         for scenario in suite.get("scenarios", []):
-            category = scenario.get("category")
-            family = scenario.get("benchmark_family")
-            if not family and category in expected:
-                family = category
-            if not family and category in CATEGORY_ALIASES:
-                family = CATEGORY_ALIASES[category]
-            if not family:
-                family = default_family or category or "unknown"
+            family = resolve_family(scenario, default_family, expected_families)
             total += 1
             if family in expected:
                 counts[family] += 1

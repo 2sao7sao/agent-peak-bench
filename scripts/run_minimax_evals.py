@@ -161,6 +161,14 @@ def ordered_unique(items: list) -> list:
     return output
 
 
+def env_first(*names: str, default: str = "") -> str:
+    for name in names:
+        value = os.environ.get(name)
+        if value:
+            return value
+    return default
+
+
 def extract_tool_uses(content_blocks) -> list:
     calls = []
     for block in content_blocks or []:
@@ -609,17 +617,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--include-skipped", action="store_true", help="Run scenarios marked skip_by_default.")
     parser.add_argument(
         "--model",
-        default=os.environ.get("MODEL_NAME") or os.environ.get("MINIMAX_MODEL", "MiniMax-M2.7-highspeed"),
+        default=env_first("MODEL_NAME", "MINIMAX_MODEL", default="MiniMax-M2.7-highspeed"),
     )
     parser.add_argument(
         "--base-url",
-        default=os.environ.get("MODEL_API_BASE") or os.environ.get("MINIMAX_API_BASE", "https://api.minimax.io/anthropic"),
+        default=env_first("MODEL_API_BASE", "MINIMAX_API_BASE", default="https://api.minimax.io/anthropic"),
         help="Anthropic-compatible base URL. MODEL_API_BASE is preferred; MINIMAX_API_BASE is kept as a compatibility alias.",
     )
     parser.add_argument(
         "--timeout",
         type=int,
-        default=int(os.environ.get("MODEL_TIMEOUT_SECONDS") or os.environ.get("MINIMAX_TIMEOUT_SECONDS", "300")),
+        default=int(env_first("MODEL_TIMEOUT_SECONDS", "MINIMAX_TIMEOUT_SECONDS", default="300")),
         help="Per-request timeout in seconds.",
     )
     parser.add_argument(
@@ -659,12 +667,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    api_key = (
-        os.environ.get("MODEL_API_KEY")
-        or os.environ.get("MINIMAX_API_KEY")
-        or os.environ.get("ANTHROPIC_API_KEY")
-        or os.environ.get("ANTHROPIC_AUTH_TOKEN")
-    )
+    api_key = env_first("MODEL_API_KEY", "MINIMAX_API_KEY", "ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")
     if not api_key:
         print(
             "Missing MODEL_API_KEY. Compatibility aliases: MINIMAX_API_KEY, ANTHROPIC_API_KEY, ANTHROPIC_AUTH_TOKEN.",
