@@ -1,0 +1,65 @@
+{
+  "schema_version": "2026-05-11",
+  "purpose": "Sample dashboard contract for comparing models on business-goal-driven agent deployment decisions.",
+  "confidence_note": "Only MiniMax M2.7 High contains measured pilot data in this file. Other rows are fixtures to demonstrate the dashboard schema and must not be interpreted as benchmark claims.",
+  "models": [
+    {
+      "model": "MiniMax M2.7 High",
+      "status": "measured_live_r7_pilot",
+      "provider": "MiniMax",
+      "business_fit_score": 0.43,
+      "tool_reliability": 0.72,
+      "context_stability": 0.3,
+      "schema_reliability": 0.61,
+      "harness_dependency": 0.82,
+      "recommended_readiness": "assistant_only_or_guarded_with_verifier",
+      "evidence": "Sanitized r7 pilot aggregate: 4 suites, 19 scenarios, 133 trials."
+    },
+    {
+      "model": "Reference Strong Agent Model",
+      "status": "fixture_not_measured",
+      "provider": "example",
+      "business_fit_score": 0.74,
+      "tool_reliability": 0.81,
+      "context_stability": 0.68,
+      "schema_reliability": 0.78,
+      "harness_dependency": 0.46,
+      "recommended_readiness": "guarded_autonomy_for_low_risk_workflows",
+      "evidence": "Fixture row for dashboard layout only."
+    },
+    {
+      "model": "Reference Compact Model",
+      "status": "fixture_not_measured",
+      "provider": "example",
+      "business_fit_score": 0.37,
+      "tool_reliability": 0.48,
+      "context_stability": 0.41,
+      "schema_reliability": 0.56,
+      "harness_dependency": 0.9,
+      "recommended_readiness": "chat_assistant_or_strict_workflow_only",
+      "evidence": "Fixture row for dashboard layout only."
+    }
+  ],
+  "dimensions": [
+    {
+      "id": "business_fit_score",
+      "meaning": "How well the model turns business goals into capability maps, benchmark plans, and deployable cookbooks."
+    },
+    {
+      "id": "tool_reliability",
+      "meaning": "Required-tool coverage, tool precision, forbidden tool avoidance, and tool-error honesty."
+    },
+    {
+      "id": "context_stability",
+      "meaning": "Resistance to long/noisy context, schema drift, and context panic."
+    },
+    {
+      "id": "schema_reliability",
+      "meaning": "JSON/schema adherence and output contract consistency."
+    },
+    {
+      "id": "harness_dependency",
+      "meaning": "Higher means the model needs more verifier, router, retry, approval, or multi-agent scaffolding."
+    }
+  ]
+}

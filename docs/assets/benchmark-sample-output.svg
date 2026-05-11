@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="620" viewBox="0 0 1180 620" role="img" aria-label="Benchmark sample output screenshot">
+  <defs>
+    <style>
+      .bg{fill:#111827}
+      .panel{fill:#0b1220;stroke:#334155}
+      .title{font:800 22px 'Avenir Next','Trebuchet MS',sans-serif;fill:#f8fafc}
+      .mono{font:500 17px 'SFMono-Regular','Menlo','Consolas',monospace;fill:#dbeafe}
+      .muted{fill:#94a3b8}
+      .good{fill:#86efac}
+      .warn{fill:#fbbf24}
+    </style>
+  </defs>
+  <rect width="1180" height="620" rx="32" fill="#f8efe5"/>
+  <rect x="42" y="42" width="1096" height="536" rx="22" class="bg"/>
+  <text x="76" y="88" class="title">Sanitized benchmark sample output</text>
+  <rect x="76" y="118" width="1028" height="402" rx="16" class="panel"/>
+  <text x="106" y="158" class="mono">{</text>
+  <text x="130" y="192" class="mono">"model": "MiniMax M2.7 High",</text>
+  <text x="130" y="226" class="mono">"run_label": "r7 pilot",</text>
+  <text x="130" y="260" class="mono">"trial_count": <tspan class="warn">133</tspan>,</text>
+  <text x="130" y="294" class="mono">"confidence_label": "pilot",</text>
+  <text x="130" y="328" class="mono">"scenario": "tools-layered-router-4",</text>
+  <text x="130" y="362" class="mono">"task_score": <tspan class="good">0.696</tspan>,</text>
+  <text x="130" y="396" class="mono">"required_tool_coverage": <tspan class="good">1.000</tspan>,</text>
+  <text x="130" y="430" class="mono">"interpretation": "router improved coverage; verifier still required"</text>
+  <text x="106" y="464" class="mono">}</text>
+  <text x="76" y="552" class="mono muted">Public sample contains aggregate metrics only. Raw traces, API keys, and private tool results are excluded.</text>
+</svg>

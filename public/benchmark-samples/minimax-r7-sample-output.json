@@ -1,0 +1,41 @@
+{
+  "sample_type": "sanitized_measured_output_subset",
+  "model": "MiniMax M2.7 High",
+  "run_label": "r7 pilot",
+  "trial_count": 133,
+  "confidence_label": "pilot",
+  "important_note": "This is a compact public sample of measured aggregate output. It is not a raw trace and does not contain API keys or private tool results.",
+  "suite_summaries": [
+    {
+      "suite": "tool_skill_mcp_ablation_v3",
+      "scenario": "tools-focused-3-direct",
+      "pass_at_1": 0.0,
+      "task_score": 0.625,
+      "tool_precision": 1.0,
+      "required_tool_coverage": 0.905,
+      "json_contract": 0.857,
+      "interpretation": "Focused tools improve precision, but strict deployment pass remains zero in the pilot."
+    },
+    {
+      "suite": "tool_skill_mcp_ablation_v3",
+      "scenario": "tools-layered-router-4",
+      "pass_at_1": 0.0,
+      "task_score": 0.696,
+      "tool_precision": 0.857,
+      "required_tool_coverage": 1.0,
+      "json_contract": 0.714,
+      "interpretation": "Router layering improved coverage and partial task score, but still requires verifier/harness."
+    },
+    {
+      "suite": "tool_return_profiles_v1",
+      "scenario": "permission-error-profile",
+      "pass_at_1": 0.0,
+      "task_score": 0.571,
+      "tool_precision": 1.0,
+      "required_tool_coverage": 1.0,
+      "json_contract": 0.857,
+      "interpretation": "Permission-denied paths can be handled structurally, but completion honesty remains a high-risk dimension."
+    }
+  ],
+  "recommended_next_step": "Run r30 calibration cells before making deployment or model-vendor claims."
+}

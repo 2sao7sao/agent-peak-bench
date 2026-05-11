@@ -23,6 +23,8 @@
   <a href="./report/agent-peak-bench-integrated-report.zh-CN.md">综合报告</a>
   ·
   <a href="https://2sao7sao.github.io/agent-peak-bench/">在线页面</a>
+  ·
+  <a href="https://2sao7sao.github.io/agent-peak-bench/multi-model-dashboard.html">多模型 Dashboard</a>
 </p>
 
 ## 这是什么
@@ -171,6 +173,8 @@ python3 scripts/check_benchmark_distribution.py
 | [`evals/blueprints/business_goal_benchmark_blueprint.md`](./evals/blueprints/business_goal_benchmark_blueprint.md) | 新业务目标 suite 的创建模板。 |
 | [`research/benchmark_sources/source_index.json`](./research/benchmark_sources/source_index.json) | 本轮参考的公开 benchmark 资料索引。 |
 | [`docs/index.html`](./docs/index.html) | GitHub Pages 首页。 |
+| [`docs/multi-model-dashboard.html`](./docs/multi-model-dashboard.html) | 静态多模型 dashboard contract，区分实测与 fixture 状态。 |
+| [`public/benchmark-samples/minimax-r7-sample-output.json`](./public/benchmark-samples/minimax-r7-sample-output.json) | 脱敏后的实测 benchmark 样例输出。 |
 | [`scripts/run_minimax_evals.py`](./scripts/run_minimax_evals.py) | Anthropic-compatible 评测 runner，文件名保留历史兼容。 |
 | [`scripts/run_eval_campaign.py`](./scripts/run_eval_campaign.py) | campaign 规划/执行脚本。 |
 | [`scripts/generate_business_goal_suite.py`](./scripts/generate_business_goal_suite.py) | 将业务目标 YAML profile 转成可评审 suite skeleton。 |

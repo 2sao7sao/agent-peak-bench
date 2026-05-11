@@ -23,6 +23,8 @@
   <a href="./report/agent-peak-bench-integrated-report.zh-CN.md">Integrated report</a>
   ·
   <a href="https://2sao7sao.github.io/agent-peak-bench/">GitHub Pages</a>
+  ·
+  <a href="https://2sao7sao.github.io/agent-peak-bench/multi-model-dashboard.html">Multi-model dashboard</a>
 </p>
 
 ## What This Is
@@ -180,6 +182,8 @@ python3 scripts/check_benchmark_distribution.py
 | [`evals/blueprints/business_goal_benchmark_blueprint.md`](./evals/blueprints/business_goal_benchmark_blueprint.md) | Template for creating new business-goal suites. |
 | [`research/benchmark_sources/source_index.json`](./research/benchmark_sources/source_index.json) | Public benchmark sources reviewed for methodology design. |
 | [`docs/index.html`](./docs/index.html) | GitHub Pages landing report. |
+| [`docs/multi-model-dashboard.html`](./docs/multi-model-dashboard.html) | Static multi-model dashboard contract with measured/fixture status labels. |
+| [`public/benchmark-samples/minimax-r7-sample-output.json`](./public/benchmark-samples/minimax-r7-sample-output.json) | Sanitized measured benchmark sample output. |
 | [`scripts/run_minimax_evals.py`](./scripts/run_minimax_evals.py) | Anthropic-compatible evaluator runner. Filename kept for historical compatibility. |
 | [`scripts/run_eval_campaign.py`](./scripts/run_eval_campaign.py) | Campaign planner/executor. |
 | [`scripts/generate_business_goal_suite.py`](./scripts/generate_business_goal_suite.py) | Converts business-goal YAML profiles into reviewable suite skeletons. |

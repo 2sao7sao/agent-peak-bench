@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agent Peak Bench | Multi-model Dashboard</title>
+    <style>
+      :root{--bg:#f5f7f8;--ink:#172026;--muted:#5f6c73;--line:#cfd7dc;--panel:#fff;--accent:#0f766e;--orange:#b7410e}
+      *{box-sizing:border-box}
+      body{margin:0;color:var(--ink);background:radial-gradient(circle at 10% 6%,#e4f5ef 0,transparent 26%),radial-gradient(circle at 88% 0,#ffe9d2 0,transparent 28%),var(--bg);font:16px/1.55 "Avenir Next","Trebuchet MS",Verdana,sans-serif}
+      main{max-width:1180px;margin:0 auto;padding:44px 22px 68px}
+      h1{margin:0;font:900 clamp(42px,7vw,88px)/.9 Georgia,"Times New Roman",serif;letter-spacing:-.055em}
+      h2{margin:0 0 14px;font:800 28px/1.1 Georgia,"Times New Roman",serif}
+      p{margin:0 0 14px;color:var(--muted)}
+      .hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);gap:26px;align-items:end}
+      .panel,.metric{background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:24px;box-shadow:0 18px 50px rgba(23,32,38,.08)}
+      .panel{padding:24px}
+      .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:24px}
+      .metric{padding:18px}
+      .metric span{display:block;color:var(--muted);font-size:12px;font-weight:900;text-transform:uppercase}
+      .metric strong{display:block;margin-top:8px;font-size:25px}
+      .section{padding-top:28px}
+      .asset{width:100%;border:1px solid var(--line);border-radius:22px;background:#fff}
+      .links{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+      .links a{color:var(--accent);border:1px solid var(--line);border-radius:999px;padding:9px 12px;text-decoration:none;background:#fff;font-weight:800}
+      table{width:100%;border-collapse:collapse}
+      td,th{padding:12px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+      th{color:var(--muted);font-size:12px;text-transform:uppercase}
+      @media(max-width:880px){.hero,.metrics{grid-template-columns:1fr}}
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <div>
+          <h1>Multi-model dashboard</h1>
+          <p>Agent Peak Bench compares models by deployment decisions: business fit, tool reliability, context stability, schema reliability, and harness dependency.</p>
+          <p>Current public data includes MiniMax M2.7 High r7 measured pilot output. Other rows in the sample contract are fixtures and are explicitly marked as not measured.</p>
+          <div class="links">
+            <a href="./index.html">Overview</a>
+            <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/public/multi-model-dashboard-sample.json">Sample JSON</a>
+            <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/public/benchmark-samples/minimax-r7-sample-output.json">Measured sample output</a>
+          </div>
+        </div>
+        <aside class="panel">
+          <h2>Dashboard rule</h2>
+          <p>Every row must declare its evidence status: <code>measured_live</code>, <code>measured_offline</code>, or <code>fixture_not_measured</code>. This prevents demo dashboards from becoming fake benchmarks.</p>
+        </aside>
+      </section>
+
+      <section class="metrics">
+        <div class="metric"><span>Measured model</span><strong>1</strong></div>
+        <div class="metric"><span>Fixture rows</span><strong>2</strong></div>
+        <div class="metric"><span>Sample trials</span><strong>133</strong></div>
+        <div class="metric"><span>Status</span><strong>Pilot</strong></div>
+      </section>
+
+      <section class="section">
+        <img class="asset" src="./assets/multi-model-dashboard.svg" alt="Multi-model dashboard sample" />
+      </section>
+
+      <section class="section panel">
+        <h2>Benchmark output sample</h2>
+        <p>The public sample shows aggregate measured output shape without raw traces, API keys, or private tool results.</p>
+        <img class="asset" src="./assets/benchmark-sample-output.svg" alt="Benchmark sample output screenshot" />
+      </section>
+
+      <section class="section panel">
+        <h2>Readiness labels</h2>
+        <table>
+          <thead><tr><th>Label</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>assistant_only</td><td>Useful for drafting or advisory flows; no autonomous side effects.</td></tr>
+            <tr><td>human_in_loop</td><td>Can prepare decisions, but approval is required.</td></tr>
+            <tr><td>guarded_autonomy</td><td>Can execute low-risk steps with verifier, router, and audit controls.</td></tr>
+            <tr><td>not_ready</td><td>Failure clusters are too broad or unstable for the target workflow.</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </body>
+</html>

@@ -221,6 +221,10 @@
           <p class="subtitle">
             本轮仅以 MiniMax M2.7 High 作为首个 case study；Agent Peak Bench 本身是模型无关评测体系。
           </p>
+          <div class="links">
+            <a href="./multi-model-dashboard.html">Multi-model dashboard</a>
+            <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/public/benchmark-samples/minimax-r7-sample-output.json">Benchmark sample output</a>
+          </div>
         </div>
         <aside class="meta">
           <dl>
@@ -271,6 +275,19 @@
               <tr><td>5</td><td>失败归因、harness 设计与模型使用指南</td></tr>
             </tbody>
           </table>
+        </div>
+      </section>
+
+      <section class="section panel">
+        <h2>Multi-model Dashboard Contract</h2>
+        <p>
+          新增 multi-model dashboard 展示层，用来把同一业务目标下的模型表现转成部署决策。当前公开数据中 MiniMax M2.7 High 是已实测 r7 pilot；其他模型行是 dashboard fixture，明确标注为未实测，避免把样例页面误读为真实 leaderboard。
+        </p>
+        <img class="asset" src="./assets/multi-model-dashboard.svg" alt="Multi-model dashboard contract preview" />
+        <div class="links">
+          <a href="./multi-model-dashboard.html">Open dashboard</a>
+          <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/public/multi-model-dashboard-sample.json">Dashboard JSON contract</a>
+          <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/public/benchmark-samples/minimax-r7-sample-output.json">Measured sample output</a>
         </div>
       </section>
 

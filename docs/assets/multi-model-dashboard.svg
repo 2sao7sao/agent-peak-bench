@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-label="Agent Peak Bench multi-model dashboard sample">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e9f7f2"/>
+      <stop offset="60%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#fff0e0"/>
+    </linearGradient>
+    <style>
+      .title{font:800 34px Georgia,'Times New Roman',serif;fill:#172026}
+      .sub{font:600 14px 'Avenir Next','Trebuchet MS',sans-serif;fill:#5f6c73}
+      .head{font:800 13px 'Avenir Next','Trebuchet MS',sans-serif;fill:#5f6c73;text-transform:uppercase}
+      .name{font:800 18px 'Avenir Next','Trebuchet MS',sans-serif;fill:#172026}
+      .small{font:600 12px 'Avenir Next','Trebuchet MS',sans-serif;fill:#5f6c73}
+      .score{font:800 16px 'Avenir Next','Trebuchet MS',sans-serif;fill:#172026}
+    </style>
+  </defs>
+  <rect width="1280" height="760" rx="34" fill="url(#bg)"/>
+  <rect x="38" y="38" width="1204" height="684" rx="28" fill="#fff" stroke="#cfd7dc"/>
+  <text x="72" y="92" class="title">Multi-Model Agent Deployment Dashboard</text>
+  <text x="72" y="124" class="sub">Contract preview: MiniMax row is measured r7 pilot; reference rows are fixtures and not benchmark claims.</text>
+  <text x="72" y="174" class="head">Model</text>
+  <text x="398" y="174" class="head">Business fit</text>
+  <text x="568" y="174" class="head">Tool reliability</text>
+  <text x="748" y="174" class="head">Context stability</text>
+  <text x="948" y="174" class="head">Harness dependency</text>
+  <line x1="72" y1="196" x2="1208" y2="196" stroke="#e5eaee"/>
+  <g transform="translate(72 226)">
+    <text x="0" y="0" class="name">MiniMax M2.7 High</text>
+    <text x="0" y="24" class="small">measured_live_r7_pilot</text>
+    <rect x="326" y="-16" width="180" height="18" rx="9" fill="#e5eaee"/>
+    <rect x="326" y="-16" width="77" height="18" rx="9" fill="#0f766e"/>
+    <text x="516" y="-1" class="score">0.43</text>
+    <rect x="496" y="-16" width="180" height="18" rx="9" fill="#e5eaee"/>
+    <rect x="496" y="-16" width="130" height="18" rx="9" fill="#2563eb"/>
+    <text x="686" y="-1" class="score">0.72</text>
+    <rect x="676" y="-16" width="180" height="18" rx="9" fill="#e5eaee"/>
+    <rect x="676" y="-16" width="54" height="18" rx="9" fill="#b7410e"/>
+    <text x="866" y="-1" class="score">0.30</text>
+    <rect x="876" y="-16" width="180" height="18" rx="9" fill="#e5eaee"/>
+    <rect x="876" y="-16" width="148" height="18" rx="9" fill="#ca8a04"/>
+    <text x="1066" y="-1" class="score">0.82</text>
+  </g>
+  <line x1="72" y1="282" x2="1208" y2="282" stroke="#e5eaee"/>
+  <g transform="translate(72 326)">
+    <text x="0" y="0" class="name">Reference Strong Agent</text>
+    <text x="0" y="24" class="small">fixture_not_measured</text>
+    <rect x="326" y="-16" width="180" height="18" rx="9" fill="#e5eaee"/>
+    <rect x="326" y="-16" width="133" height="18" rx="9" fill="#0f766e"/>
+    <text x="516" y="-1" class="score">0.74</text>
+    <rect x="496" y="-16" width="180" height="18" rx="9" fill="#e5eaee"/>
+    <rect x="496" y="-16" width="146" height="18" rx="9" fill="#2563eb"/>
+    <text x="686" y="-1" class="score">0.81</text>
+    <rect x="676" y="-16" width="180" height="18" rx="9" fill="#e5eaee"/>
+    <rect x="676" y="-16" width="122" height="18" rx="9" fill="#b7410e"/>
+    <text x="866" y="-1" class="score">0.68</text>
+    <rect x="876" y="-16" width="180" height="18" rx="9" fill="#e5eaee"/>
+    <rect x="876" y="-16" width="83" height="18" rx="9" fill="#ca8a04"/>
+    <text x="1066" y="-1" class="score">0.46</text>
+  </g>
+  <line x1="72" y1="382" x2="1208" y2="382" stroke="#e5eaee"/>
+  <g transform="translate(72 426)">
+    <text x="0" y="0" class="name">Reference Compact Model</text>
+    <text x="0" y="24" class="small">fixture_not_measured</text>
+    <rect x="326" y="-16" width="180" height="18" rx="9" fill="#e5eaee"/>
+    <rect x="326" y="-16" width="67" height="18" rx="9" fill="#0f766e"/>
+    <text x="516" y="-1" class="score">0.37</text>
+    <rect x="496" y="-16" width="180" height="18" rx="9" fill="#e5eaee"/>
+    <rect x="496" y="-16" width="86" height="18" rx="9" fill="#2563eb"/>
+    <text x="686" y="-1" class="score">0.48</text>
+    <rect x="676" y="-16" width="180" height="18" rx="9" fill="#e5eaee"/>
+    <rect x="676" y="-16" width="74" height="18" rx="9" fill="#b7410e"/>
+    <text x="866" y="-1" class="score">0.41</text>
+    <rect x="876" y="-16" width="180" height="18" rx="9" fill="#e5eaee"/>
+    <rect x="876" y="-16" width="162" height="18" rx="9" fill="#ca8a04"/>
+    <text x="1066" y="-1" class="score">0.90</text>
+  </g>
+  <rect x="72" y="532" width="1136" height="124" rx="18" fill="#f8faf9" stroke="#e5eaee"/>
+  <text x="96" y="570" class="head">How to read this</text>
+  <text x="96" y="600" class="sub">Higher business/tool/context scores are better. Higher harness dependency means the model needs more router, verifier, retry, approval, or multi-agent scaffolding.</text>
+  <text x="96" y="630" class="sub">Dashboard rows must carry status labels: measured_live, measured_offline, or fixture_not_measured.</text>
+</svg>
