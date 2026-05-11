@@ -1,120 +1,82 @@
 # Agent Peak Bench
 
 <p align="center">
-  <strong>面向真实 Agent 落地的商业目标驱动、harness-first 模型评测系统。</strong>
-</p>
-
-<p align="center">
-  <a href="https://2sao7sao.github.io/agent-peak-bench/"><img alt="在线报告" src="https://img.shields.io/badge/report-live-0f766e?style=for-the-badge"></a>
-  <a href="./report/agent-peak-bench-integrated-report.zh-CN.md"><img alt="综合报告" src="https://img.shields.io/badge/report-integrated-111827?style=for-the-badge"></a>
-  <a href="./evals/benchmark_manifest_v2.json"><img alt="Benchmark Manifest" src="https://img.shields.io/badge/benchmark-v3.1-2563eb?style=for-the-badge"></a>
-  <img alt="无密钥发布" src="https://img.shields.io/badge/secrets-not_published-b91c1c?style=for-the-badge">
+  <strong>把业务目标变成模型评测、失败归因和 Agent 落地方案。</strong>
 </p>
 
 <p align="center">
   <a href="./README.md">English</a>
   ·
-  <a href="./report/business-goal-agent-benchmark-methodology.zh-CN.md">商业目标方法论</a>
-  ·
-  <a href="./ROADMAP.md">路线图</a>
-  ·
-  <a href="./CONTRIBUTING.md">贡献指南</a>
-  ·
-  <a href="./report/agent-peak-bench-integrated-report.zh-CN.md">综合报告</a>
-  ·
   <a href="https://2sao7sao.github.io/agent-peak-bench/">在线页面</a>
   ·
   <a href="https://2sao7sao.github.io/agent-peak-bench/multi-model-dashboard.html">多模型 Dashboard</a>
+  ·
+  <a href="./report/agent-peak-bench-integrated-report.zh-CN.md">综合报告</a>
+  ·
+  <a href="./CONTRIBUTING.md">贡献指南</a>
 </p>
 
-## 这是什么
+<p align="center">
+  <img alt="Benchmark" src="https://img.shields.io/badge/benchmark-business--goal--driven-0f766e">
+  <img alt="Scenarios" src="https://img.shields.io/badge/scenarios-104-2563eb">
+  <img alt="Case Study" src="https://img.shields.io/badge/case_study-MiniMax_M2.7_High-b7410e">
+  <img alt="No Secrets" src="https://img.shields.io/badge/secrets-not_published-b91c1c">
+</p>
 
-Agent Peak Bench 不是一个只给模型排名的榜单。它是一个用来回答
-**模型应该如何被搭成 Agent 并进入业务场景** 的评估系统。
+## 不要再问“哪个模型最强”
 
-项目从用户的业务需求出发，而不是从预设 AI 功能清单出发。它先判断这个需求
-是否适合 AI 落地，再拆解哪些环节可以交给 Agent、需要测试哪些模型能力、
-哪些风险必须保留人工控制，并进一步判断如何组合模型能力与工程手段完成落地：
-例如 memory、RAG、MCP/tools、skills、multi-agent 拓扑、verifier、审批流和
-harness 设计。
+真正应该问的是：
 
-一次严肃评测不应该只输出一个分数，而应该输出四类产物：
+> **哪个模型能在我的业务流程里推进任务？需要什么 harness？风险在哪里？工程上该怎么搭？**
 
-| 产物 | 回答的问题 |
+Agent Peak Bench 不是普通 leaderboard。它是一个 harness-first 的评测工具包，
+用于把商业化目标转成：
+
+| 产物 | 回答什么 |
 | --- | --- |
-| 模型综合能力报告 | 模型 A 在各类 agent 任务里哪些能力稳定，哪些能力不稳定。 |
-| 定向业务表现报告 | 模型 A 在某个具体商业流程里是否可用，风险在哪里。 |
-| Agent 落地 cookbook | 该用 single-agent、multi-agent、memory、RAG、MCP router、skills、verifier 还是人工审批。 |
-| 模型厂商反馈包 | 哪些可复现失败簇应该反馈给模型厂商优化。 |
+| 模型能力报告 | 模型在各类 Agent 任务中哪些能力稳定，哪些不稳定。 |
+| 定向业务报告 | 它能不能处理续约风险、退款自动化、安全评审、财务关账等具体流程。 |
+| Agent cookbook | 应该用 single-agent、multi-agent、memory、RAG、MCP router、skills、verifier 还是审批流。 |
+| 厂商反馈包 | 哪些可复现失败簇应该反馈给模型厂商优化。 |
+
+![Multi-model dashboard](docs/assets/multi-model-dashboard.svg)
 
 > [!IMPORTANT]
-> MiniMax M2.7 High 只是第一个 case study。Agent Peak Bench 是模型无关评测体系，默认使用通用 `MODEL_*` 环境变量。历史 `MINIMAX_*` 变量只作为兼容别名保留。
+> MiniMax M2.7 High 是第一个实测 case study。Agent Peak Bench 本身是模型无关的。
+> Dashboard 中未实测模型会明确标记为 fixture，不能当成真实 benchmark 结论。
 
-## 为什么需要它
+## 30 秒理解
 
-多数 benchmark 告诉你“模型能不能做一道题”。真实 Agent 落地要回答的是：
-
-> 在什么 harness、工具、上下文、memory、skills、审批和 verifier 条件下，这个模型才能安全推进一个业务流程？
-
-这要求同时测试模型能力和工程设计。一个模型在 14 个平铺工具下会乱调，但在
-router 分层后可能稳定；一个模型 pass@1 低但 pass@7 高，说明它有潜力但依赖
-verifier / repair loop，不能直接放权；一个模型能写出好文案，也可能需要独立
-harness engineer 去校验证据和产品 claim。
-
-## 评估闭环
-
-```mermaid
-flowchart LR
-  A["商业目标"] --> B["能力项拆解"]
-  B --> C["Benchmark Suite"]
-  C --> D["重复实验"]
-  D --> E["失败归因"]
-  E --> F["Harness 设计"]
-  F --> G["Agent Cookbook"]
-  G --> H["模型厂商反馈"]
+```text
+Business goal -> Capability map -> Benchmark suite -> Repeated trials
+-> Failure attribution -> Harness design -> Deployment cookbook -> Vendor feedback
 ```
 
-## 主评测集
+多数 benchmark 告诉你模型有没有做对题。Agent 落地更需要知道模型能不能安全推进
+一个业务流程。
 
-| Suite | 角色 | 评估内容 |
-| --- | --- | --- |
-| [`business_goal_agent_synthesis_v1`](./evals/suites/business_goal_agent_synthesis_v1.json) | 商业目标层 | 把商业目标转成能力项、benchmark plan、agent cookbook 和 vendor feedback。 |
-| [`enterprise_agent_landing_v3`](./evals/suites/enterprise_agent_landing_v3.json) | 企业端到端任务 | 潜台词理解、企业证据检索、跨系统工具调用、权限治理、长任务恢复。 |
-| [`tool_skill_mcp_ablation_v3`](./evals/suites/tool_skill_mcp_ablation_v3.json) | 工程归因 | 聚焦工具、平铺工具、router 分层、procedural skill contract 的差异。 |
-| [`tool_return_profiles_v1`](./evals/suites/tool_return_profiles_v1.json) | 工具返回敏感性 | 短 JSON、长噪声、冲突证据、权限错误、大型日志对模型的影响。 |
-| [`openclaw_complex_agent_tasks_v1`](./evals/suites/openclaw_complex_agent_tasks_v1.json) | 复杂 Agent 压力 | personal OS、语音生产修复、异步 GitHub、多 Agent 运营、插件治理、memory 安全。 |
-
-辅助 probes 覆盖上下文窗口、工具数量、行为严谨性、repeatability、skill 设计和
-harness load-bearing ablation。
-
-## 观测指标
-
-| 维度 | 指标 |
+| 常见 benchmark | Agent Peak Bench |
 | --- | --- |
-| 稳定性 | pass@1、pass@3、pass@5、pass@7、pass@10、CI95、输出一致性。 |
-| 工具使用 | required-tool coverage、tool precision、forbidden tool calls、重复调用。 |
-| 输出契约 | JSON/schema 通过率、缺口诚实、证据字段位置。 |
-| Harness 压力 | context length、generated context chars、plan mode、agent topology、tool surface。 |
-| 运行成本 | total latency、first-round latency、tool rounds、token usage。 |
-| 落地风险 | unsafe action、policy miss、single-source bias、schema drift、role blur。 |
+| 从任务集出发 | 从业务目标出发 |
+| 输出一个分数 | 输出能力、风险、cookbook、厂商反馈 |
+| 工具只是测试细节 | 专门测试工具面、router、side effect、审批 |
+| 不关心 harness | 测 memory、RAG、skills、MCP、verifier、multi-agent、context strategy |
+| 跑一次就下结论 | 支持 r7 pilot、r30 calibration、r100 confirmatory cells |
 
-如果 pass@1 低但 pass@k 高，结论不是“模型已经可生产”，而是“模型依赖 harness”。
+## 先跑业务目标流程
 
-## 当前 Case Study
+从 business profile 生成 suite skeleton：
 
-MiniMax M2.7 High 第一轮 r7 pilot 覆盖 4 个 suite、19 个场景、133 trials。r7 是
-pilot 信号，不是强边界结论。严肃结论需要 r30 calibration；高风险部署决策需要
-r100 confirmatory cells。
+```bash
+git clone https://github.com/2sao7sao/agent-peak-bench.git
+cd agent-peak-bench
+python3 scripts/generate_business_goal_suite.py \
+  evals/business_goals/security_review_acceleration.yaml \
+  evals/business_goals/support_refund_automation.yaml \
+  --out /tmp/business-goal-suite.json
+```
 
-![tools skills](./docs/assets/minimax-r7-tool-skill-quality.svg)
-
-![tool return](./docs/assets/minimax-r7-tool-return-quality.svg)
-
-![behavior passk](./docs/assets/minimax-r7-behavior-passk.svg)
-
-## 运行方式
-
-只规划 batch，不调用模型：
+只规划 campaign，不调用模型：
 
 ```bash
 python3 scripts/run_eval_campaign.py \
@@ -122,16 +84,7 @@ python3 scripts/run_eval_campaign.py \
   --batch business_goal_mapping_pilot
 ```
 
-从业务目标 profile 生成 suite skeleton：
-
-```bash
-python3 scripts/generate_business_goal_suite.py \
-  evals/business_goals/security_review_acceleration.yaml \
-  evals/business_goals/support_refund_automation.yaml \
-  --out /tmp/business-goal-suite.json
-```
-
-配置 provider 后运行单 suite：
+配置 Anthropic-compatible provider 后运行一个 suite：
 
 ```bash
 export MODEL_API_KEY="your_key"
@@ -144,45 +97,87 @@ python3 scripts/run_minimax_evals.py \
   --out results/model-business-goal-agent-synthesis-v1.json
 ```
 
-合并多批结果：
+## 测什么
 
-```bash
-python3 scripts/summarize_eval_results.py \
-  results/harness_engineering_campaign_v1/*.json \
-  --json-out results/harness_engineering_campaign_v1/summary.json
-```
+| 层 | 关键问题 |
+| --- | --- |
+| Business fit | 模型能不能从模糊业务语言恢复真实目标？ |
+| Tool use | 能不能调用正确系统，并避开危险 side-effect tools？ |
+| Context pressure | 长上下文、噪声上下文、模糊上下文下是否漂移？ |
+| Skills and MCP | procedural skills、router、聚焦工具是否提升稳定性？ |
+| Multi-agent design | planner / executor / verifier 什么时候优于单 Agent？ |
+| Governance | 是否遵守权限、审批、缺失证据、审计要求？ |
+| Reliability | pass@1/3/5/7/10、CI95、latency、consistency 如何变化？ |
 
-检查 suite 分布：
+## 主评测集
 
-```bash
-python3 scripts/check_benchmark_distribution.py
-```
+| Suite | 角色 |
+| --- | --- |
+| [`business_goal_agent_synthesis_v1`](./evals/suites/business_goal_agent_synthesis_v1.json) | 把商业目标转成能力项、benchmark plan、cookbook 和厂商反馈。 |
+| [`enterprise_agent_landing_v3`](./evals/suites/enterprise_agent_landing_v3.json) | 企业端到端任务：潜台词、跨系统证据、治理、长任务恢复。 |
+| [`tool_skill_mcp_ablation_v3`](./evals/suites/tool_skill_mcp_ablation_v3.json) | 聚焦工具、工具过载、router 分层、procedural skill 对比。 |
+| [`tool_return_profiles_v1`](./evals/suites/tool_return_profiles_v1.json) | 短 JSON、长噪声、冲突证据、权限错误、大日志。 |
+| [`openclaw_complex_agent_tasks_v1`](./evals/suites/openclaw_complex_agent_tasks_v1.json) | personal OS、语音生产修复、异步 GitHub、多 Agent 运营、插件治理、memory 安全。 |
+
+## 当前证据
+
+第一个公开实测案例是 **MiniMax M2.7 High r7 pilot**：
+
+| 范围 | 数值 |
+| --- | ---: |
+| Suites | `4` |
+| Scenarios | `19` |
+| Trials | `133` |
+| 置信标签 | `pilot` |
+
+公开资产：
+
+| 资产 | 作用 |
+| --- | --- |
+| [综合报告](./report/agent-peak-bench-integrated-report.zh-CN.md) | MiniMax case study 解读和方法论。 |
+| [多模型 Dashboard](./docs/multi-model-dashboard.html) | 区分 measured / fixture 状态的 dashboard contract。 |
+| [实测样例输出](./public/benchmark-samples/minimax-r7-sample-output.json) | 脱敏后的聚合 benchmark 样例。 |
+| [Dashboard JSON contract](./public/multi-model-dashboard-sample.json) | 多模型对比 schema，避免 fixture 和实测混淆。 |
+
+![Benchmark sample output](docs/assets/benchmark-sample-output.svg)
+
+## 如何解释结果
+
+| 信号 | 落地含义 |
+| --- | --- |
+| pass@1 低但 pass@k 高 | 模型可能适合 retry/verifier/repair loop，不适合直接自治。 |
+| 平铺工具下 precision 下降 | 需要 router、聚焦工具面或角色拆分。 |
+| 长上下文下 schema drift | 需要 context compression、output contract 或 multi-window handoff。 |
+| 内容好但证据弱 | 拆 content engineer 和 harness verifier。 |
+| 权限错误处理差 | 加 approval gate 和 completion-honesty check。 |
 
 ## 仓库结构
 
-| 路径 | 作用 |
+```text
+evals/business_goals/     # 生成 suite skeleton 的业务 profile
+evals/suites/             # benchmark suites
+evals/campaigns/          # 多天/多周 campaign specs
+scripts/                  # runner、campaign planner、summarizer、generator
+docs/                     # GitHub Pages、dashboard、图表资产
+public/                   # 脱敏样例结果和 dashboard contracts
+report/                   # 综合报告、方法论、system card、分析
+research/                 # benchmark 来源和 repo review 信号
+```
+
+## Roadmap
+
+| 阶段 | 目标 |
 | --- | --- |
-| [`report/agent-peak-bench-integrated-report.zh-CN.md`](./report/agent-peak-bench-integrated-report.zh-CN.md) | 主综合报告和 MiniMax case study 解读。 |
-| [`report/github-repo-product-review-2026-05-11.zh-CN.md`](./report/github-repo-product-review-2026-05-11.zh-CN.md) | 对 Agent Peak Bench、EvolveKB、EvolveMemory 的 GitHub 产品评审和爆款项目对照。 |
-| [`report/business-goal-agent-benchmark-methodology.zh-CN.md`](./report/business-goal-agent-benchmark-methodology.zh-CN.md) | 商业目标 benchmark 方法论。 |
-| [`ROADMAP.md`](./ROADMAP.md) | 从 OSS kit 到多模型证据和生产级 canary 的产品路线图。 |
-| [`CONTRIBUTING.md`](./CONTRIBUTING.md) | 贡献流程与质量标准。 |
-| [`evals/suites/`](./evals/suites) | 评测 suite。 |
-| [`evals/business_goals/`](./evals/business_goals) | 将商业目标转成 benchmark skeleton 的业务 profile。 |
-| [`evals/campaigns/harness_engineering_campaign_v1.json`](./evals/campaigns/harness_engineering_campaign_v1.json) | 多天到数周的 campaign 规格。 |
-| [`evals/blueprints/business_goal_benchmark_blueprint.md`](./evals/blueprints/business_goal_benchmark_blueprint.md) | 新业务目标 suite 的创建模板。 |
-| [`research/benchmark_sources/source_index.json`](./research/benchmark_sources/source_index.json) | 本轮参考的公开 benchmark 资料索引。 |
-| [`docs/index.html`](./docs/index.html) | GitHub Pages 首页。 |
-| [`docs/multi-model-dashboard.html`](./docs/multi-model-dashboard.html) | 静态多模型 dashboard contract，区分实测与 fixture 状态。 |
-| [`public/benchmark-samples/minimax-r7-sample-output.json`](./public/benchmark-samples/minimax-r7-sample-output.json) | 脱敏后的实测 benchmark 样例输出。 |
-| [`scripts/run_minimax_evals.py`](./scripts/run_minimax_evals.py) | Anthropic-compatible 评测 runner，文件名保留历史兼容。 |
-| [`scripts/run_eval_campaign.py`](./scripts/run_eval_campaign.py) | campaign 规划/执行脚本。 |
-| [`scripts/generate_business_goal_suite.py`](./scripts/generate_business_goal_suite.py) | 将业务目标 YAML profile 转成可评审 suite skeleton。 |
-| [`scripts/summarize_eval_results.py`](./scripts/summarize_eval_results.py) | 多结果汇总脚本。 |
-| [`scripts/check_benchmark_distribution.py`](./scripts/check_benchmark_distribution.py) | suite 分布检查脚本。 |
+| OSS kit | Profiles、suite generator、CI、Pages、sample outputs。 |
+| Multi-model evidence | 多 provider 在同一业务目标上跑 r30 calibration。 |
+| Cookbook engine | 生成 topology、harness、memory/RAG/MCP/skills/verifier 建议。 |
+| Production-like canaries | 加入脱敏 live-adapter fixtures 和周期性回归 campaign。 |
 
-## 安全边界
+## Security
 
-- 不要提交 API key、token、cookie、原始 trace 或私有工具输出。
-- `results/` 是本地目录，已被 gitignore。
-- 对外只发布脱敏 summary、聚合指标、failure taxonomy 和工程建议。
+不要提交 API key、provider secret、raw trace、客户数据、私有工具输出或线上系统导出。
+公开版本只应包含脱敏 summary、聚合指标、failure taxonomy 和工程建议。
+
+## License
+
+MIT. See [LICENSE](LICENSE).
