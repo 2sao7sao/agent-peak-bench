@@ -16,6 +16,10 @@
   ·
   <a href="./report/business-goal-agent-benchmark-methodology.zh-CN.md">商业目标方法论</a>
   ·
+  <a href="./ROADMAP.md">路线图</a>
+  ·
+  <a href="./CONTRIBUTING.md">贡献指南</a>
+  ·
   <a href="./report/agent-peak-bench-integrated-report.zh-CN.md">综合报告</a>
   ·
   <a href="https://2sao7sao.github.io/agent-peak-bench/">在线页面</a>
@@ -159,6 +163,8 @@ python3 scripts/check_benchmark_distribution.py
 | [`report/agent-peak-bench-integrated-report.zh-CN.md`](./report/agent-peak-bench-integrated-report.zh-CN.md) | 主综合报告和 MiniMax case study 解读。 |
 | [`report/github-repo-product-review-2026-05-11.zh-CN.md`](./report/github-repo-product-review-2026-05-11.zh-CN.md) | 对 Agent Peak Bench、EvolveKB、EvolveMemory 的 GitHub 产品评审和爆款项目对照。 |
 | [`report/business-goal-agent-benchmark-methodology.zh-CN.md`](./report/business-goal-agent-benchmark-methodology.zh-CN.md) | 商业目标 benchmark 方法论。 |
+| [`ROADMAP.md`](./ROADMAP.md) | 从 OSS kit 到多模型证据和生产级 canary 的产品路线图。 |
+| [`CONTRIBUTING.md`](./CONTRIBUTING.md) | 贡献流程与质量标准。 |
 | [`evals/suites/`](./evals/suites) | 评测 suite。 |
 | [`evals/business_goals/`](./evals/business_goals) | 将商业目标转成 benchmark skeleton 的业务 profile。 |
 | [`evals/campaigns/harness_engineering_campaign_v1.json`](./evals/campaigns/harness_engineering_campaign_v1.json) | 多天到数周的 campaign 规格。 |

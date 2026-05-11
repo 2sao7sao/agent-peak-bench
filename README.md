@@ -16,6 +16,10 @@
   ·
   <a href="./report/business-goal-agent-benchmark-methodology.zh-CN.md">Business-goal methodology</a>
   ·
+  <a href="./ROADMAP.md">Roadmap</a>
+  ·
+  <a href="./CONTRIBUTING.md">Contributing</a>
+  ·
   <a href="./report/agent-peak-bench-integrated-report.zh-CN.md">Integrated report</a>
   ·
   <a href="https://2sao7sao.github.io/agent-peak-bench/">GitHub Pages</a>
@@ -168,6 +172,8 @@ python3 scripts/check_benchmark_distribution.py
 | [`report/agent-peak-bench-integrated-report.zh-CN.md`](./report/agent-peak-bench-integrated-report.zh-CN.md) | Main integrated report and MiniMax case-study interpretation. |
 | [`report/github-repo-product-review-2026-05-11.zh-CN.md`](./report/github-repo-product-review-2026-05-11.zh-CN.md) | Product review of Agent Peak Bench, EvolveKB, and EvolveMemory against current popular GitHub AI projects. |
 | [`report/business-goal-agent-benchmark-methodology.zh-CN.md`](./report/business-goal-agent-benchmark-methodology.zh-CN.md) | Business-goal benchmark methodology. |
+| [`ROADMAP.md`](./ROADMAP.md) | Product roadmap from OSS kit to multi-model evidence and production-like canaries. |
+| [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Contribution workflow and quality bar. |
 | [`evals/suites/`](./evals/suites) | Evaluation suites. |
 | [`evals/business_goals/`](./evals/business_goals) | Business-goal profiles used to turn commercial objectives into benchmark skeletons. |
 | [`evals/campaigns/harness_engineering_campaign_v1.json`](./evals/campaigns/harness_engineering_campaign_v1.json) | Multi-day/multi-week campaign plan. |

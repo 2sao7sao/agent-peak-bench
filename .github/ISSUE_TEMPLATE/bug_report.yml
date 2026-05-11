@@ -1,0 +1,41 @@
+name: Bug report
+description: Report a reproducible Agent Peak Bench issue.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What broke, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction
+      description: Include the command, suite/profile, and relevant output.
+      value: |
+        ```bash
+        python scripts/check_benchmark_distribution.py
+        ```
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - business goal profile
+        - suite generation
+        - eval runner
+        - summary/reporting
+        - charts
+        - documentation
+    validations:
+      required: true
+  - type: textarea
+    id: data_safety
+    attributes:
+      label: Data safety
+      description: Do not include API keys, private traces, or customer data.

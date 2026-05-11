@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pyyaml
+      - name: Compile scripts
+        run: |
+          python -m py_compile \
+            scripts/check_benchmark_distribution.py \
+            scripts/generate_business_goal_suite.py \
+            scripts/run_eval_campaign.py \
+            scripts/summarize_eval_results.py
+      - name: Check benchmark distribution
+        run: python scripts/check_benchmark_distribution.py
+      - name: Generate business-goal suite skeleton
+        run: |
+          python scripts/generate_business_goal_suite.py \
+            evals/business_goals/security_review_acceleration.yaml \
+            evals/business_goals/support_refund_automation.yaml \
+            evals/business_goals/renewal_risk_diagnosis.yaml \
+            --out /tmp/business-goal-suite.json

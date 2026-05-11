@@ -1,0 +1,32 @@
+name: Feature request
+description: Propose a new business profile, metric, suite, or harness mechanism.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: business_decision
+    attributes:
+      label: Business decision
+      description: What deployment decision should this help answer?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the new profile, eval, metric, or report output.
+    validations:
+      required: true
+  - type: dropdown
+    id: contribution_type
+    attributes:
+      label: Contribution type
+      options:
+        - business profile
+        - benchmark suite
+        - metric
+        - harness ablation
+        - report/chart
+        - documentation
+    validations:
+      required: true
