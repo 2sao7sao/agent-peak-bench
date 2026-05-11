@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-label="Agent Peak Bench product demo metrics">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8f6f1"/>
+      <stop offset="58%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#fff0df"/>
+    </linearGradient>
+    <style>
+      .title{font:800 34px Georgia,'Times New Roman',serif;fill:#172026}
+      .sub{font:600 15px 'Avenir Next','Trebuchet MS',sans-serif;fill:#5f6c73}
+      .label{font:800 13px 'Avenir Next','Trebuchet MS',sans-serif;fill:#60717a;text-transform:uppercase;letter-spacing:.08em}
+      .metric{font:800 30px Georgia,'Times New Roman',serif;fill:#172026}
+      .mono{font:500 16px 'SFMono-Regular','Menlo','Consolas',monospace;fill:#172026}
+      .panel{fill:#ffffff;stroke:#cfd7dc;stroke-width:1.2}
+      .green{fill:#0f766e}
+      .blue{fill:#2563eb}
+      .orange{fill:#b7410e}
+    </style>
+  </defs>
+  <rect width="1280" height="760" rx="34" fill="url(#bg)"/>
+  <rect x="38" y="38" width="1204" height="684" rx="28" fill="#fff" stroke="#cfd7dc"/>
+  <text x="72" y="96" class="title">Business Goal -> Agent Benchmark -> Cookbook</text>
+  <text x="72" y="130" class="sub">Dry-run product demo. No model call. It validates the benchmark kit's landing workflow.</text>
+
+  <rect x="72" y="176" width="340" height="142" rx="20" class="panel"/>
+  <text x="100" y="212" class="label">Business Profiles</text>
+  <text x="100" y="258" class="metric">3 / 3</text>
+  <text x="100" y="288" class="sub">converted to suite scenarios</text>
+
+  <rect x="470" y="176" width="340" height="142" rx="20" class="panel"/>
+  <text x="498" y="212" class="label">Capability Surface</text>
+  <text x="498" y="258" class="metric">15</text>
+  <text x="498" y="288" class="sub">capability items mapped</text>
+
+  <rect x="868" y="176" width="300" height="142" rx="20" class="panel"/>
+  <text x="896" y="212" class="label">Governance</text>
+  <text x="896" y="258" class="metric">8</text>
+  <text x="896" y="288" class="sub">forbidden side-effect tools</text>
+
+  <rect x="72" y="372" width="1096" height="160" rx="20" class="panel"/>
+  <text x="100" y="410" class="label">Product Metrics</text>
+  <circle cx="112" cy="452" r="7" class="green"/>
+  <text x="132" y="458" class="mono">business_goal_to_suite_rate: 1.00</text>
+  <circle cx="112" cy="488" r="7" class="green"/>
+  <text x="132" y="494" class="mono">capability_mapping_rate: 1.00</text>
+  <circle cx="112" cy="524" r="7" class="green"/>
+  <text x="132" y="530" class="mono">governance_contract_rate: 1.00</text>
+  <circle cx="590" cy="452" r="7" class="blue"/>
+  <text x="610" y="458" class="mono">cookbook_completeness_rate: 1.00</text>
+  <circle cx="590" cy="488" r="7" class="blue"/>
+  <text x="610" y="494" class="mono">campaign_confidence_contract_rate: 1.00</text>
+  <circle cx="590" cy="524" r="7" class="orange"/>
+  <text x="610" y="530" class="mono">capability_surface_presence_rate: 1.00</text>
+
+  <rect x="72" y="578" width="1096" height="92" rx="20" fill="#f8faf9" stroke="#e5eaee"/>
+  <text x="100" y="616" class="label">Cookbook Topologies</text>
+  <text x="100" y="648" class="sub">security_review: single_agent_with_verifier · refund: workflow_agent_with_human_approval · renewal: planner_executor_verifier</text>
+</svg>

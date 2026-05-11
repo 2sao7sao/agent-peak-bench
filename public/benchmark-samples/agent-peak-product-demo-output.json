@@ -1,0 +1,58 @@
+{
+  "status": "PASS",
+  "profile_count": 3,
+  "generated_scenario_count": 3,
+  "capability_count": 15,
+  "required_tool_count": 13,
+  "forbidden_tool_count": 8,
+  "campaign_batches": [
+    "pilot_boundary_scan",
+    "business_goal_mapping_pilot",
+    "calibration_cells",
+    "business_goal_mapping_calibration",
+    "confirmatory_boundary_run"
+  ],
+  "cookbook_topologies": {
+    "security_review_acceleration": "single_agent_with_verifier",
+    "support_refund_automation": "workflow_agent_with_human_approval",
+    "renewal_risk_diagnosis": "planner_executor_verifier"
+  },
+  "metrics": {
+    "business_goal_to_suite_rate": {
+      "value": 1.0,
+      "numerator": 3,
+      "denominator": 3,
+      "explanation": "business profiles converted into benchmark scenarios"
+    },
+    "capability_mapping_rate": {
+      "value": 1.0,
+      "numerator": 3,
+      "denominator": 3,
+      "explanation": "scenarios include capabilities, benchmark mappings, and output contracts"
+    },
+    "governance_contract_rate": {
+      "value": 1.0,
+      "numerator": 3,
+      "denominator": 3,
+      "explanation": "side-effect tools are modeled as forbidden without approval"
+    },
+    "cookbook_completeness_rate": {
+      "value": 1.0,
+      "numerator": 3,
+      "denominator": 3,
+      "explanation": "business profiles contain topology, memory, RAG, tools, skills, and verifier guidance"
+    },
+    "campaign_confidence_contract_rate": {
+      "value": 1.0,
+      "numerator": 1,
+      "denominator": 1,
+      "explanation": "campaign defines r7/r30/r100, pass@k, and deployment decision objectives"
+    },
+    "capability_surface_presence_rate": {
+      "value": 1.0,
+      "numerator": 1,
+      "denominator": 1,
+      "explanation": "demo exposes capabilities, required tools, forbidden tools, and campaign objective metadata"
+    }
+  }
+}

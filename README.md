@@ -1,7 +1,7 @@
 # Agent Peak Bench
 
 <p align="center">
-  <strong>Turn business goals into model benchmarks, failure diagnosis, and agent deployment cookbooks.</strong>
+  <strong>Turn a business goal into model capability tests, failure diagnosis, and an agent deployment cookbook.</strong>
 </p>
 
 <p align="center">
@@ -11,7 +11,7 @@
   ·
   <a href="https://2sao7sao.github.io/agent-peak-bench/multi-model-dashboard.html">Dashboard</a>
   ·
-  <a href="./report/agent-peak-bench-integrated-report.zh-CN.md">Integrated Report</a>
+  <a href="./public/benchmark-samples/agent-peak-product-demo-output.json">Product Demo Output</a>
   ·
   <a href="./CONTRIBUTING.md">Contributing</a>
 </p>
@@ -19,61 +19,106 @@
 <p align="center">
   <img alt="Benchmark" src="https://img.shields.io/badge/benchmark-business--goal--driven-0f766e">
   <img alt="Scenarios" src="https://img.shields.io/badge/scenarios-104-2563eb">
+  <img alt="Product demo" src="https://img.shields.io/badge/product_demo-PASS-167b63">
   <img alt="Case Study" src="https://img.shields.io/badge/case_study-MiniMax_M2.7_High-b7410e">
-  <img alt="No Secrets" src="https://img.shields.io/badge/secrets-not_published-b91c1c">
 </p>
 
 ## Stop Asking "Which Model Is Best?"
 
-Ask the question that actually matters:
+The deployment question is narrower and more useful:
 
-> **Which model can move this business workflow forward, under which harness, with which risks, and with what engineering design?**
+> **Given this business workflow, which model capability boundaries matter, what harness is required, and what should the final agent architecture look like?**
 
-Agent Peak Bench is not a leaderboard. It is a harness-first evaluation kit for
-turning commercial objectives into:
+Agent Peak Bench is a harness-first evaluation kit. It starts from commercial
+objectives such as security review acceleration, refund automation, renewal risk
+diagnosis, and finance close. Then it turns those objectives into capability
+probes, repeated benchmark campaigns, model failure attribution, and deployment
+cookbooks.
 
-| Output | What it answers |
-| --- | --- |
-| Model capability report | What can the model do reliably across agent task families? |
-| Business-goal report | Can it handle a concrete workflow such as renewal risk, refund automation, security review, or finance close? |
-| Agent cookbook | Should the deployment use single-agent, multi-agent, memory, RAG, MCP routers, skills, verifier loops, or approval gates? |
-| Vendor feedback pack | Which reproducible failure clusters should a model provider optimize? |
-
-![Multi-model dashboard](docs/assets/multi-model-dashboard.svg)
+![Business-goal product demo](docs/assets/business-goal-demo.svg)
 
 > [!IMPORTANT]
-> MiniMax M2.7 High is the first measured case study. Agent Peak Bench is
-> model-agnostic. Dashboard rows for non-measured models are marked as fixtures
-> and must not be interpreted as benchmark claims.
+> MiniMax M2.7 High is the first measured case study. The benchmark framework is
+> model-agnostic. Non-measured dashboard rows are fixtures and must not be read
+> as benchmark claims.
 
-## The 30-Second Pitch
+## 30-Second Product Path
 
 ```text
-Business goal -> Capability map -> Benchmark suite -> Repeated trials
--> Failure attribution -> Harness design -> Deployment cookbook -> Vendor feedback
+Business goal
+  -> capability map
+  -> benchmark suite
+  -> repeated trials
+  -> failure attribution
+  -> harness design
+  -> deployment cookbook
+  -> model-vendor feedback
 ```
 
-Most benchmarks tell you whether a model solved a task. Agent deployment needs
-to know whether the model can safely move a business process forward.
-
-| Common benchmark | Agent Peak Bench |
+| If you have... | Agent Peak Bench produces... |
 | --- | --- |
-| Starts from a task dataset | Starts from a business objective |
-| Produces a score | Produces capability, risk, cookbook, and vendor feedback |
-| Treats tools as a test detail | Tests tool surface, router design, side effects, and approval gates |
-| Ignores harness design | Evaluates memory, RAG, skills, MCP, verifier, multi-agent, and context strategy |
-| Reports one run | Supports r7 pilot, r30 calibration, and r100 confirmatory cells |
+| A vague business idea | Required model capabilities and evaluation scope |
+| A target workflow | Suite skeletons with tools, approvals, expected outputs, and failure taxonomy |
+| A candidate model | pass@k, CI95, tool precision, schema adherence, latency, and consistency signals |
+| A deployment decision | Single-agent vs multi-agent, memory/RAG/MCP/skills/verifier/approval guidance |
+| A model-provider discussion | Reproducible failure clusters and optimization feedback |
 
-## Run The Business-Goal Workflow
+## 5-Minute Product Demo
 
-Generate a suite skeleton from business profiles:
+Run the dry-run product path. It does not call a model or use provider secrets.
 
 ```bash
 git clone https://github.com/2sao7sao/agent-peak-bench.git
 cd agent-peak-bench
+python3 -m pip install pyyaml
+python3 scripts/run_product_demo.py
+```
+
+Expected shape:
+
+```text
+# Agent Peak Bench Product Demo
+
+status: PASS
+business_profiles: 3
+generated_scenarios: 3
+capability_items: 15
+required_tools: 13
+forbidden_side_effect_tools: 8
+
+## Product metrics
+- business_goal_to_suite_rate: 1.00 (3/3)
+- capability_mapping_rate: 1.00 (3/3)
+- governance_contract_rate: 1.00 (3/3)
+- cookbook_completeness_rate: 1.00 (3/3)
+- campaign_confidence_contract_rate: 1.00 (1/1)
+```
+
+The machine-readable sample is published at
+[`public/benchmark-samples/agent-peak-product-demo-output.json`](./public/benchmark-samples/agent-peak-product-demo-output.json).
+
+## What The Demo Proves
+
+The demo validates the project itself, not a model score.
+
+| Metric | What it checks | Why it matters |
+| --- | --- | --- |
+| `business_goal_to_suite_rate` | Business profiles become benchmark scenarios | Evaluation starts from user/commercial goals, not random tasks |
+| `capability_mapping_rate` | Scenarios include capabilities, benchmark mappings, and output contracts | Results can be traced back to deployment requirements |
+| `governance_contract_rate` | Side-effect actions are forbidden without approval | Agent benchmarks must test safety and authority boundaries |
+| `cookbook_completeness_rate` | Profiles include topology, memory, RAG, tools, skills, and verifier guidance | Scores turn into engineering decisions |
+| `campaign_confidence_contract_rate` | Campaign defines r7/r30/r100 and pass@k policy | Boundary claims require repeated trials, not one-off runs |
+| `capability_surface_presence_rate` | Required tools, forbidden tools, and decision objectives are visible | Harness design is first-class, not hidden in prose |
+
+## Run The Core Workflows
+
+Generate a suite skeleton from business profiles:
+
+```bash
 python3 scripts/generate_business_goal_suite.py \
   evals/business_goals/security_review_acceleration.yaml \
   evals/business_goals/support_refund_automation.yaml \
+  evals/business_goals/renewal_risk_diagnosis.yaml \
   --out /tmp/business-goal-suite.json
 ```
 
@@ -100,15 +145,15 @@ python3 scripts/run_minimax_evals.py \
 
 ## What Gets Tested
 
-| Layer | Example questions |
+| Layer | Example deployment question |
 | --- | --- |
-| Business fit | Does the model recover the real objective from vague user language? |
-| Tool use | Does it call the right systems and avoid dangerous side-effect tools? |
-| Context pressure | Does performance degrade under long, noisy, or ambiguous context? |
+| Business fit | Can the model recover the real objective from vague stakeholder language? |
+| Tool use | Can it call the right systems and avoid dangerous side-effect tools? |
+| Context pressure | Where do long, noisy, or ambiguous contexts cause drift? |
 | Skills and MCP | Do procedural skills, routers, and focused tools improve stability? |
 | Multi-agent design | When does planner/executor/verifier beat a single agent? |
 | Governance | Does it respect permissions, approvals, missing evidence, and audit needs? |
-| Reliability | How do pass@1, pass@3, pass@5, pass@7, pass@10, CI95, latency, and consistency move? |
+| Reliability | How do pass@1/3/5/7/10, CI95, latency, and consistency move? |
 
 ## Primary Suites
 
@@ -118,11 +163,11 @@ python3 scripts/run_minimax_evals.py \
 | [`enterprise_agent_landing_v3`](./evals/suites/enterprise_agent_landing_v3.json) | End-to-end enterprise tasks with implicit intent, cross-system evidence, governance, and long-running resume. |
 | [`tool_skill_mcp_ablation_v3`](./evals/suites/tool_skill_mcp_ablation_v3.json) | Focused tools vs flat overload vs router layering vs procedural skills. |
 | [`tool_return_profiles_v1`](./evals/suites/tool_return_profiles_v1.json) | Short JSON, long noisy returns, conflicting evidence, permission errors, and large logs. |
-| [`openclaw_complex_agent_tasks_v1`](./evals/suites/openclaw_complex_agent_tasks_v1.json) | Personal OS, voice-triggered production fixes, async GitHub, multi-agent ops, plugin governance, memory safety. |
+| [`openclaw_complex_agent_tasks_v1`](./evals/suites/openclaw_complex_agent_tasks_v1.json) | Personal OS, voice-triggered production fixes, async GitHub, multi-agent ops, plugin governance, and memory safety. |
 
 ## Current Evidence
 
-The first measured public case study is **MiniMax M2.7 High r7 pilot**:
+The first public measured case study is **MiniMax M2.7 High r7 pilot**:
 
 | Scope | Value |
 | --- | ---: |
@@ -135,44 +180,35 @@ Public assets:
 
 | Asset | Purpose |
 | --- | --- |
-| [Integrated report](./report/agent-peak-bench-integrated-report.zh-CN.md) | Full MiniMax case-study interpretation and methodology. |
+| [Integrated report](./report/agent-peak-bench-integrated-report.zh-CN.md) | MiniMax case-study interpretation and methodology. |
 | [Multi-model dashboard](./docs/multi-model-dashboard.html) | Static dashboard contract with measured/fixture status labels. |
 | [Measured sample output](./public/benchmark-samples/minimax-r7-sample-output.json) | Sanitized aggregate benchmark sample. |
-| [Dashboard JSON contract](./public/multi-model-dashboard-sample.json) | Example schema for comparing models without mixing fixture and measured rows. |
+| [Product demo output](./public/benchmark-samples/agent-peak-product-demo-output.json) | Deterministic project workflow sample. |
 
 ![Benchmark sample output](docs/assets/benchmark-sample-output.svg)
 
-## How To Interpret Results
+## Stable vs Prototype
 
-| Signal | Deployment meaning |
+| Layer | Current status |
 | --- | --- |
-| Low pass@1, higher pass@k | The model may be useful with retry, verifier, or repair loops; not safe for direct autonomy. |
-| Tool precision drops with flat tools | Use routers, focused tool surfaces, or role-specific agents. |
-| Schema drift under long context | Add context compression, output contracts, or multi-window handoff. |
-| Good content but weak evidence | Split content engineer and harness verifier roles. |
-| Permission errors mishandled | Add approval gates and completion-honesty checks. |
+| Business-goal profiles and suite generator | Supported project path |
+| Campaign planner and summarizer | Supported for dry-run planning and result aggregation |
+| Provider runner | Works with Anthropic-compatible APIs, requires user credentials |
+| MiniMax report | Pilot case study only, not a final leaderboard |
+| Multi-model dashboard | Contract and sample UI; non-measured rows are fixtures |
+| Strong deployment claims | Require r30/r100 cells, CI95, and stable failure taxonomy |
 
 ## Repository Map
 
 ```text
-evals/business_goals/     # business profiles that generate suite skeletons
-evals/suites/             # benchmark suites
-evals/campaigns/          # multi-day / multi-week campaign specs
-scripts/                  # runner, campaign planner, summarizer, generator
-docs/                     # GitHub Pages, dashboard, chart assets
-public/                   # sanitized public result samples and dashboard contracts
-report/                   # integrated report, methodology, system card, analysis
-research/                 # benchmark source notes and GitHub repo review signals
+evals/business_goals/     business profiles that generate suite skeletons
+evals/suites/             benchmark suites
+evals/campaigns/          multi-day / multi-week campaign specs
+scripts/                  product demo, runner, campaign planner, summarizer, generator
+docs/                     GitHub Pages, dashboard, chart assets
+public/                   sanitized result samples and dashboard contracts
+report/                   integrated report, methodology, system card, analysis
 ```
-
-## Roadmap
-
-| Phase | Goal |
-| --- | --- |
-| OSS kit | Profiles, suite generator, CI, Pages, sample outputs. |
-| Multi-model evidence | Run multiple providers on the same business goals with r30 calibration. |
-| Cookbook engine | Generate deployment topology, harness, memory/RAG/MCP/skills/verifier recommendations. |
-| Production-like canaries | Add sanitized live-adapter fixtures and recurring regression campaigns. |
 
 ## Security
 

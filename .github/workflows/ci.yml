@@ -23,6 +23,7 @@ jobs:
           python -m py_compile \
             scripts/check_benchmark_distribution.py \
             scripts/generate_business_goal_suite.py \
+            scripts/run_product_demo.py \
             scripts/run_eval_campaign.py \
             scripts/summarize_eval_results.py
       - name: Check benchmark distribution
@@ -34,3 +35,5 @@ jobs:
             evals/business_goals/support_refund_automation.yaml \
             evals/business_goals/renewal_risk_diagnosis.yaml \
             --out /tmp/business-goal-suite.json
+      - name: Run product demo
+        run: python scripts/run_product_demo.py --json-out /tmp/agent-peak-product-demo.json

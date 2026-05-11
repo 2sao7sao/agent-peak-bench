@@ -216,7 +216,7 @@
         <div>
           <h1>Agent Peak Bench</h1>
           <p class="subtitle">
-            面向 Agent 落地的综合评估项目：把真实任务、子能力观测、端到端稳定性、失败归因、harness 设计和模型使用指南合并到一份主报告中。
+            面向 Agent 落地的综合评估项目：从业务目标出发，反向生成能力评测、重复实验、失败归因、harness 设计和模型使用 cookbook。
           </p>
           <p class="subtitle">
             本轮仅以 MiniMax M2.7 High 作为首个 case study；Agent Peak Bench 本身是模型无关评测体系。
@@ -242,24 +242,24 @@
 
       <section class="section">
         <div class="metrics">
-          <div class="metric"><span>Focus</span><strong>Agent Landing</strong></div>
-          <div class="metric"><span>Primary Suites</span><strong>5</strong></div>
-          <div class="metric"><span>Total Scenarios</span><strong>104</strong></div>
-          <div class="metric"><span>Run Mode</span><strong>Campaign</strong></div>
+          <div class="metric"><span>Product Demo</span><strong>PASS</strong></div>
+          <div class="metric"><span>Business Profiles</span><strong>3</strong></div>
+          <div class="metric"><span>Capability Items</span><strong>15</strong></div>
+          <div class="metric"><span>Forbidden Tools</span><strong>8</strong></div>
         </div>
       </section>
 
       <section class="section grid two">
         <div class="panel">
-          <h2>主报告</h2>
-          <p>所有评估结论、商业目标拆解、OpenClaw 复杂任务方向、工具/skills/MCP 归因和 MiniMax M2.7 High 使用指南，都收敛到同一份综合报告。</p>
+          <h2>产品路径</h2>
+          <p>Agent Peak Bench 的入口不是 leaderboard，而是业务目标：先判断业务需要哪些模型能力，再生成 suite、campaign、失败归因和 Agent cookbook。</p>
           <div class="callout">
-            Smoke/canary 只用于验证评测 runner，不作为 README 或 Pages 的模型能力结论。
+            Product demo 是确定性 dry-run，不调用模型；它验证项目工作流本身是否完整。
           </div>
           <div class="links">
-            <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/report/agent-peak-bench-integrated-report.zh-CN.md">Read integrated report</a>
+            <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/public/benchmark-samples/agent-peak-product-demo-output.json">Product demo JSON</a>
+            <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/scripts/run_product_demo.py">Product demo script</a>
             <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/report/business-goal-agent-benchmark-methodology.zh-CN.md">Business goal methodology</a>
-            <a href="https://github.com/2sao7sao/agent-peak-bench/blob/main/docs/evaluation-samples.zh-CN.md">Evaluation samples</a>
           </div>
         </div>
 
@@ -276,6 +276,14 @@
             </tbody>
           </table>
         </div>
+      </section>
+
+      <section class="section panel">
+        <h2>Business Goal Product Demo</h2>
+        <p>
+          Dry-run 会把安全评审、退款自动化、续约风险三个业务 profiles 转成 3 个 benchmark scenarios，覆盖 15 个 capability items、13 个 required tools 和 8 个 forbidden side-effect tools，并检查 campaign 是否具备 r7/r30/r100 与 pass@k 置信策略。
+        </p>
+        <img class="asset" src="./assets/business-goal-demo.svg" alt="Agent Peak Bench business-goal product demo" />
       </section>
 
       <section class="section panel">
