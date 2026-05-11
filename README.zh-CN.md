@@ -116,6 +116,15 @@ python3 scripts/run_eval_campaign.py \
   --batch business_goal_mapping_pilot
 ```
 
+从业务目标 profile 生成 suite skeleton：
+
+```bash
+python3 scripts/generate_business_goal_suite.py \
+  evals/business_goals/security_review_acceleration.yaml \
+  evals/business_goals/support_refund_automation.yaml \
+  --out /tmp/business-goal-suite.json
+```
+
 配置 provider 后运行单 suite：
 
 ```bash
@@ -148,14 +157,17 @@ python3 scripts/check_benchmark_distribution.py
 | 路径 | 作用 |
 | --- | --- |
 | [`report/agent-peak-bench-integrated-report.zh-CN.md`](./report/agent-peak-bench-integrated-report.zh-CN.md) | 主综合报告和 MiniMax case study 解读。 |
+| [`report/github-repo-product-review-2026-05-11.zh-CN.md`](./report/github-repo-product-review-2026-05-11.zh-CN.md) | 对 Agent Peak Bench、EvolveKB、EvolveMemory 的 GitHub 产品评审和爆款项目对照。 |
 | [`report/business-goal-agent-benchmark-methodology.zh-CN.md`](./report/business-goal-agent-benchmark-methodology.zh-CN.md) | 商业目标 benchmark 方法论。 |
 | [`evals/suites/`](./evals/suites) | 评测 suite。 |
+| [`evals/business_goals/`](./evals/business_goals) | 将商业目标转成 benchmark skeleton 的业务 profile。 |
 | [`evals/campaigns/harness_engineering_campaign_v1.json`](./evals/campaigns/harness_engineering_campaign_v1.json) | 多天到数周的 campaign 规格。 |
 | [`evals/blueprints/business_goal_benchmark_blueprint.md`](./evals/blueprints/business_goal_benchmark_blueprint.md) | 新业务目标 suite 的创建模板。 |
 | [`research/benchmark_sources/source_index.json`](./research/benchmark_sources/source_index.json) | 本轮参考的公开 benchmark 资料索引。 |
 | [`docs/index.html`](./docs/index.html) | GitHub Pages 首页。 |
 | [`scripts/run_minimax_evals.py`](./scripts/run_minimax_evals.py) | Anthropic-compatible 评测 runner，文件名保留历史兼容。 |
 | [`scripts/run_eval_campaign.py`](./scripts/run_eval_campaign.py) | campaign 规划/执行脚本。 |
+| [`scripts/generate_business_goal_suite.py`](./scripts/generate_business_goal_suite.py) | 将业务目标 YAML profile 转成可评审 suite skeleton。 |
 | [`scripts/summarize_eval_results.py`](./scripts/summarize_eval_results.py) | 多结果汇总脚本。 |
 | [`scripts/check_benchmark_distribution.py`](./scripts/check_benchmark_distribution.py) | suite 分布检查脚本。 |
 

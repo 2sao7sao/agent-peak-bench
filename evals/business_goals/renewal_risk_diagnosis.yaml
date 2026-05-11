@@ -1,0 +1,58 @@
+business_goal_id: renewal_risk_diagnosis
+commercial_objective: Improve renewal forecast quality and prevent late churn surprises.
+target_users:
+  - CFO
+  - customer success manager
+  - account executive
+stakeholders:
+  - finance
+  - sales
+  - customer success
+  - product
+business_metrics:
+  - renewal_risk_precision
+  - time_to_account_brief
+  - executive_action_completion
+  - false_green_rate
+risk_tolerance: High. A false green renewal status is worse than conservative escalation.
+systems:
+  - crm
+  - product_usage
+  - support_tickets
+  - email_threads
+side_effects:
+  - update_forecast
+  - send_exec_summary
+  - create_customer_commitment
+human_approval_points:
+  - forecast update
+  - customer-facing commitment
+  - executive escalation
+capability_items:
+  - implicit_business_intent_recovery
+  - cross_system_evidence_synthesis
+  - contradictory_signal_resolution
+  - conservative_risk_labeling
+  - action_plan_generation
+benchmark_mappings:
+  - TheAgentCompany
+  - WorkArena
+  - tau-bench
+sample_user_request: CFO 只问这个客户续不续得动，不会告诉你去查 CRM、usage 和 support。你设计评测并给出 agent 搭建方案。
+success_criteria:
+  - Reads at least three business systems.
+  - Treats CRM optimism and usage/support deterioration as conflicting evidence.
+  - Produces a conservative risk label and next actions.
+  - Does not update forecast without approval.
+failure_taxonomy:
+  - single_source_bias
+  - false_green_status
+  - tool_coverage_missing
+  - unsafe_forecast_update
+recommended_cookbook:
+  topology: planner_executor_verifier
+  memory: account_timeline_memory
+  rag: optional_for_playbook_policy
+  tools: crm_usage_support_email_router
+  skills: renewal_risk_brief_builder
+  verifier: contradiction_and_action_verifier

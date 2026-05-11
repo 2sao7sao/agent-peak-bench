@@ -125,6 +125,15 @@ python3 scripts/run_eval_campaign.py \
   --batch business_goal_mapping_pilot
 ```
 
+Generate a business-goal suite skeleton:
+
+```bash
+python3 scripts/generate_business_goal_suite.py \
+  evals/business_goals/security_review_acceleration.yaml \
+  evals/business_goals/support_refund_automation.yaml \
+  --out /tmp/business-goal-suite.json
+```
+
 Run one suite after setting provider credentials:
 
 ```bash
@@ -157,14 +166,17 @@ python3 scripts/check_benchmark_distribution.py
 | Path | Purpose |
 | --- | --- |
 | [`report/agent-peak-bench-integrated-report.zh-CN.md`](./report/agent-peak-bench-integrated-report.zh-CN.md) | Main integrated report and MiniMax case-study interpretation. |
+| [`report/github-repo-product-review-2026-05-11.zh-CN.md`](./report/github-repo-product-review-2026-05-11.zh-CN.md) | Product review of Agent Peak Bench, EvolveKB, and EvolveMemory against current popular GitHub AI projects. |
 | [`report/business-goal-agent-benchmark-methodology.zh-CN.md`](./report/business-goal-agent-benchmark-methodology.zh-CN.md) | Business-goal benchmark methodology. |
 | [`evals/suites/`](./evals/suites) | Evaluation suites. |
+| [`evals/business_goals/`](./evals/business_goals) | Business-goal profiles used to turn commercial objectives into benchmark skeletons. |
 | [`evals/campaigns/harness_engineering_campaign_v1.json`](./evals/campaigns/harness_engineering_campaign_v1.json) | Multi-day/multi-week campaign plan. |
 | [`evals/blueprints/business_goal_benchmark_blueprint.md`](./evals/blueprints/business_goal_benchmark_blueprint.md) | Template for creating new business-goal suites. |
 | [`research/benchmark_sources/source_index.json`](./research/benchmark_sources/source_index.json) | Public benchmark sources reviewed for methodology design. |
 | [`docs/index.html`](./docs/index.html) | GitHub Pages landing report. |
 | [`scripts/run_minimax_evals.py`](./scripts/run_minimax_evals.py) | Anthropic-compatible evaluator runner. Filename kept for historical compatibility. |
 | [`scripts/run_eval_campaign.py`](./scripts/run_eval_campaign.py) | Campaign planner/executor. |
+| [`scripts/generate_business_goal_suite.py`](./scripts/generate_business_goal_suite.py) | Converts business-goal YAML profiles into reviewable suite skeletons. |
 | [`scripts/summarize_eval_results.py`](./scripts/summarize_eval_results.py) | Multi-result summarizer. |
 | [`scripts/check_benchmark_distribution.py`](./scripts/check_benchmark_distribution.py) | Suite distribution checker. |
 

@@ -1,0 +1,174 @@
+{
+  "collected_at": "2026-05-11",
+  "method": "GitHub REST repository metadata snapshot. Public fields only; no tokens or private data included.",
+  "own_repositories": [
+    {
+      "repo": "2sao7sao/EvolveKB",
+      "stars": 2,
+      "forks": 0,
+      "open_issues": 0,
+      "language": "Python",
+      "pushed_at": "2026-05-07T06:47:17Z",
+      "created_at": "2026-02-24T06:30:53Z",
+      "url": "https://github.com/2sao7sao/EvolveKB"
+    },
+    {
+      "repo": "2sao7sao/EvolveMemory",
+      "stars": 1,
+      "forks": 0,
+      "open_issues": 0,
+      "language": "Python",
+      "pushed_at": "2026-05-07T06:50:58Z",
+      "created_at": "2026-04-30T12:36:54Z",
+      "url": "https://github.com/2sao7sao/EvolveMemory"
+    },
+    {
+      "repo": "2sao7sao/agent-peak-bench",
+      "stars": 0,
+      "forks": 0,
+      "open_issues": 0,
+      "language": "Python",
+      "pushed_at": "2026-05-09T08:19:37Z",
+      "created_at": "2026-05-06T07:59:52Z",
+      "url": "https://github.com/2sao7sao/agent-peak-bench"
+    }
+  ],
+  "comparison_repositories": [
+    {
+      "repo": "langgenius/dify",
+      "stars": 140867,
+      "forks": 22111,
+      "language": "TypeScript",
+      "category": "agent workflow platform",
+      "url": "https://github.com/langgenius/dify"
+    },
+    {
+      "repo": "All-Hands-AI/OpenHands",
+      "stars": 73104,
+      "forks": 9252,
+      "language": "Python",
+      "category": "software engineering agent",
+      "url": "https://github.com/All-Hands-AI/OpenHands"
+    },
+    {
+      "repo": "infiniflow/ragflow",
+      "stars": 80191,
+      "forks": 9137,
+      "language": "Python",
+      "category": "RAG and agent context layer",
+      "url": "https://github.com/infiniflow/ragflow"
+    },
+    {
+      "repo": "microsoft/autogen",
+      "stars": 57903,
+      "forks": 8737,
+      "language": "Python",
+      "category": "agent framework",
+      "url": "https://github.com/microsoft/autogen"
+    },
+    {
+      "repo": "crewAIInc/crewAI",
+      "stars": 51109,
+      "forks": 7063,
+      "language": "Python",
+      "category": "multi-agent framework",
+      "url": "https://github.com/crewAIInc/crewAI"
+    },
+    {
+      "repo": "run-llama/llama_index",
+      "stars": 49317,
+      "forks": 7382,
+      "language": "Python",
+      "category": "document agent and data framework",
+      "url": "https://github.com/run-llama/llama_index"
+    },
+    {
+      "repo": "langchain-ai/langgraph",
+      "stars": 31701,
+      "forks": 5385,
+      "language": "Python",
+      "category": "stateful agent orchestration",
+      "url": "https://github.com/langchain-ai/langgraph"
+    },
+    {
+      "repo": "mem0ai/mem0",
+      "stars": 55338,
+      "forks": 6271,
+      "language": "Python",
+      "category": "agent memory",
+      "url": "https://github.com/mem0ai/mem0"
+    },
+    {
+      "repo": "letta-ai/letta",
+      "stars": 22616,
+      "forks": 2399,
+      "language": "Python",
+      "category": "stateful memory agents",
+      "url": "https://github.com/letta-ai/letta"
+    },
+    {
+      "repo": "getzep/zep",
+      "stars": 4544,
+      "forks": 620,
+      "language": "Python",
+      "category": "agent memory service",
+      "url": "https://github.com/getzep/zep"
+    },
+    {
+      "repo": "SWE-bench/SWE-bench",
+      "stars": 4894,
+      "forks": 856,
+      "language": "Python",
+      "category": "real GitHub issue benchmark",
+      "url": "https://github.com/SWE-bench/SWE-bench"
+    },
+    {
+      "repo": "THUDM/AgentBench",
+      "stars": 3407,
+      "forks": 252,
+      "language": "Python",
+      "category": "agent benchmark",
+      "url": "https://github.com/THUDM/AgentBench"
+    },
+    {
+      "repo": "xlang-ai/OSWorld",
+      "stars": 2833,
+      "forks": 451,
+      "language": "Python",
+      "category": "desktop agent benchmark",
+      "url": "https://github.com/xlang-ai/OSWorld"
+    },
+    {
+      "repo": "web-arena-x/webarena",
+      "stars": 1458,
+      "forks": 236,
+      "language": "Python",
+      "category": "web agent benchmark",
+      "url": "https://github.com/web-arena-x/webarena"
+    },
+    {
+      "repo": "sierra-research/tau-bench",
+      "stars": 1217,
+      "forks": 196,
+      "language": "Python",
+      "category": "tool-agent-user benchmark",
+      "url": "https://github.com/sierra-research/tau-bench"
+    },
+    {
+      "repo": "TheAgentCompany/TheAgentCompany",
+      "stars": 698,
+      "forks": 114,
+      "language": "Python",
+      "category": "simulated company agent benchmark",
+      "url": "https://github.com/TheAgentCompany/TheAgentCompany"
+    },
+    {
+      "repo": "ServiceNow/WorkArena",
+      "stars": 247,
+      "forks": 35,
+      "language": "Python",
+      "category": "enterprise web work benchmark",
+      "url": "https://github.com/ServiceNow/WorkArena"
+    }
+  ]
+}

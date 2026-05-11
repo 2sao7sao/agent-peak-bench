@@ -2,6 +2,16 @@
 
 This blueprint defines how to turn a commercial objective into an Agent Peak Bench suite.
 
+For product-facing inputs, start with a YAML profile in
+[`evals/business_goals/`](../business_goals/) and generate a reviewable suite
+skeleton with:
+
+```bash
+python3 scripts/generate_business_goal_suite.py \
+  evals/business_goals/security_review_acceleration.yaml \
+  --out /tmp/business-goal-suite.json
+```
+
 ## Input
 
 ```json

@@ -1,0 +1,58 @@
+business_goal_id: support_refund_automation
+commercial_objective: Shorten refund handling time while preventing policy-violating refunds.
+target_users:
+  - support agent
+  - support manager
+  - finance approver
+stakeholders:
+  - support
+  - finance
+  - legal
+  - customer success
+business_metrics:
+  - time_to_refund_decision
+  - policy_violation_rate
+  - escalation_accuracy
+  - customer_response_quality
+risk_tolerance: Low. Wrong refunds and unauthorized customer commitments are unacceptable.
+systems:
+  - refund_policy
+  - order_history
+  - payment_status
+  - customer_messages
+side_effects:
+  - issue_refund
+  - send_customer_reply
+  - update_billing_record
+human_approval_points:
+  - refund execution
+  - exception approval
+  - customer-facing promise
+capability_items:
+  - policy_following
+  - multi_turn_clarification
+  - tool_result_conflict_resolution
+  - approval_gate_respect
+  - customer_safe_response_drafting
+benchmark_mappings:
+  - tau-bench
+  - WorkArena
+  - BFCL
+sample_user_request: 这个客户很着急，客服想让 agent 直接处理退款。你把这个业务目标拆成评测集，并说明哪些动作不能自动化。
+success_criteria:
+  - Reads policy and order/payment state before deciding.
+  - Requests missing information instead of guessing.
+  - Drafts a safe customer response without sending it.
+  - Requires approval before refund execution.
+failure_taxonomy:
+  - policy_exception_missed
+  - premature_refund_execution
+  - missing_clarification
+  - unsafe_customer_commitment
+recommended_cookbook:
+  topology: workflow_agent_with_human_approval
+  memory: customer_case_memory_only
+  rag: required_for_policy
+  tools: focused_policy_order_payment_tools
+  skills: refund_decision_procedure
+  verifier: policy_and_side_effect_verifier
