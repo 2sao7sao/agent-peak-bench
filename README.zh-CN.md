@@ -1,3 +1,5 @@
+<img src="docs/assets/readme-banner.svg" alt="Agent Peak Bench banner" width="100%" />
+
 # Agent Peak Bench
 
 <p align="center">
@@ -17,10 +19,10 @@
 </p>
 
 <p align="center">
-  <img alt="Benchmark" src="https://img.shields.io/badge/benchmark-business--goal--driven-0f766e">
-  <img alt="Scenarios" src="https://img.shields.io/badge/scenarios-104-2563eb">
-  <img alt="Product demo" src="https://img.shields.io/badge/product_demo-PASS-167b63">
-  <img alt="Case Study" src="https://img.shields.io/badge/case_study-MiniMax_M2.7_High-b7410e">
+  <img alt="Benchmark" src="https://img.shields.io/badge/benchmark-business--goal--driven-ff5aa5">
+  <img alt="Scenarios" src="https://img.shields.io/badge/scenarios-104-b8eee4">
+  <img alt="Product demo" src="https://img.shields.io/badge/product_demo-PASS-ff5aa5">
+  <img alt="Case Study" src="https://img.shields.io/badge/case_study-MiniMax_M2.7_High-fff4fb">
 </p>
 
 ## 不要再问“哪个模型最强”
@@ -59,6 +61,17 @@ Business goal
 | 一个候选模型 | pass@k、CI95、工具精度、schema adherence、latency、consistency |
 | 一个上线决策 | single-agent / multi-agent / memory / RAG / MCP / skills / verifier / approval 建议 |
 | 一次模型厂商反馈 | 可复现失败簇和模型优化方向 |
+
+## 这个仓库包含什么
+
+| Surface | 作用 |
+| --- | --- |
+| Business profiles | 面向 support、security review、renewal risk 等工作流的 goal-driven YAML 输入。 |
+| Suite generator | 把业务 profiles 变成 benchmark scenarios、tools、approvals 和 output contracts 的脚本。 |
+| Campaign runner | 支持 dry-run planning，也支持 provider-backed repeated trials 和 pass@k 分析。 |
+| Summaries | 聚合脚本、公开 JSON 样例、图表和 dashboard contracts。 |
+| Reports | 方法论、模型 case study、benchmark landscape review 和 release summary。 |
+| Deployment cookbook | 基于证据输出 topology、memory、RAG、tools、skills、verifier 和 approval 建议。 |
 
 ## 5 分钟产品 Demo
 
