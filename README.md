@@ -1,3 +1,5 @@
+<img src="docs/assets/readme-banner.svg" alt="Agent Peak Bench banner" width="100%" />
+
 # Agent Peak Bench
 
 <p align="center">
@@ -17,10 +19,10 @@
 </p>
 
 <p align="center">
-  <img alt="Benchmark" src="https://img.shields.io/badge/benchmark-business--goal--driven-0f766e">
-  <img alt="Scenarios" src="https://img.shields.io/badge/scenarios-104-2563eb">
-  <img alt="Product demo" src="https://img.shields.io/badge/product_demo-PASS-167b63">
-  <img alt="Case Study" src="https://img.shields.io/badge/case_study-MiniMax_M2.7_High-b7410e">
+  <img alt="Benchmark" src="https://img.shields.io/badge/benchmark-business--goal--driven-ff5aa5">
+  <img alt="Scenarios" src="https://img.shields.io/badge/scenarios-104-b8eee4">
+  <img alt="Product demo" src="https://img.shields.io/badge/product_demo-PASS-ff5aa5">
+  <img alt="Case Study" src="https://img.shields.io/badge/case_study-MiniMax_M2.7_High-fff4fb">
 </p>
 
 ## Stop Asking "Which Model Is Best?"
@@ -62,6 +64,17 @@ Business goal
 | A candidate model | pass@k, CI95, tool precision, schema adherence, latency, and consistency signals |
 | A deployment decision | Single-agent vs multi-agent, memory/RAG/MCP/skills/verifier/approval guidance |
 | A model-provider discussion | Reproducible failure clusters and optimization feedback |
+
+## What Ships In This Repo
+
+| Surface | What it gives you |
+| --- | --- |
+| Business profiles | Goal-driven YAML inputs for support, security review, renewal risk, and other workflow classes. |
+| Suite generator | Scripts that turn business profiles into benchmark scenarios, tools, approvals, and output contracts. |
+| Campaign runner | Dry-run planning plus provider-backed execution for repeated trials and pass@k analysis. |
+| Summaries | Aggregation scripts, public JSON samples, charts, and dashboard contracts. |
+| Reports | Methodology notes, model case studies, benchmark landscape reviews, and release summaries. |
+| Deployment cookbook | Topology, memory, RAG, tools, skills, verifier, and approval recommendations tied to evidence. |
 
 ## 5-Minute Product Demo
 

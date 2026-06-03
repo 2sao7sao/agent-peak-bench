@@ -1,0 +1,65 @@
+<svg width="1600" height="720" viewBox="0 0 1600 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M80 0H0V80" stroke="#261421" stroke-opacity=".7" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="pink" x1="980" x2="1420" y1="120" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff8cba"/>
+      <stop offset=".6" stop-color="#ff2f86"/>
+      <stop offset="1" stop-color="#b8eee4"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="720" fill="#0f0b12"/>
+  <rect width="1600" height="720" fill="url(#grid)"/>
+  <rect x="72" y="62" width="1456" height="596" rx="28" fill="#140e16" stroke="#342031"/>
+  <circle cx="1270" cy="330" r="260" fill="#ff5aa5" opacity=".07"/>
+
+  <g transform="translate(116 96)">
+    <circle cx="50" cy="50" r="50" fill="#1b1219" stroke="#ff5aa5" stroke-width="4"/>
+    <ellipse cx="50" cy="47" rx="34" ry="32" fill="#5f6268"/>
+    <ellipse cx="37" cy="50" rx="15" ry="20" fill="#fff4fb"/>
+    <ellipse cx="63" cy="50" rx="15" ry="20" fill="#fff4fb"/>
+    <circle cx="39" cy="50" r="6" fill="#050507"/>
+    <circle cx="61" cy="50" r="6" fill="#050507"/>
+    <ellipse cx="50" cy="59" rx="9" ry="6" fill="#151217"/>
+    <rect x="25" y="72" width="50" height="13" rx="6.5" fill="#b8eee4"/>
+    <rect x="60" y="74" width="16" height="26" rx="6" fill="#b8eee4"/>
+    <rect x="63" y="78" width="10" height="10" rx="3" fill="#ff5aa5"/>
+    <text x="66" y="87" fill="#fff4fb" font-family="Inter, Arial, sans-serif" font-size="9" font-weight="800">e</text>
+  </g>
+
+  <text x="116" y="252" fill="#ff5aa5" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="3">HARNESS-FIRST AGENT EVALUATION</text>
+  <text x="112" y="342" fill="#fff4fb" font-family="Inter, Arial, sans-serif" font-size="84" font-weight="800">Agent Peak Bench</text>
+  <text x="118" y="398" fill="#d8c6d0" font-family="Inter, Arial, sans-serif" font-size="28">Business goals become capability tests.</text>
+  <text x="118" y="446" fill="#a998a4" font-family="Inter, Arial, sans-serif" font-size="21">Map workflows to suites, repeated trials, failure maps, and cookbooks.</text>
+
+  <g font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700">
+    <rect x="118" y="505" width="176" height="38" rx="19" fill="#21131d" stroke="#ff5aa5"/>
+    <text x="140" y="530" fill="#ff8cba">business goals</text>
+    <rect x="310" y="505" width="112" height="38" rx="19" fill="#21131d" stroke="#ff5aa5"/>
+    <text x="336" y="530" fill="#ff8cba">pass@k</text>
+    <rect x="438" y="505" width="170" height="38" rx="19" fill="#21131d" stroke="#ff5aa5"/>
+    <text x="462" y="530" fill="#ff8cba">failure map</text>
+    <rect x="624" y="505" width="150" height="38" rx="19" fill="#21131d" stroke="#ff5aa5"/>
+    <text x="648" y="530" fill="#ff8cba">cookbook</text>
+  </g>
+
+  <g transform="translate(922 110)">
+    <rect width="520" height="456" rx="24" fill="#09070a" stroke="#3b2536"/>
+    <text x="34" y="62" fill="#ff5aa5" font-family="SFMono-Regular, Menlo, monospace" font-size="18">$ campaign summary</text>
+    <path d="M76 360L150 280L228 310L306 190L386 236L458 112" stroke="url(#pink)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <g fill="#09070a" stroke-width="5">
+      <circle cx="76" cy="360" r="12" stroke="#ff5aa5"/>
+      <circle cx="150" cy="280" r="12" stroke="#ff5aa5"/>
+      <circle cx="228" cy="310" r="12" stroke="#b8eee4"/>
+      <circle cx="306" cy="190" r="12" stroke="#ff5aa5"/>
+      <circle cx="386" cy="236" r="12" stroke="#b8eee4"/>
+      <circle cx="458" cy="112" r="12" stroke="#ff5aa5"/>
+    </g>
+    <g font-family="SFMono-Regular, Menlo, monospace" font-size="17" fill="#d8c6d0">
+      <text x="56" y="414">pass@k</text>
+      <text x="180" y="414">CI95</text>
+      <text x="294" y="414">tool precision</text>
+    </g>
+  </g>
+</svg>
